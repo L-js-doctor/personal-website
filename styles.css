@@ -220,14 +220,18 @@ h1 {
 }
 
 .focus-grid,
-.project-grid {
+.project-grid,
+.portal-grid,
+.steps {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
 }
 
 .focus-item,
-.project-card {
+.project-card,
+.portal-card,
+.steps article {
   min-height: 238px;
   padding: 24px;
   background: var(--panel);
@@ -236,6 +240,20 @@ h1 {
   box-shadow: 0 10px 34px rgba(22, 34, 31, 0.06);
 }
 
+.portal-card {
+  display: flex;
+  flex-direction: column;
+  color: inherit;
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.portal-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(31, 111, 107, 0.42);
+  box-shadow: var(--shadow);
+}
+
+.portal-number,
 .focus-item span {
   display: inline-block;
   margin-bottom: 42px;
@@ -244,18 +262,134 @@ h1 {
 }
 
 .focus-item h3,
-.project-card h3 {
+.project-card h3,
+.portal-card h3,
+.steps h3 {
   margin: 0 0 10px;
   font-size: 1.24rem;
 }
 
 .focus-item p,
-.project-card p {
+.project-card p,
+.portal-card p,
+.steps p {
   margin-bottom: 0;
+}
+
+.portal-card strong {
+  margin-top: auto;
+  padding-top: 24px;
+  color: var(--teal);
+}
+
+.steps article span {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 42px;
+  place-items: center;
+  color: #fff;
+  background: var(--green);
+  border-radius: 8px;
+  font-weight: 900;
 }
 
 .project-card {
   border-top: 4px solid var(--green);
+}
+
+.subpage {
+  min-height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(247, 248, 244, 0.96)),
+    var(--paper);
+}
+
+.page-shell {
+  width: min(980px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 132px 0 72px;
+}
+
+.page-shell h1 {
+  max-width: 760px;
+  font-size: clamp(2.8rem, 7vw, 5.8rem);
+}
+
+.page-lead {
+  max-width: 720px;
+  margin: 22px 0 36px;
+  color: var(--muted);
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+}
+
+.file-list {
+  display: grid;
+  gap: 12px;
+}
+
+.file-list a {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  min-height: 76px;
+  padding: 16px 18px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 8px 28px rgba(22, 34, 31, 0.06);
+}
+
+.file-list a:hover {
+  border-color: rgba(31, 111, 107, 0.42);
+  box-shadow: var(--shadow);
+}
+
+.file-list span {
+  display: inline-flex;
+  justify-content: center;
+  padding: 6px 8px;
+  color: #fff;
+  background: var(--teal);
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.file-list em {
+  color: var(--muted);
+  font-style: normal;
+  font-size: 0.92rem;
+}
+
+.back-link {
+  display: inline-flex;
+  margin-bottom: 28px;
+  color: var(--teal);
+  font-weight: 800;
+}
+
+.note-page {
+  max-width: 860px;
+}
+
+.note-page p {
+  color: var(--muted);
+  font-size: 1.08rem;
+}
+
+.note-block {
+  margin-top: 28px;
+  padding: 22px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.note-block h2 {
+  margin: 0 0 8px;
+  font-size: 1.35rem;
 }
 
 .contact {
@@ -307,7 +441,9 @@ h1 {
   .intro,
   .contact,
   .focus-grid,
-  .project-grid {
+  .project-grid,
+  .portal-grid,
+  .steps {
     grid-template-columns: 1fr;
   }
 
@@ -321,8 +457,24 @@ h1 {
   }
 
   .focus-item,
-  .project-card {
+  .project-card,
+  .portal-card,
+  .steps article {
     min-height: 0;
+  }
+
+  .page-shell {
+    width: min(100% - 32px, 980px);
+    padding-top: 92px;
+  }
+
+  .file-list a {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .file-list span {
+    width: fit-content;
   }
 
   .contact-actions {
