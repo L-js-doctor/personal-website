@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>成果与发表</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <script defer src="../../site.js"></script>
+  </head>
+  <body class="subpage">
+    <main class="page-shell" data-app="publication">
+      <a class="back-link" href="../">← 返回科研生态中心</a>
+      <p class="section-kicker">Publication</p>
+      <h1>成果与发表</h1>
+      <p class="page-lead">追踪摘要、海报、综述、展示页和可公开科研作品的状态。</p>
+
+      <form class="tool-form" data-form>
+        <label>标题<input name="title" required placeholder="例如：炎症机制复习图谱"></label>
+        <label>状态<input name="status" placeholder="草稿、修改中、可公开、已发布"></label>
+        <label>目标读者<textarea name="audience" placeholder="这个成果写给谁看？"></textarea></label>
+        <label>核心信息<textarea name="message" placeholder="最重要的一句话是什么？"></textarea></label>
+        <label>下一步<textarea name="next" placeholder="下一步需要补图、查文献还是改结构？"></textarea></label>
+        <button class="button primary" type="submit">保存成果记录</button>
+      </form>
+
+      <div class="tool-bar">
+        <input data-search type="search" placeholder="搜索标题、状态、核心信息">
+        <button class="button secondary" type="button" data-export>导出 JSON</button>
+        <button class="button secondary" type="button" data-clear>清空本地数据</button>
+      </div>
+
+      <section class="tool-list" data-list></section>
+    </main>
+  </body>
+</html>
