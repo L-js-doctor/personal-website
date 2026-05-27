@@ -3,37 +3,37 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="L-js-doctor 的个人网站，记录医学学习、技术实践和个人项目。">
-    <title>L-js-doctor | Personal Website</title>
+    <meta name="description" content="L-js-doctor 的个人网站，集中保存医学学习资料、技术实践和项目档案。">
+    <title>L-js-doctor | 个人学习与项目入口</title>
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
     <header class="site-header">
-      <a class="brand" href="#top" aria-label="L-js-doctor home">
+      <a class="brand" href="#top" aria-label="回到首页">
         <span class="brand-mark">L</span>
         <span>L-js-doctor</span>
       </a>
-      <nav class="nav" aria-label="Primary navigation">
+      <nav class="nav" aria-label="主导航">
         <a href="#about">关于</a>
-        <a href="#focus">方向</a>
-        <a href="#projects">项目</a>
+        <a href="#library">资料库</a>
+        <a href="#workflow">怎么用</a>
         <a href="#contact">联系</a>
       </nav>
     </header>
 
     <main id="top">
-      <section class="hero" aria-label="Personal introduction">
-        <img class="hero-image" src="assets/hero-study-workspace.png" alt="A calm study workspace with a notebook, laptop, and medical learning notes.">
+      <section class="hero" aria-label="个人介绍">
+        <img class="hero-image" src="assets/hero-study-workspace.png" alt="安静的学习桌面，有电脑、笔记本和医学学习资料。">
         <div class="hero-overlay"></div>
         <div class="hero-content">
           <p class="eyebrow">Medical learning · Code · Notes</p>
           <h1>L-js-doctor</h1>
           <p class="hero-copy">
-            这里是我的个人主页，用来记录学习、整理项目、沉淀想法，也作为我和 Codex 协作工作的入口。
+            这是我的个人学习与项目入口。医学资料、代码练习、网站项目都会放进对应目录，点开就能找到整理好的 HTML 文件。
           </p>
           <div class="hero-actions">
-            <a class="button primary" href="#projects">查看项目</a>
-            <a class="button secondary" href="https://github.com/L-js-doctor">GitHub</a>
+            <a class="button primary" href="#library">进入资料库</a>
+            <a class="button secondary" href="https://github.com/L-js-doctor/personal-website">查看仓库</a>
           </div>
         </div>
       </section>
@@ -41,58 +41,64 @@
       <section class="section intro" id="about">
         <div>
           <p class="section-kicker">About</p>
-          <h2>把学习过程变成可积累的作品。</h2>
+          <h2>让网站变成真正能用的学习工作台。</h2>
         </div>
         <p>
-          这个网站会逐步变成我的个人档案：医学笔记、编程练习、项目记录、阅读总结，以及那些值得长期保存的学习成果。
-          当前版本先作为起点，后续可以继续扩展博客、作品集、课程笔记和英文简历页面。
+          这个网站不只是展示个人信息。以后你让我整理课程资料、病理学笔记、代码练习或项目说明时，我会把内容保存成网页文件，
+          放进对应文件夹，并在这里更新入口。这样你不用翻聊天记录，打开网站就能找到资料。
         </p>
       </section>
 
-      <section class="section focus" id="focus">
+      <section class="section library" id="library">
         <div class="section-heading">
-          <p class="section-kicker">Focus</p>
-          <h2>近期关注</h2>
+          <p class="section-kicker">Library</p>
+          <h2>资料入口</h2>
         </div>
-        <div class="focus-grid">
-          <article class="focus-item">
-            <span>01</span>
+        <div class="portal-grid">
+          <a class="portal-card" href="medical-learning/">
+            <span class="portal-number">01</span>
+            <p class="project-type">Study</p>
             <h3>医学学习</h3>
-            <p>整理病理学、基础医学和临床知识，形成可复习、可检索、可迭代的笔记体系。</p>
-          </article>
-          <article class="focus-item">
-            <span>02</span>
+            <p>存放病理学、基础医学、课程复习资料和我帮你整理出的 HTML 学习包。</p>
+            <strong>打开医学资料夹</strong>
+          </a>
+          <a class="portal-card" href="coding-practice/">
+            <span class="portal-number">02</span>
+            <p class="project-type">Code</p>
             <h3>技术实践</h3>
-            <p>用代码解决真实学习和工作问题，包括网页、自动化、数据整理和个人工具。</p>
-          </article>
-          <article class="focus-item">
-            <span>03</span>
-            <h3>长期作品集</h3>
-            <p>把每一次学习和项目都保存到 GitHub，让成长过程有清晰的版本记录。</p>
-          </article>
+            <p>存放编程练习、网页实验、自动化脚本和代码学习记录。</p>
+            <strong>打开技术资料夹</strong>
+          </a>
+          <a class="portal-card" href="project-archive/">
+            <span class="portal-number">03</span>
+            <p class="project-type">Portfolio</p>
+            <h3>项目档案</h3>
+            <p>存放个人网站、测试仓库、作品集页面和后续可以展示的项目。</p>
+            <strong>打开项目档案</strong>
+          </a>
         </div>
       </section>
 
-      <section class="section projects" id="projects">
+      <section class="section workflow" id="workflow">
         <div class="section-heading">
-          <p class="section-kicker">Projects</p>
-          <h2>项目入口</h2>
+          <p class="section-kicker">Workflow</p>
+          <h2>以后我会这样和 GitHub 联动</h2>
         </div>
-        <div class="project-grid">
-          <article class="project-card">
-            <p class="project-type">Website</p>
-            <h3>Personal Website</h3>
-            <p>当前个人主页，用来展示学习方向、项目和联系方式。</p>
+        <div class="steps">
+          <article>
+            <span>1</span>
+            <h3>整理资料</h3>
+            <p>你给我课件、笔记、PDF 或想法，我把它整理成清晰的 HTML 页面。</p>
           </article>
-          <article class="project-card">
-            <p class="project-type">Study</p>
-            <h3>Medical Notes</h3>
-            <p>计划建设的医学学习笔记仓库，适合存放章节总结、表格和复习清单。</p>
+          <article>
+            <span>2</span>
+            <h3>放入目录</h3>
+            <p>医学内容放进 `medical-learning`，代码内容放进 `coding-practice`，项目内容放进 `project-archive`。</p>
           </article>
-          <article class="project-card">
-            <p class="project-type">Code</p>
-            <h3>Coding Practice</h3>
-            <p>记录编程练习、网页实验和自动化脚本，逐步形成可展示的作品集。</p>
+          <article>
+            <span>3</span>
+            <h3>更新入口</h3>
+            <p>我会把新页面加到对应目录页，你以后只要点网站入口就能找到。</p>
           </article>
         </div>
       </section>
@@ -100,11 +106,11 @@
       <section class="section contact" id="contact">
         <div>
           <p class="section-kicker">Contact</p>
-          <h2>保持更新。</h2>
+          <h2>继续把它养成你的长期档案。</h2>
         </div>
         <div class="contact-actions">
-          <a class="button primary" href="https://github.com/L-js-doctor">访问 GitHub</a>
-          <a class="button secondary" href="mailto:288302595+L-js-doctor@users.noreply.github.com">发送邮件</a>
+          <a class="button primary" href="https://l-js-doctor.github.io/personal-website/">访问网站</a>
+          <a class="button secondary" href="https://github.com/L-js-doctor">GitHub 主页</a>
         </div>
       </section>
     </main>
