@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>数据与工具</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <script defer src="../../site.js"></script>
+  </head>
+  <body class="subpage">
+    <main class="page-shell" data-app="dataTools">
+      <a class="back-link" href="../">← 返回科研生态中心</a>
+      <p class="section-kicker">Data & Tools</p>
+      <h1>数据与工具</h1>
+      <p class="page-lead">登记数据表、脚本、分析方法和可视化工具。以后可以逐步接入真实代码和数据文件。</p>
+
+      <form class="tool-form" data-form>
+        <label>类型<input name="kind" placeholder="数据表、脚本、可视化、检索工具"></label>
+        <label>名称<input name="name" required placeholder="例如：文献筛选表"></label>
+        <label>输入<textarea name="input" placeholder="需要什么文件、字段或材料？"></textarea></label>
+        <label>输出<textarea name="output" placeholder="会产生什么结果？"></textarea></label>
+        <label>使用方法<textarea name="method" placeholder="怎么运行或怎么使用？"></textarea></label>
+        <button class="button primary" type="submit">保存工具记录</button>
+      </form>
+
+      <div class="tool-bar">
+        <input data-search type="search" placeholder="搜索工具、输入、输出">
+        <button class="button secondary" type="button" data-export>导出 JSON</button>
+        <button class="button secondary" type="button" data-clear>清空本地数据</button>
+      </div>
+
+      <section class="tool-list" data-list></section>
+    </main>
+  </body>
+</html>
