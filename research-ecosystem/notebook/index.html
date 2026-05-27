@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>研究日志</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <script defer src="../../site.js"></script>
+  </head>
+  <body class="subpage">
+    <main class="page-shell" data-app="notebook">
+      <a class="back-link" href="../">← 返回科研生态中心</a>
+      <p class="section-kicker">Notebook</p>
+      <h1>研究日志</h1>
+      <p class="page-lead">记录每天的学习、疑问和下一步行动，让研究过程可回看。</p>
+
+      <form class="tool-form" data-form>
+        <label>日期<input name="date" type="date"></label>
+        <label>主题<input name="topic" required placeholder="例如：炎症章节复习"></label>
+        <label>今天完成<textarea name="done" placeholder="今天读了什么、做了什么？"></textarea></label>
+        <label>问题<textarea name="problem" placeholder="还不懂什么？出现了什么新问题？"></textarea></label>
+        <label>下一步<textarea name="next" placeholder="下一次具体做什么？"></textarea></label>
+        <button class="button primary" type="submit">保存日志</button>
+      </form>
+
+      <div class="tool-bar">
+        <input data-search type="search" placeholder="搜索日期、主题、问题">
+        <button class="button secondary" type="button" data-export>导出 JSON</button>
+        <button class="button secondary" type="button" data-clear>清空本地数据</button>
+      </div>
+
+      <section class="tool-list" data-list></section>
+    </main>
+  </body>
+</html>
