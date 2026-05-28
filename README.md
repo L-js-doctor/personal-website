@@ -36,3 +36,13 @@ The long-term goal is to turn this site into a research learning ecosystem:
 - literature deep-reading briefs that can be handed to Codex for structured HTML notes
 - GitHub Issues/Projects for planning and review
 - GitHub Actions or a static site generator when the site becomes large enough
+
+## Validation
+
+Run the repository validation locally:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\validate-site.ps1
+```
+
+GitHub Actions also runs this validation on pushes and pull requests to `main`.
