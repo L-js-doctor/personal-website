@@ -1,0 +1,11 @@
+[
+  {
+    "system": "Pathology",
+    "concept": "Example knowledge node",
+    "mechanism": "Cause -> cellular response -> tissue change -> clinical meaning.",
+    "disease": "Replace with real disease links as notes are added.",
+    "compare": "Use this field for confusing comparisons.",
+    "createdAt": "2026-05-27",
+    "source": "repository-seed"
+  }
+]
