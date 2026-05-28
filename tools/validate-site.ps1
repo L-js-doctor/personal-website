@@ -44,6 +44,7 @@ function Require-JsonArray {
 
 $requiredFiles = @(
   "index.html",
+  ".nojekyll",
   "styles.css",
   "site.js",
   "research-ecosystem/index.html",
