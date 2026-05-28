@@ -47,6 +47,7 @@ $requiredFiles = @(
   "styles.css",
   "site.js",
   "research-ecosystem/index.html",
+  "research-ecosystem/graph.html",
   "research-ecosystem/literature/index.html",
   "research-ecosystem/literature/pmid-42193877.html",
   "research-ecosystem/literature/search-strategy-glioblastoma-immune-microenvironment.html",
@@ -76,6 +77,9 @@ foreach ($file in $jsonFiles) {
 }
 
 Require-Text "research-ecosystem/literature/index.html" "data-pubmed-form"
+Require-Text "research-ecosystem/index.html" "graph.html"
+Require-Text "research-ecosystem/graph.html" "data-research-graph"
+Require-Text "data/research/graph.json" "pmid-42193877"
 Require-Text "research-ecosystem/literature/index.html" "data-reading-form"
 Require-Text "research-ecosystem/literature/index.html" "data-high-relevance"
 Require-Text "research-ecosystem/literature/index.html" "pmid-42193877.html"
