@@ -45,4 +45,4 @@ Run the repository validation locally:
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\validate-site.ps1
 ```
 
-GitHub Actions also runs this validation on pushes and pull requests to `main`.
+The GitHub Actions workflow is prepared under `.github/workflows/`. Publishing workflow files through the GitHub API requires a token with the `workflow` scope, so this can be enabled later when you explicitly want that permission.
