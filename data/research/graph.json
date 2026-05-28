@@ -1,0 +1,58 @@
+{
+  "nodes": [
+    {
+      "id": "pmid-42193877",
+      "type": "paper",
+      "title": "PMID 42193877 deep-reading card",
+      "description": "Systematic review starter card about oncolytic HSV therapy and glioblastoma immune microenvironment.",
+      "url": "research-ecosystem/literature/pmid-42193877.html",
+      "tags": ["glioblastoma", "oncolytic HSV", "immune microenvironment", "systematic review"]
+    },
+    {
+      "id": "glioblastoma-immune-microenvironment",
+      "type": "knowledge",
+      "title": "Glioblastoma immune microenvironment",
+      "description": "Draft mechanism node linking immune suppression, therapeutic remodeling, and follow-up questions.",
+      "url": "research-ecosystem/knowledge-map/glioblastoma-immune-microenvironment.html",
+      "tags": ["tumor immunology", "microenvironment", "mechanism map"]
+    },
+    {
+      "id": "gbm-immune-search-strategy",
+      "type": "search-strategy",
+      "title": "Glioblastoma immune microenvironment search strategy",
+      "description": "Reusable PubMed strategy for reviews and mechanistic papers.",
+      "url": "research-ecosystem/literature/search-strategy-glioblastoma-immune-microenvironment.html",
+      "tags": ["PubMed", "search", "review"]
+    },
+    {
+      "id": "repository-validation",
+      "type": "workflow",
+      "title": "Repository validation workflow",
+      "description": "Local validation script that checks pages, JSON data, and feature hooks.",
+      "url": "tools/validate-site.ps1",
+      "tags": ["GitHub ecosystem", "quality control", "validation"]
+    }
+  ],
+  "edges": [
+    {
+      "source": "pmid-42193877",
+      "target": "glioblastoma-immune-microenvironment",
+      "label": "supports mechanism node"
+    },
+    {
+      "source": "gbm-immune-search-strategy",
+      "target": "pmid-42193877",
+      "label": "can retrieve related paper"
+    },
+    {
+      "source": "repository-validation",
+      "target": "pmid-42193877",
+      "label": "guards required literature card"
+    },
+    {
+      "source": "repository-validation",
+      "target": "glioblastoma-immune-microenvironment",
+      "label": "guards required knowledge node"
+    }
+  ]
+}
