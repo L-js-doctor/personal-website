@@ -19,6 +19,109 @@
     });
   }
 
+  function setupResearchGraph() {
+    var root = document.querySelector("[data-research-graph]");
+    if (!root) {
+      return;
+    }
+
+    var board = root.querySelector("[data-graph-board]");
+    var details = root.querySelector("[data-graph-details]");
+    var search = root.querySelector("[data-graph-search]");
+    var type = root.querySelector("[data-graph-type]");
+    var graph = { nodes: [], edges: [] };
+
+    function visibleNodes() {
+      var query = search ? search.value.trim().toLowerCase() : "";
+      var selectedType = type ? type.value : "";
+
+      return graph.nodes.filter(function (node) {
+        var text = JSON.stringify(node).toLowerCase();
+        var typeOk = !selectedType || node.type === selectedType;
+        var queryOk = !query || text.indexOf(query) !== -1;
+        return typeOk && queryOk;
+      });
+    }
+
+    function renderBoard() {
+      var nodes = visibleNodes();
+      board.innerHTML = "";
+
+      if (!nodes.length) {
+        board.innerHTML = "<p class='empty-state'>No graph nodes match this filter.</p>";
+        return;
+      }
+
+      nodes.forEach(function (node) {
+        var card = document.createElement("button");
+        card.type = "button";
+        card.className = "graph-node";
+        card.innerHTML =
+          "<span>" + escapeHtml(node.type) + "</span>" +
+          "<strong>" + escapeHtml(node.title) + "</strong>" +
+          "<em>" + escapeHtml((node.tags || []).join(", ")) + "</em>";
+        card.addEventListener("click", function () {
+          renderDetails(node);
+        });
+        board.appendChild(card);
+      });
+    }
+
+    function renderDetails(node) {
+      var connections = graph.edges.filter(function (edge) {
+        return edge.source === node.id || edge.target === node.id;
+      });
+
+      var connectedHtml = connections.map(function (edge) {
+        var otherId = edge.source === node.id ? edge.target : edge.source;
+        var other = graph.nodes.find(function (candidate) {
+          return candidate.id === otherId;
+        });
+        return "<li><strong>" + escapeHtml(edge.label) + ":</strong> " +
+          escapeHtml(other ? other.title : otherId) + "</li>";
+      }).join("");
+
+      details.innerHTML =
+        "<article class='tool-card'>" +
+        "<p class='project-type'>" + escapeHtml(node.type) + "</p>" +
+        "<h2>" + escapeHtml(node.title) + "</h2>" +
+        "<p>" + escapeHtml(node.description || "") + "</p>" +
+        "<p><strong>Tags:</strong> " + escapeHtml((node.tags || []).join(", ")) + "</p>" +
+        "<p><a href='../" + escapeHtml(node.url) + "'>Open source page</a></p>" +
+        "<h3>Connections</h3>" +
+        (connectedHtml ? "<ul>" + connectedHtml + "</ul>" : "<p>No connections yet.</p>") +
+        "</article>";
+    }
+
+    if (search) {
+      search.addEventListener("input", renderBoard);
+    }
+    if (type) {
+      type.addEventListener("change", renderBoard);
+    }
+
+    fetch("../data/research/graph.json")
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error("graph data unavailable");
+        }
+        return response.json();
+      })
+      .then(function (data) {
+        graph = {
+          nodes: Array.isArray(data.nodes) ? data.nodes : [],
+          edges: Array.isArray(data.edges) ? data.edges : []
+        };
+        renderBoard();
+        if (graph.nodes[0]) {
+          renderDetails(graph.nodes[0]);
+        }
+      })
+      .catch(function () {
+        board.innerHTML = "<p class='empty-state'>Graph data could not be loaded.</p>";
+      });
+  }
+
   function readStore(key) {
     try {
       return JSON.parse(localStorage.getItem(key) || "[]");
@@ -622,6 +725,7 @@
   }
 
   setupFilter();
+  setupResearchGraph();
 
   setupApp({
     key: "literature",
