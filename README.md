@@ -34,6 +34,7 @@ The long-term goal is to turn this site into a research learning ecosystem:
 - local browser tools for adding, searching, deleting, and exporting research records
 - PubMed search/import for literature records via NCBI E-utilities
 - literature deep-reading briefs that can be handed to Codex for structured HTML notes
+- repository-backed literature cards, starting with PMID 42193877
 - GitHub Issues/Projects for planning and review
 - GitHub Actions or a static site generator when the site becomes large enough
 
