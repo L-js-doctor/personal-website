@@ -213,6 +213,9 @@
     var queryInput = root.querySelector("[data-pubmed-query]");
     var results = root.querySelector("[data-pubmed-results]");
     var preview = root.querySelector("[data-query-preview]");
+    var highRelevance = root.querySelector("[data-high-relevance]");
+    var lastPapers = [];
+    var lastCriteria = {};
 
     if (!form || !queryInput || !results) {
       return;
@@ -239,18 +242,52 @@
       }
 
       results.innerHTML = "<p class='empty-state'>Connecting to PubMed...</p>";
+      lastCriteria = getSearchCriteria(root);
 
       searchPubMed(query)
         .then(function (papers) {
-          renderPubMedResults(papers, results, storeKey, render);
+          lastPapers = papers.map(function (paper) {
+            paper.screening = scorePaper(paper, lastCriteria);
+            return paper;
+          }).sort(function (a, b) {
+            return b.screening.score - a.screening.score;
+          });
+          renderPubMedResults(filterPapers(lastPapers, highRelevance), results, storeKey, render);
         })
         .catch(function () {
           results.innerHTML = "<p class='empty-state'>PubMed is not reachable right now. Try again later or use a more specific English query.</p>";
         });
     });
 
+    if (highRelevance) {
+      highRelevance.addEventListener("change", function () {
+        renderPubMedResults(filterPapers(lastPapers, highRelevance), results, storeKey, render);
+      });
+    }
+
     setupDeepReading(root);
     updatePreview();
+  }
+
+  function getSearchCriteria(root) {
+    return {
+      population: getPubMedField(root, "population"),
+      intervention: getPubMedField(root, "intervention"),
+      outcome: getPubMedField(root, "outcome"),
+      extra: (root.querySelector("[data-pubmed-query]") || {}).value || "",
+      type: getPubMedField(root, "type"),
+      fromYear: getPubMedField(root, "fromYear"),
+      toYear: getPubMedField(root, "toYear")
+    };
+  }
+
+  function filterPapers(papers, highRelevance) {
+    if (!highRelevance || !highRelevance.checked) {
+      return papers;
+    }
+    return papers.filter(function (paper) {
+      return paper.screening && paper.screening.score >= 55;
+    });
   }
 
   function getPubMedField(root, name) {
@@ -350,10 +387,71 @@
             year: extractYear(item.pubdate || item.epubdate || ""),
             pubdate: item.pubdate || item.epubdate || "",
             authors: formatAuthors(item.authors || []),
+            pubtypes: Array.isArray(item.pubtype) ? item.pubtype.join(", ") : "",
             url: "https://pubmed.ncbi.nlm.nih.gov/" + uid + "/"
           };
         });
       });
+  }
+
+  function scorePaper(paper, criteria) {
+    var score = 20;
+    var reasons = [];
+    var title = (paper.title || "").toLowerCase();
+    var year = Number(paper.year || 0);
+    var pubtypes = (paper.pubtypes || "").toLowerCase();
+
+    [
+      ["population", criteria.population],
+      ["mechanism/intervention", criteria.intervention],
+      ["outcome/focus", criteria.outcome],
+      ["extra term", criteria.extra]
+    ].forEach(function (entry) {
+      var label = entry[0];
+      var value = entry[1];
+      if (!value) {
+        return;
+      }
+      var tokens = value.toLowerCase().split(/[,\s]+/).filter(function (token) {
+        return token.length >= 4 && !/^\d+$/.test(token);
+      });
+      var matched = tokens.filter(function (token) {
+        return title.indexOf(token) !== -1;
+      });
+      if (matched.length > 0) {
+        score += Math.min(25, matched.length * 10);
+        reasons.push("title matches " + label + ": " + matched.slice(0, 3).join(", "));
+      }
+    });
+
+    if (criteria.type && pubtypes.indexOf(criteria.type.toLowerCase()) !== -1) {
+      score += 18;
+      reasons.push("publication type matches " + criteria.type);
+    }
+
+    if (criteria.fromYear && year >= Number(criteria.fromYear)) {
+      score += 7;
+      reasons.push("within lower year limit");
+    }
+
+    if (criteria.toYear && year <= Number(criteria.toYear)) {
+      score += 7;
+      reasons.push("within upper year limit");
+    }
+
+    if (paper.journal) {
+      score += 5;
+      reasons.push("journal metadata available");
+    }
+
+    if (!reasons.length) {
+      reasons.push("PubMed relevance ranking only; inspect manually");
+    }
+
+    return {
+      score: Math.max(0, Math.min(100, score)),
+      reasons: reasons
+    };
   }
 
   function renderPubMedResults(papers, target, storeKey, render) {
@@ -370,8 +468,11 @@
       card.innerHTML =
         "<p class='project-type'>PMID " + escapeHtml(paper.pmid) + "</p>" +
         "<h3>" + escapeHtml(paper.title) + "</h3>" +
+        "<p><strong>Local relevance:</strong> " + escapeHtml((paper.screening && paper.screening.score) || 0) + "/100</p>" +
+        "<p><strong>Why:</strong> " + escapeHtml(((paper.screening && paper.screening.reasons) || []).join("; ")) + "</p>" +
         "<p><strong>Journal:</strong> " + escapeHtml(paper.journal || "Not provided") + "</p>" +
         "<p><strong>Date:</strong> " + escapeHtml(paper.pubdate || paper.year || "Not provided") + "</p>" +
+        "<p><strong>Type:</strong> " + escapeHtml(paper.pubtypes || "Not provided") + "</p>" +
         "<p><strong>Authors:</strong> " + escapeHtml(paper.authors || "Not provided") + "</p>" +
         "<p><a href='" + escapeHtml(paper.url) + "'>Open PubMed page</a></p>";
 
@@ -390,6 +491,9 @@
           next: paper.url,
           pmid: paper.pmid,
           authors: paper.authors,
+          pubtypes: paper.pubtypes,
+          relevanceScore: paper.screening && paper.screening.score,
+          relevanceReasons: paper.screening && paper.screening.reasons,
           source: "browser-local",
           createdAt: new Date().toISOString().slice(0, 10)
         });
