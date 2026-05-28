@@ -649,8 +649,58 @@ h1 {
 }
 
 .deep-reading,
-.manual-entry {
+.manual-entry,
+.featured-literature {
   margin: 28px 0;
+}
+
+.featured-literature {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px;
+  background: #183633;
+  color: #fff;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.featured-literature p,
+.featured-literature .section-kicker {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.featured-literature h2 {
+  margin: 0;
+}
+
+.literature-note ul,
+.literature-note ol {
+  color: var(--muted);
+}
+
+.metadata-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+}
+
+.metadata-grid div {
+  padding: 12px;
+  background: rgba(247, 248, 244, 0.82);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.metadata-grid dt {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.metadata-grid dd {
+  margin: 4px 0 0;
 }
 
 .reading-output {
@@ -807,8 +857,14 @@ h1 {
 
   .pubmed-search,
   .pubmed-builder,
-  .literature-workflow {
+  .literature-workflow,
+  .metadata-grid {
     grid-template-columns: 1fr;
+  }
+
+  .featured-literature {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .contact-actions {
