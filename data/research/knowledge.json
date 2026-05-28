@@ -1,5 +1,17 @@
 [
   {
+    "id": "glioblastoma-immune-microenvironment",
+    "system": "Neuro-oncology / tumor immunology",
+    "concept": "Glioblastoma immune microenvironment",
+    "mechanism": "Tumor context -> suppressive immune states -> impaired anti-tumor response -> therapeutic attempts to remodel immunity.",
+    "disease": "Glioblastoma; glioma",
+    "compare": "Compare oncolytic virus therapy, immune checkpoint blockade, and glioma vaccine strategies.",
+    "linkedLiterature": "research-ecosystem/literature/pmid-42193877.html",
+    "createdAt": "2026-05-28",
+    "source": "repository-seed"
+  },
+  {
+    "id": "example-knowledge-node",
     "system": "Pathology",
     "concept": "Example knowledge node",
     "mechanism": "Cause -> cellular response -> tissue change -> clinical meaning.",
