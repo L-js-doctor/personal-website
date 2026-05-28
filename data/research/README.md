@@ -11,6 +11,7 @@ The website can read these JSON files as seed data. Browser-entered records are 
 - `notebook.json` - dated research and study logs
 - `data-tools.json` - datasets, scripts, tables, and tool documentation
 - `publication.json` - outputs, abstracts, posters, reviews, and portfolio records
+- `graph.json` - cross-links among papers, knowledge nodes, search strategies, workflows, and outputs
 
 ## Workflow
 
