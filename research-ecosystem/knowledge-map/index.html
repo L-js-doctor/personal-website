@@ -12,7 +12,7 @@
       <a class="back-link" href="../">← 返回科研生态中心</a>
       <p class="section-kicker">Knowledge Map</p>
       <h1>知识图谱</h1>
-      <p class="page-lead">把医学概念、机制链条、关联疾病和易混点保存成可搜索节点。</p>
+      <p class="page-lead">把医学概念、机制链条、关联疾病和易混点保存成可搜索节点。仓库数据会自动显示，本地新增内容可导出后交给 Codex 提交进 GitHub。</p>
 
       <form class="tool-form" data-form>
         <label>系统/学科<input name="system" placeholder="病理学、免疫学、肿瘤学"></label>
@@ -26,6 +26,7 @@
       <div class="tool-bar">
         <input data-search type="search" placeholder="搜索概念、机制、疾病">
         <button class="button secondary" type="button" data-export>导出 JSON</button>
+        <label class="import-button">导入 JSON<input data-import type="file" accept="application/json,.json"></label>
         <button class="button secondary" type="button" data-clear>清空本地数据</button>
       </div>
 
