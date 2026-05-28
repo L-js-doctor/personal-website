@@ -37,6 +37,7 @@ The long-term goal is to turn this site into a research learning ecosystem:
 - repository-backed literature cards, starting with PMID 42193877
 - linked knowledge nodes and reusable PubMed search strategies
 - an interactive research graph backed by `data/research/graph.json`
+- a GitHub Lab page explaining Pages, repository data, Issues, validation, and Actions permission boundaries
 - GitHub Issues/Projects for planning and review
 - GitHub Actions or a static site generator when the site becomes large enough
 
