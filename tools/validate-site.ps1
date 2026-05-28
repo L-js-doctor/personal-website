@@ -48,6 +48,7 @@ $requiredFiles = @(
   "site.js",
   "research-ecosystem/index.html",
   "research-ecosystem/literature/index.html",
+  "research-ecosystem/literature/pmid-42193877.html",
   "research-ecosystem/knowledge-map/index.html",
   "research-ecosystem/notebook/index.html",
   "research-ecosystem/data-tools/index.html",
@@ -75,6 +76,8 @@ foreach ($file in $jsonFiles) {
 Require-Text "research-ecosystem/literature/index.html" "data-pubmed-form"
 Require-Text "research-ecosystem/literature/index.html" "data-reading-form"
 Require-Text "research-ecosystem/literature/index.html" "data-high-relevance"
+Require-Text "research-ecosystem/literature/index.html" "pmid-42193877.html"
+Require-Text "data/research/literature.json" "pmid-42193877"
 Require-Text "site.js" "eutils.ncbi.nlm.nih.gov"
 Require-Text "site.js" "buildPubMedQuery"
 Require-Text "site.js" "scorePaper"
