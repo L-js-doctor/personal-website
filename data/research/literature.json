@@ -1,10 +1,25 @@
 [
   {
+    "id": "pmid-42193877",
+    "pmid": "42193877",
+    "title": "Reprogramming the Immunosuppressive Microenvironment in Glioblastoma Through Oncolytic Herpes Simplex Virus Therapy: A Systematic Review.",
+    "year": "2026",
+    "journal": "Cells",
+    "pubdate": "2026 May 9",
+    "doi": "10.3390/cells15100867",
+    "question": "How can oncolytic herpes simplex virus therapy reprogram immune suppression in glioblastoma?",
+    "finding": "Repository-backed starter card created from PubMed metadata; full critical appraisal requires abstract/full-text extraction.",
+    "next": "pmid-42193877.html",
+    "source": "repository-seed",
+    "createdAt": "2026-05-28"
+  },
+  {
+    "id": "example-literature-note",
     "title": "Example literature note",
     "year": "2026",
     "question": "How should a paper be summarized for long-term review?",
     "finding": "Capture the research question, method, key evidence, limitation, and next reading step.",
-    "next": "Replace this example with a real paper note when the first article is reviewed.",
+    "next": "Replace this example with a real paper note when more articles are reviewed.",
     "createdAt": "2026-05-27",
     "source": "repository-seed"
   }
