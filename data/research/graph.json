@@ -31,6 +31,14 @@
       "description": "Local validation script that checks pages, JSON data, and feature hooks.",
       "url": "tools/validate-site.ps1",
       "tags": ["GitHub ecosystem", "quality control", "validation"]
+    },
+    {
+      "id": "github-lab",
+      "type": "workflow",
+      "title": "GitHub Website Ecosystem Lab",
+      "description": "Learning page that explains Pages, repository data, Issues, validation, and Actions permissions.",
+      "url": "research-ecosystem/github-lab.html",
+      "tags": ["GitHub ecosystem", "Pages", "Issues", "Actions", "learning"]
     }
   ],
   "edges": [
@@ -53,6 +61,16 @@
       "source": "repository-validation",
       "target": "glioblastoma-immune-microenvironment",
       "label": "guards required knowledge node"
+    },
+    {
+      "source": "github-lab",
+      "target": "repository-validation",
+      "label": "explains validation layer"
+    },
+    {
+      "source": "github-lab",
+      "target": "pmid-42193877",
+      "label": "shows repository-backed content workflow"
     }
   ]
 }
