@@ -1,0 +1,11 @@
+[
+  {
+    "title": "Research ecosystem website",
+    "status": "Prototype",
+    "audience": "Personal learning, future collaborators, and portfolio viewers.",
+    "message": "A research site should connect notes, evidence, tools, and outputs rather than only display static pages.",
+    "next": "Add real research notes and public-facing project summaries.",
+    "createdAt": "2026-05-27",
+    "source": "repository-seed"
+  }
+]
