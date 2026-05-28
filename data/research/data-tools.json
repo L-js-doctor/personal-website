@@ -1,0 +1,11 @@
+[
+  {
+    "kind": "Workflow",
+    "name": "JSON export and repository import",
+    "input": "Browser-local records exported from a research module.",
+    "output": "Versioned JSON files under data/research.",
+    "method": "Export JSON from the page, then ask Codex to import it into the repository and publish.",
+    "createdAt": "2026-05-27",
+    "source": "repository-seed"
+  }
+]
