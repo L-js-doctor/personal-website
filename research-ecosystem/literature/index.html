@@ -1,32 +1,118 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>文献库</title>
+    <title>Literature Intelligence Lab</title>
     <link rel="stylesheet" href="../../styles.css">
     <script defer src="../../site.js"></script>
   </head>
   <body class="subpage">
     <main class="page-shell" data-app="literature">
-      <a class="back-link" href="../">← 返回科研生态中心</a>
+      <a class="back-link" href="../">Back to Research Ecosystem</a>
       <p class="section-kicker">Literature</p>
-      <h1>文献库</h1>
-      <p class="page-lead">记录论文的研究问题、主要结论和下一步阅读方向。数据保存在当前浏览器，可导出 JSON 备份。</p>
+      <h1>Literature Intelligence Lab</h1>
+      <p class="page-lead">
+        A three-layer workflow: targeted PubMed retrieval, fast paper screening, and Codex-ready deep reading.
+        Repository seed data loads from GitHub; new records stay local until exported and committed.
+      </p>
 
-      <form class="tool-form" data-form>
-        <label>论文标题<input name="title" required placeholder="例如：Tumor microenvironment and immune escape"></label>
-        <label>年份<input name="year" placeholder="2026"></label>
-        <label>研究问题<textarea name="question" placeholder="这篇文章试图回答什么问题？"></textarea></label>
-        <label>主要结论<textarea name="finding" placeholder="最值得记住的发现是什么？"></textarea></label>
-        <label>下一步<textarea name="next" placeholder="下一篇要读什么，或要补什么背景？"></textarea></label>
-        <button class="button primary" type="submit">保存文献记录</button>
-      </form>
+      <section class="literature-workflow" aria-label="Literature workflow">
+        <a href="#targeted-search"><span>01</span><strong>Targeted Search</strong><em>PICO fields, mechanism terms, article type, year filters</em></a>
+        <a href="#screening"><span>02</span><strong>Fast Screening</strong><em>PMID, title, journal, date, author scan</em></a>
+        <a href="#deep-reading"><span>03</span><strong>Deep Reading</strong><em>Generate a Codex reading brief for selected papers</em></a>
+      </section>
+
+      <section class="pubmed-tool" id="targeted-search" aria-label="PubMed targeted search">
+        <div>
+          <p class="section-kicker">PubMed Connector</p>
+          <h2>Targeted PubMed Search</h2>
+          <p>
+            Build a focused PubMed query instead of typing one broad keyword. Use disease/population,
+            mechanism/intervention, outcome, article type, and year limits.
+          </p>
+        </div>
+        <form class="pubmed-builder" data-pubmed-form>
+          <label>Disease or population<input data-pubmed-field="population" placeholder="glioblastoma, gastric cancer, sepsis"></label>
+          <label>Mechanism or intervention<input data-pubmed-field="intervention" placeholder="immunotherapy, macrophage polarization"></label>
+          <label>Outcome or focus<input data-pubmed-field="outcome" placeholder="survival, resistance, microenvironment"></label>
+          <label>Extra keywords or PMID<input data-pubmed-query type="search" placeholder="optional extra terms"></label>
+          <label>Article type
+            <select data-pubmed-field="type">
+              <option value="">Any</option>
+              <option value="review">Review</option>
+              <option value="systematic review">Systematic review</option>
+              <option value="clinical trial">Clinical trial</option>
+              <option value="meta-analysis">Meta-analysis</option>
+              <option value="guideline">Guideline</option>
+            </select>
+          </label>
+          <label>From year<input data-pubmed-field="fromYear" inputmode="numeric" placeholder="2020"></label>
+          <label>To year<input data-pubmed-field="toYear" inputmode="numeric" placeholder="2026"></label>
+          <label>Search scope
+            <select data-pubmed-field="scope">
+              <option value="title abstract">Title/abstract weighted</option>
+              <option value="all fields">All fields</option>
+              <option value="mesh">MeSH oriented</option>
+            </select>
+          </label>
+          <div class="query-preview">
+            <span>Generated PubMed query</span>
+            <code data-query-preview>Waiting for input...</code>
+          </div>
+          <button class="button primary" type="submit">Search PubMed</button>
+        </form>
+        <div class="pubmed-results" id="screening" data-pubmed-results></div>
+      </section>
+
+      <section class="deep-reading" id="deep-reading" data-deep-reading>
+        <div>
+          <p class="section-kicker">Deep Reading</p>
+          <h2>Codex Reading Brief Generator</h2>
+          <p>
+            Paste a PMID, DOI, title, abstract, or selected paper details. The page generates a structured brief
+            that you can give to Codex for deep reading and HTML note creation.
+          </p>
+        </div>
+        <form class="tool-form" data-reading-form>
+          <label>PMID or DOI<input name="id" placeholder="42193877 or 10.xxxx/xxxxx"></label>
+          <label>Paper title<input name="title" placeholder="Paste the title"></label>
+          <label>Abstract or key details<textarea name="abstract" placeholder="Paste abstract or key PubMed information"></textarea></label>
+          <label>Your reading goal<textarea name="goal" placeholder="Example: identify how this review informs glioblastoma immune microenvironment research"></textarea></label>
+          <label>Output mode
+            <select name="mode">
+              <option value="exam">Study/exam deep reading</option>
+              <option value="research">Research-question deep reading</option>
+              <option value="journal-club">Journal club briefing</option>
+              <option value="methods">Methods dissection</option>
+            </select>
+          </label>
+          <button class="button primary" type="submit">Generate Codex brief</button>
+        </form>
+        <textarea class="reading-output" data-reading-output readonly placeholder="The Codex deep-reading brief will appear here."></textarea>
+        <button class="button secondary" type="button" data-copy-reading>Copy brief</button>
+      </section>
+
+      <section class="manual-entry">
+        <div>
+          <p class="section-kicker">Manual Record</p>
+          <h2>Save a literature record</h2>
+        </div>
+        <form class="tool-form" data-form>
+          <label>Paper title<input name="title" required placeholder="Tumor microenvironment and immune escape"></label>
+          <label>Year<input name="year" placeholder="2026"></label>
+          <label>Research question<textarea name="question" placeholder="What question does this paper answer?"></textarea></label>
+          <label>Main finding<textarea name="finding" placeholder="What is the most important finding?"></textarea></label>
+          <label>Next step<textarea name="next" placeholder="What should be read or done next?"></textarea></label>
+          <button class="button primary" type="submit">Save literature record</button>
+        </form>
+      </section>
 
       <div class="tool-bar">
-        <input data-search type="search" placeholder="搜索标题、问题、结论">
-        <button class="button secondary" type="button" data-export>导出 JSON</button>
-        <button class="button secondary" type="button" data-clear>清空本地数据</button>
+        <input data-search type="search" placeholder="Search saved literature records">
+        <button class="button secondary" type="button" data-export>Export JSON</button>
+        <label class="import-button">Import JSON<input data-import type="file" accept="application/json,.json"></label>
+        <button class="button secondary" type="button" data-clear>Clear local data</button>
       </div>
 
       <section class="tool-list" data-list></section>
