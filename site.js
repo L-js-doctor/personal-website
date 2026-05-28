@@ -41,12 +41,19 @@
     var list = root.querySelector("[data-list]");
     var search = root.querySelector("[data-search]");
     var exportButton = root.querySelector("[data-export]");
+    var importInput = root.querySelector("[data-import]");
     var clearButton = root.querySelector("[data-clear]");
     var storeKey = "ljsdoctor:" + config.key;
+    var seedItems = [];
 
     function getFilteredItems() {
       var query = search ? search.value.trim().toLowerCase() : "";
-      return readStore(storeKey).filter(function (item) {
+      var localItems = readStore(storeKey).map(function (item) {
+        item.source = item.source || "browser-local";
+        return item;
+      });
+
+      return seedItems.concat(localItems).filter(function (item) {
         return query.length === 0 || JSON.stringify(item).toLowerCase().indexOf(query) !== -1;
       });
     }
@@ -63,25 +70,51 @@
         return;
       }
 
-      items.forEach(function (item, index) {
+      items.forEach(function (item) {
         var card = document.createElement("article");
         card.className = "tool-card";
         card.innerHTML = config.render(item);
 
-        var remove = document.createElement("button");
-        remove.type = "button";
-        remove.className = "text-button";
-        remove.textContent = "删除";
-        remove.addEventListener("click", function () {
-          var all = readStore(storeKey);
-          all.splice(index, 1);
-          writeStore(storeKey, all);
-          render();
-        });
+        if (item.source !== "repository-seed") {
+          var remove = document.createElement("button");
+          remove.type = "button";
+          remove.className = "text-button";
+          remove.textContent = "Delete local record";
+          remove.addEventListener("click", function () {
+            var next = readStore(storeKey).filter(function (candidate) {
+              return candidate.id !== item.id;
+            });
+            writeStore(storeKey, next);
+            render();
+          });
+          card.appendChild(remove);
+        }
 
-        card.appendChild(remove);
         list.appendChild(card);
       });
+    }
+
+    function loadSeedData() {
+      if (!config.seed) {
+        render();
+        return;
+      }
+
+      fetch(config.seed)
+        .then(function (response) {
+          if (!response.ok) {
+            return [];
+          }
+          return response.json();
+        })
+        .then(function (items) {
+          seedItems = Array.isArray(items) ? items : [];
+          render();
+        })
+        .catch(function () {
+          seedItems = [];
+          render();
+        });
     }
 
     if (form) {
@@ -96,6 +129,8 @@
           data[field.name] = field.value.trim();
         });
 
+        data.id = "local-" + Date.now() + "-" + Math.random().toString(16).slice(2);
+        data.source = "browser-local";
         data.createdAt = new Date().toISOString().slice(0, 10);
 
         var items = readStore(storeKey);
@@ -122,79 +157,356 @@
       });
     }
 
+    if (importInput) {
+      importInput.addEventListener("change", function () {
+        var file = importInput.files && importInput.files[0];
+        if (!file) {
+          return;
+        }
+
+        var reader = new FileReader();
+        reader.addEventListener("load", function () {
+          try {
+            var imported = JSON.parse(reader.result);
+            if (!Array.isArray(imported)) {
+              window.alert("Import file must be a JSON array.");
+              return;
+            }
+
+            var existing = readStore(storeKey);
+            imported.forEach(function (item) {
+              item.source = "browser-local";
+              item.id = item.id || "imported-" + Date.now() + "-" + Math.random().toString(16).slice(2);
+              item.createdAt = item.createdAt || new Date().toISOString().slice(0, 10);
+              existing.unshift(item);
+            });
+
+            writeStore(storeKey, existing);
+            importInput.value = "";
+            render();
+          } catch (error) {
+            window.alert("Could not read this JSON file.");
+          }
+        });
+        reader.readAsText(file);
+      });
+    }
+
     if (clearButton) {
       clearButton.addEventListener("click", function () {
-        if (window.confirm("确认清空这个板块保存在当前浏览器里的数据？")) {
+        if (window.confirm("Clear local records for this module?")) {
           writeStore(storeKey, []);
           render();
         }
       });
     }
 
-    render();
+    if (config.key === "literature") {
+      setupPubMed(root, storeKey, render);
+    }
+
+    loadSeedData();
   }
 
-  setupFilter();
+  function setupPubMed(root, storeKey, render) {
+    var form = root.querySelector("[data-pubmed-form]");
+    var queryInput = root.querySelector("[data-pubmed-query]");
+    var results = root.querySelector("[data-pubmed-results]");
+    var preview = root.querySelector("[data-query-preview]");
 
-  setupApp({
-    key: "literature",
-    empty: "还没有文献记录。添加第一篇论文后，它会保存在当前浏览器里。",
-    render: function (item) {
-      return "<p class='project-type'>" + escapeHtml(item.year || "Paper") + "</p>" +
-        "<h3>" + escapeHtml(item.title || "未命名文献") + "</h3>" +
-        "<p><strong>研究问题：</strong>" + escapeHtml(item.question || "未填写") + "</p>" +
-        "<p><strong>主要结论：</strong>" + escapeHtml(item.finding || "未填写") + "</p>" +
-        "<p><strong>下一步：</strong>" + escapeHtml(item.next || "未填写") + "</p>";
+    if (!form || !queryInput || !results) {
+      return;
     }
-  });
 
-  setupApp({
-    key: "knowledge",
-    empty: "还没有知识节点。添加概念后，可以用关键词搜索。",
-    render: function (item) {
-      return "<p class='project-type'>" + escapeHtml(item.system || "Concept") + "</p>" +
-        "<h3>" + escapeHtml(item.concept || "未命名概念") + "</h3>" +
-        "<p><strong>机制链条：</strong>" + escapeHtml(item.mechanism || "未填写") + "</p>" +
-        "<p><strong>关联疾病：</strong>" + escapeHtml(item.disease || "未填写") + "</p>" +
-        "<p><strong>易混点：</strong>" + escapeHtml(item.compare || "未填写") + "</p>";
+    function updatePreview() {
+      if (preview) {
+        preview.textContent = buildPubMedQuery(root) || "Waiting for input...";
+      }
     }
-  });
 
-  setupApp({
-    key: "notebook",
-    empty: "还没有研究日志。添加今天的学习记录，之后可以搜索回看。",
-    render: function (item) {
-      return "<p class='project-type'>" + escapeHtml(item.date || item.createdAt || "Log") + "</p>" +
-        "<h3>" + escapeHtml(item.topic || "未命名日志") + "</h3>" +
-        "<p><strong>今天完成：</strong>" + escapeHtml(item.done || "未填写") + "</p>" +
-        "<p><strong>问题：</strong>" + escapeHtml(item.problem || "未填写") + "</p>" +
-        "<p><strong>下一步：</strong>" + escapeHtml(item.next || "未填写") + "</p>";
-    }
-  });
+    Array.prototype.slice.call(root.querySelectorAll("[data-pubmed-field], [data-pubmed-query]")).forEach(function (field) {
+      field.addEventListener("input", updatePreview);
+      field.addEventListener("change", updatePreview);
+    });
 
-  setupApp({
-    key: "dataTools",
-    empty: "还没有工具记录。添加一个数据表、脚本或分析工具。",
-    render: function (item) {
-      return "<p class='project-type'>" + escapeHtml(item.kind || "Tool") + "</p>" +
-        "<h3>" + escapeHtml(item.name || "未命名工具") + "</h3>" +
-        "<p><strong>输入：</strong>" + escapeHtml(item.input || "未填写") + "</p>" +
-        "<p><strong>输出：</strong>" + escapeHtml(item.output || "未填写") + "</p>" +
-        "<p><strong>使用方法：</strong>" + escapeHtml(item.method || "未填写") + "</p>";
-    }
-  });
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      var query = buildPubMedQuery(root);
 
-  setupApp({
-    key: "publication",
-    empty: "还没有成果记录。添加一个摘要、海报、综述或项目展示。",
-    render: function (item) {
-      return "<p class='project-type'>" + escapeHtml(item.status || "Draft") + "</p>" +
-        "<h3>" + escapeHtml(item.title || "未命名成果") + "</h3>" +
-        "<p><strong>目标读者：</strong>" + escapeHtml(item.audience || "未填写") + "</p>" +
-        "<p><strong>核心信息：</strong>" + escapeHtml(item.message || "未填写") + "</p>" +
-        "<p><strong>下一步：</strong>" + escapeHtml(item.next || "未填写") + "</p>";
+      if (!query) {
+        results.innerHTML = "<p class='empty-state'>Add at least one search term.</p>";
+        return;
+      }
+
+      results.innerHTML = "<p class='empty-state'>Connecting to PubMed...</p>";
+
+      searchPubMed(query)
+        .then(function (papers) {
+          renderPubMedResults(papers, results, storeKey, render);
+        })
+        .catch(function () {
+          results.innerHTML = "<p class='empty-state'>PubMed is not reachable right now. Try again later or use a more specific English query.</p>";
+        });
+    });
+
+    setupDeepReading(root);
+    updatePreview();
+  }
+
+  function getPubMedField(root, name) {
+    var field = root.querySelector("[data-pubmed-field='" + name + "']");
+    return field ? field.value.trim() : "";
+  }
+
+  function buildPubMedQuery(root) {
+    var population = getPubMedField(root, "population");
+    var intervention = getPubMedField(root, "intervention");
+    var outcome = getPubMedField(root, "outcome");
+    var type = getPubMedField(root, "type");
+    var fromYear = getPubMedField(root, "fromYear");
+    var toYear = getPubMedField(root, "toYear");
+    var scope = getPubMedField(root, "scope") || "title abstract";
+    var extraField = root.querySelector("[data-pubmed-query]");
+    var extra = extraField ? extraField.value.trim() : "";
+    var parts = [];
+
+    function scoped(term) {
+      if (!term) {
+        return "";
+      }
+      if (/^\d{6,}$/.test(term)) {
+        return term + "[PMID]";
+      }
+      if (scope === "mesh") {
+        return "(" + term + "[MeSH Terms] OR " + term + "[Title/Abstract])";
+      }
+      if (scope === "all fields") {
+        return term + "[All Fields]";
+      }
+      return term + "[Title/Abstract]";
     }
-  });
+
+    [population, intervention, outcome, extra].forEach(function (term) {
+      var built = scoped(term);
+      if (built) {
+        parts.push(built);
+      }
+    });
+
+    if (type) {
+      parts.push(type + "[Publication Type]");
+    }
+
+    if (fromYear || toYear) {
+      parts.push("(" + (fromYear || "1900") + ":" + (toYear || "3000") + "[Date - Publication])");
+    }
+
+    return parts.join(" AND ");
+  }
+
+  function searchPubMed(query) {
+    var base = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/";
+    var common = "&tool=ljsdoctor_research_site&email=288302595%2BL-js-doctor%40users.noreply.github.com";
+    var searchUrl = base + "esearch.fcgi?db=pubmed&retmode=json&retmax=8&sort=relevance&term=" + encodeURIComponent(query) + common;
+
+    return fetch(searchUrl)
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error("PubMed search failed");
+        }
+        return response.json();
+      })
+      .then(function (searchData) {
+        var ids = searchData.esearchresult && searchData.esearchresult.idlist;
+        if (!ids || ids.length === 0) {
+          return [];
+        }
+
+        var summaryUrl = base + "esummary.fcgi?db=pubmed&retmode=json&id=" + ids.join(",") + common;
+        return fetch(summaryUrl);
+      })
+      .then(function (response) {
+        if (Array.isArray(response)) {
+          return response;
+        }
+        if (!response.ok) {
+          throw new Error("PubMed summary failed");
+        }
+        return response.json();
+      })
+      .then(function (summaryData) {
+        if (Array.isArray(summaryData)) {
+          return summaryData;
+        }
+
+        var result = summaryData.result || {};
+        var uids = result.uids || [];
+        return uids.map(function (uid) {
+          var item = result[uid] || {};
+          return {
+            pmid: uid,
+            title: item.title || "Untitled PubMed record",
+            journal: item.fulljournalname || item.source || "",
+            year: extractYear(item.pubdate || item.epubdate || ""),
+            pubdate: item.pubdate || item.epubdate || "",
+            authors: formatAuthors(item.authors || []),
+            url: "https://pubmed.ncbi.nlm.nih.gov/" + uid + "/"
+          };
+        });
+      });
+  }
+
+  function renderPubMedResults(papers, target, storeKey, render) {
+    target.innerHTML = "";
+
+    if (!papers.length) {
+      target.innerHTML = "<p class='empty-state'>No PubMed results found. Try a more specific English query.</p>";
+      return;
+    }
+
+    papers.forEach(function (paper) {
+      var card = document.createElement("article");
+      card.className = "tool-card";
+      card.innerHTML =
+        "<p class='project-type'>PMID " + escapeHtml(paper.pmid) + "</p>" +
+        "<h3>" + escapeHtml(paper.title) + "</h3>" +
+        "<p><strong>Journal:</strong> " + escapeHtml(paper.journal || "Not provided") + "</p>" +
+        "<p><strong>Date:</strong> " + escapeHtml(paper.pubdate || paper.year || "Not provided") + "</p>" +
+        "<p><strong>Authors:</strong> " + escapeHtml(paper.authors || "Not provided") + "</p>" +
+        "<p><a href='" + escapeHtml(paper.url) + "'>Open PubMed page</a></p>";
+
+      var save = document.createElement("button");
+      save.type = "button";
+      save.className = "button secondary";
+      save.textContent = "Save to literature library";
+      save.addEventListener("click", function () {
+        var items = readStore(storeKey);
+        items.unshift({
+          id: "pubmed-" + paper.pmid + "-" + Date.now(),
+          title: paper.title,
+          year: paper.year,
+          question: "PubMed imported record. Add the research question after reading.",
+          finding: paper.journal + (paper.pubdate ? " - " + paper.pubdate : ""),
+          next: paper.url,
+          pmid: paper.pmid,
+          authors: paper.authors,
+          source: "browser-local",
+          createdAt: new Date().toISOString().slice(0, 10)
+        });
+        writeStore(storeKey, items);
+        render();
+        save.textContent = "Saved";
+        save.disabled = true;
+      });
+
+      card.appendChild(save);
+
+      var brief = document.createElement("button");
+      brief.type = "button";
+      brief.className = "button secondary";
+      brief.textContent = "Use for deep reading";
+      brief.addEventListener("click", function () {
+        fillDeepReadingForm(paper);
+        var targetSection = document.querySelector("[data-deep-reading]");
+        if (targetSection) {
+          targetSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+
+      card.appendChild(brief);
+      target.appendChild(card);
+    });
+  }
+
+  function fillDeepReadingForm(paper) {
+    var form = document.querySelector("[data-reading-form]");
+    if (!form) {
+      return;
+    }
+    if (form.elements.id) {
+      form.elements.id.value = paper.pmid || "";
+    }
+    if (form.elements.title) {
+      form.elements.title.value = paper.title || "";
+    }
+    if (form.elements.abstract) {
+      form.elements.abstract.value = [
+        paper.journal ? "Journal: " + paper.journal : "",
+        paper.pubdate ? "Date: " + paper.pubdate : "",
+        paper.authors ? "Authors: " + paper.authors : "",
+        paper.url ? "URL: " + paper.url : ""
+      ].filter(Boolean).join("\n");
+    }
+  }
+
+  function setupDeepReading(root) {
+    var form = root.querySelector("[data-reading-form]");
+    var output = root.querySelector("[data-reading-output]");
+    var copyButton = root.querySelector("[data-copy-reading]");
+
+    if (!form || !output) {
+      return;
+    }
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      var fields = {};
+      Array.prototype.slice.call(form.elements).forEach(function (field) {
+        if (field.name) {
+          fields[field.name] = field.value.trim();
+        }
+      });
+      output.value = buildReadingBrief(fields);
+    });
+
+    if (copyButton) {
+      copyButton.addEventListener("click", function () {
+        output.select();
+        document.execCommand("copy");
+        copyButton.textContent = "Copied";
+        window.setTimeout(function () {
+          copyButton.textContent = "Copy brief";
+        }, 1200);
+      });
+    }
+  }
+
+  function buildReadingBrief(fields) {
+    return [
+      "Please perform a deep reading of this paper and create an HTML-ready literature note.",
+      "",
+      "Reading mode: " + (fields.mode || "research"),
+      "Identifier: " + (fields.id || "not provided"),
+      "Title: " + (fields.title || "not provided"),
+      "",
+      "Abstract or key details:",
+      fields.abstract || "not provided",
+      "",
+      "My reading goal:",
+      fields.goal || "not provided",
+      "",
+      "Required output:",
+      "1. One-paragraph high-signal summary.",
+      "2. Research question and why it matters.",
+      "3. Study type, methods, population/model, and evidence level.",
+      "4. Main findings with mechanisms and limitations.",
+      "5. Important terms and confusing comparisons.",
+      "6. How this connects to pathology/medicine learning.",
+      "7. Follow-up papers or search terms.",
+      "8. A compact HTML note that can be saved into the research ecosystem."
+    ].join("\n");
+  }
+
+  function extractYear(value) {
+    var match = String(value).match(/\d{4}/);
+    return match ? match[0] : "";
+  }
+
+  function formatAuthors(authors) {
+    return authors.slice(0, 4).map(function (author) {
+      return author.name;
+    }).filter(Boolean).join(", ");
+  }
 
   function escapeHtml(value) {
     return String(value)
@@ -203,5 +515,80 @@
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#039;");
+  }
+
+  setupFilter();
+
+  setupApp({
+    key: "literature",
+    seed: "../../data/research/literature.json",
+    empty: "No literature records yet. Add a paper or import PubMed results.",
+    render: function (item) {
+      return "<p class='project-type'>" + escapeHtml(item.year || item.pmid || "Paper") + "</p>" +
+        "<h3>" + escapeHtml(item.title || "Untitled literature record") + "</h3>" +
+        "<p><strong>Research question:</strong> " + escapeHtml(item.question || "Not filled") + "</p>" +
+        "<p><strong>Main finding:</strong> " + escapeHtml(item.finding || "Not filled") + "</p>" +
+        "<p><strong>Next step:</strong> " + linkIfUrl(item.next || "Not filled") + "</p>";
+    }
+  });
+
+  setupApp({
+    key: "knowledge",
+    seed: "../../data/research/knowledge.json",
+    empty: "No knowledge nodes yet. Add a concept and search it later.",
+    render: function (item) {
+      return "<p class='project-type'>" + escapeHtml(item.system || "Concept") + "</p>" +
+        "<h3>" + escapeHtml(item.concept || "Untitled concept") + "</h3>" +
+        "<p><strong>Mechanism:</strong> " + escapeHtml(item.mechanism || "Not filled") + "</p>" +
+        "<p><strong>Related disease:</strong> " + escapeHtml(item.disease || "Not filled") + "</p>" +
+        "<p><strong>Comparison:</strong> " + escapeHtml(item.compare || "Not filled") + "</p>";
+    }
+  });
+
+  setupApp({
+    key: "notebook",
+    seed: "../../data/research/notebook.json",
+    empty: "No notebook entries yet. Add today's learning log.",
+    render: function (item) {
+      return "<p class='project-type'>" + escapeHtml(item.date || item.createdAt || "Log") + "</p>" +
+        "<h3>" + escapeHtml(item.topic || "Untitled log") + "</h3>" +
+        "<p><strong>Done:</strong> " + escapeHtml(item.done || "Not filled") + "</p>" +
+        "<p><strong>Problem:</strong> " + escapeHtml(item.problem || "Not filled") + "</p>" +
+        "<p><strong>Next step:</strong> " + escapeHtml(item.next || "Not filled") + "</p>";
+    }
+  });
+
+  setupApp({
+    key: "dataTools",
+    seed: "../../data/research/data-tools.json",
+    empty: "No data or tool records yet. Add a table, script, or analysis tool.",
+    render: function (item) {
+      return "<p class='project-type'>" + escapeHtml(item.kind || "Tool") + "</p>" +
+        "<h3>" + escapeHtml(item.name || "Untitled tool") + "</h3>" +
+        "<p><strong>Input:</strong> " + escapeHtml(item.input || "Not filled") + "</p>" +
+        "<p><strong>Output:</strong> " + escapeHtml(item.output || "Not filled") + "</p>" +
+        "<p><strong>Method:</strong> " + escapeHtml(item.method || "Not filled") + "</p>";
+    }
+  });
+
+  setupApp({
+    key: "publication",
+    seed: "../../data/research/publication.json",
+    empty: "No publication records yet. Add an abstract, poster, review, or project page.",
+    render: function (item) {
+      return "<p class='project-type'>" + escapeHtml(item.status || "Draft") + "</p>" +
+        "<h3>" + escapeHtml(item.title || "Untitled output") + "</h3>" +
+        "<p><strong>Audience:</strong> " + escapeHtml(item.audience || "Not filled") + "</p>" +
+        "<p><strong>Core message:</strong> " + escapeHtml(item.message || "Not filled") + "</p>" +
+        "<p><strong>Next step:</strong> " + escapeHtml(item.next || "Not filled") + "</p>";
+    }
+  });
+
+  function linkIfUrl(value) {
+    var text = String(value);
+    if (/^https?:\/\//.test(text)) {
+      return "<a href='" + escapeHtml(text) + "'>" + escapeHtml(text) + "</a>";
+    }
+    return escapeHtml(text);
   }
 })();
