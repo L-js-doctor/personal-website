@@ -36,6 +36,7 @@ The long-term goal is to turn this site into a research learning ecosystem:
 - literature deep-reading briefs that can be handed to Codex for structured HTML notes
 - repository-backed literature cards, starting with PMID 42193877
 - linked knowledge nodes and reusable PubMed search strategies
+- an interactive research graph backed by `data/research/graph.json`
 - GitHub Issues/Projects for planning and review
 - GitHub Actions or a static site generator when the site becomes large enough
 
