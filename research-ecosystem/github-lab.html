@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GitHub Lab | L-js-doctor</title>
+    <link rel="stylesheet" href="../styles.css">
+  </head>
+  <body class="subpage">
+    <header class="site-header">
+      <a class="brand" href="../index.html"><span class="brand-mark">L</span><span>L-js-doctor</span></a>
+      <nav class="nav">
+        <a href="./">Research Hub</a>
+        <a href="graph.html">Graph</a>
+        <a href="roadmap.html">Roadmap</a>
+      </nav>
+    </header>
+
+    <main class="page-shell note-page">
+      <p class="section-kicker">GitHub Lab</p>
+      <h1>GitHub Website Ecosystem Lab</h1>
+      <p class="page-lead">
+        This page explains how the research website is using GitHub as an ecosystem, not just as file storage.
+        Each layer is tied to a real file or workflow in this repository.
+      </p>
+
+      <section class="timeline">
+        <article>
+          <span>Layer 1</span>
+          <h2>GitHub Pages</h2>
+          <p>
+            GitHub Pages publishes the static website from the repository. The public site is the reading surface;
+            the repository is the editable source of truth.
+          </p>
+          <p><strong>Current evidence:</strong> `personal-website` publishes to `https://l-js-doctor.github.io/personal-website/`.</p>
+        </article>
+        <article>
+          <span>Layer 2</span>
+          <h2>Repository-backed data</h2>
+          <p>
+            Research records live as JSON under `data/research/`. The website reads these files, and Codex can update
+            them through commits. This keeps research data versioned and reviewable.
+          </p>
+          <p><strong>Current evidence:</strong> `literature.json`, `knowledge.json`, and `graph.json` power the research pages.</p>
+        </article>
+        <article>
+          <span>Layer 3</span>
+          <h2>Issues as research requests</h2>
+          <p>
+            GitHub Issues can become structured requests: literature deep reading, data import, or future feature work.
+            This turns a vague task into a trackable research workflow.
+          </p>
+          <p><strong>Current evidence:</strong> `.github/ISSUE_TEMPLATE/literature-deep-reading.md` and `research-data-import.md`.</p>
+        </article>
+        <article>
+          <span>Layer 4</span>
+          <h2>Validation and quality control</h2>
+          <p>
+            A research website should not silently break. The local validator checks important pages, JSON files,
+            PubMed hooks, graph hooks, and required links.
+          </p>
+          <p><strong>Current evidence:</strong> `tools/validate-site.ps1` runs before publishing.</p>
+        </article>
+        <article>
+          <span>Layer 5</span>
+          <h2>Actions boundary</h2>
+          <p>
+            GitHub Actions can eventually run validation automatically, but publishing workflow files requires the
+            `workflow` token scope. We intentionally do not enable that permission until you choose it.
+          </p>
+          <p><strong>Current evidence:</strong> the workflow is prepared locally, and the README documents the permission boundary.</p>
+        </article>
+      </section>
+
+      <section class="note-block">
+        <h2>How you will use this with Codex</h2>
+        <ol>
+          <li>You ask for a paper search, deep reading, knowledge map, or project page.</li>
+          <li>Codex creates or updates HTML and JSON files in the repository.</li>
+          <li>The validator checks that core links and data still exist.</li>
+          <li>Codex publishes the static site through GitHub Pages.</li>
+          <li>The graph page shows how the new content connects to the existing ecosystem.</li>
+        </ol>
+      </section>
+    </main>
+  </body>
+</html>
