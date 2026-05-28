@@ -12,7 +12,7 @@
       <a class="back-link" href="../">← 返回科研生态中心</a>
       <p class="section-kicker">Notebook</p>
       <h1>研究日志</h1>
-      <p class="page-lead">记录每天的学习、疑问和下一步行动，让研究过程可回看。</p>
+      <p class="page-lead">记录每天的学习、疑问和下一步行动，让研究过程可回看。临时日志先保存在浏览器，稳定后可以导出并纳入 GitHub 仓库。</p>
 
       <form class="tool-form" data-form>
         <label>日期<input name="date" type="date"></label>
@@ -26,6 +26,7 @@
       <div class="tool-bar">
         <input data-search type="search" placeholder="搜索日期、主题、问题">
         <button class="button secondary" type="button" data-export>导出 JSON</button>
+        <label class="import-button">导入 JSON<input data-import type="file" accept="application/json,.json"></label>
         <button class="button secondary" type="button" data-clear>清空本地数据</button>
       </div>
 
