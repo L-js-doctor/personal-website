@@ -843,6 +843,111 @@ h1 {
   margin: 0;
 }
 
+.queue-dashboard,
+.issue-controls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 28px 0;
+}
+
+.queue-dashboard article,
+.issue-card {
+  padding: 20px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 10px 34px rgba(22, 34, 31, 0.06);
+}
+
+.queue-dashboard span {
+  display: block;
+  margin-bottom: 14px;
+  color: var(--teal);
+  font-size: 2.2rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.queue-dashboard h2,
+.issue-card h2 {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+}
+
+.queue-dashboard p,
+.issue-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.issue-controls {
+  grid-template-columns: minmax(220px, 1fr) 220px;
+}
+
+.issue-controls label,
+.issue-draft-form label {
+  display: grid;
+  gap: 7px;
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.issue-controls input,
+.issue-controls select,
+.issue-draft-form input,
+.issue-draft-form select,
+.issue-draft-form textarea {
+  min-height: 46px;
+  padding: 10px 12px;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: inherit;
+  font-weight: 500;
+}
+
+.issue-draft-form {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.issue-draft-form .wide-field {
+  grid-column: 1 / -1;
+}
+
+.issue-list {
+  display: grid;
+  gap: 14px;
+  margin: 24px 0;
+}
+
+.issue-meta,
+.label-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.issue-meta span,
+.label-row span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 4px 8px;
+  color: #183633;
+  background: #d9efe8;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.issue-meta span:last-child {
+  color: var(--muted);
+  background: rgba(247, 248, 244, 0.9);
+}
+
 .import-button {
   display: inline-flex;
   align-items: center;
@@ -999,7 +1104,10 @@ h1 {
   .graph-board,
   .desk-grid,
   .desk-output-grid,
-  .desk-form {
+  .desk-form,
+  .queue-dashboard,
+  .issue-controls,
+  .issue-draft-form {
     grid-template-columns: 1fr;
   }
 
