@@ -948,6 +948,132 @@ h1 {
   background: rgba(247, 248, 244, 0.9);
 }
 
+.project-controls {
+  margin: 28px 0;
+}
+
+.project-controls label {
+  display: grid;
+  gap: 8px;
+  max-width: 640px;
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.project-controls input {
+  min-height: 46px;
+  padding: 10px 12px;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: inherit;
+  font-weight: 500;
+}
+
+.project-dashboard-list {
+  display: grid;
+  gap: 18px;
+}
+
+.project-dashboard-card {
+  padding: 24px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 10px 34px rgba(22, 34, 31, 0.06);
+}
+
+.project-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.project-card-head h2 {
+  margin: 0;
+  font-size: clamp(1.7rem, 3vw, 2.5rem);
+  line-height: 1.08;
+}
+
+.progress-track {
+  height: 12px;
+  margin: 22px 0 8px;
+  overflow: hidden;
+  background: #edf6f3;
+  border-radius: 999px;
+}
+
+.progress-track span {
+  display: block;
+  height: 100%;
+  background: var(--teal);
+  border-radius: inherit;
+}
+
+.progress-label,
+.project-labels {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.project-brief {
+  margin-top: 20px;
+}
+
+.project-brief h3,
+.project-link-grid h3 {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+}
+
+.project-brief p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.project-link-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.project-link-grid section {
+  padding: 16px;
+  background: rgba(247, 248, 244, 0.76);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.project-link-grid ul,
+.linked-record-list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+}
+
+.linked-record-list li {
+  margin: 8px 0;
+}
+
+.linked-record-list a {
+  color: var(--teal);
+  font-weight: 900;
+}
+
+.linked-record-list span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.project-labels {
+  margin-top: 18px;
+}
+
 .import-button {
   display: inline-flex;
   align-items: center;
@@ -1107,12 +1233,18 @@ h1 {
   .desk-form,
   .queue-dashboard,
   .issue-controls,
-  .issue-draft-form {
+  .issue-draft-form,
+  .project-card-head,
+  .project-link-grid {
     grid-template-columns: 1fr;
   }
 
   .contact-actions {
     justify-content: flex-start;
+  }
+
+  .project-card-head {
+    flex-direction: column;
   }
 
   .site-footer {
