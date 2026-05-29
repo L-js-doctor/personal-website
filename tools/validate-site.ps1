@@ -51,6 +51,7 @@ $requiredFiles = @(
   "research-ecosystem/graph.html",
   "research-ecosystem/github-lab.html",
   "research-ecosystem/literature/index.html",
+  "research-ecosystem/literature/reading-desk.html",
   "research-ecosystem/literature/pmid-42193877.html",
   "research-ecosystem/literature/search-strategy-glioblastoma-immune-microenvironment.html",
   "research-ecosystem/knowledge-map/glioblastoma-immune-microenvironment.html",
@@ -88,6 +89,10 @@ Require-Text "research-ecosystem/github-lab.html" "GitHub Pages"
 Require-Text "research-ecosystem/github-lab.html" "tools/validate-site.ps1"
 Require-Text "research-ecosystem/literature/index.html" "data-reading-form"
 Require-Text "research-ecosystem/literature/index.html" "data-high-relevance"
+Require-Text "research-ecosystem/literature/index.html" "reading-desk.html"
+Require-Text "research-ecosystem/literature/reading-desk.html" "data-reading-desk"
+Require-Text "research-ecosystem/literature/reading-desk.html" "Repository JSON"
+Require-Text "research-ecosystem/literature/reading-desk.html" "GitHub Issue Draft"
 Require-Text "research-ecosystem/literature/index.html" "pmid-42193877.html"
 Require-Text "research-ecosystem/literature/index.html" "search-strategy-glioblastoma-immune-microenvironment.html"
 Require-Text "research-ecosystem/knowledge-map/index.html" "glioblastoma-immune-microenvironment.html"
@@ -97,6 +102,9 @@ Require-Text "site.js" "eutils.ncbi.nlm.nih.gov"
 Require-Text "site.js" "buildPubMedQuery"
 Require-Text "site.js" "scorePaper"
 Require-Text "site.js" "buildReadingBrief"
+Require-Text "site.js" "setupReadingDesk"
+Require-Text "site.js" "buildReadingPackage"
+Require-Text "data/research/graph.json" "literature-reading-desk"
 
 if ($errors.Count -gt 0) {
   Write-Error ($errors -join [Environment]::NewLine)
