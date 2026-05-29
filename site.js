@@ -761,6 +761,136 @@
     });
   }
 
+  function setupIssueQueue() {
+    var root = document.querySelector("[data-issue-queue]");
+    if (!root) {
+      return;
+    }
+
+    var list = root.querySelector("[data-issue-list]");
+    var count = root.querySelector("[data-issue-count]");
+    var search = root.querySelector("[data-issue-search]");
+    var label = root.querySelector("[data-issue-label]");
+    var form = root.querySelector("[data-issue-draft-form]");
+    var draftLink = root.querySelector("[data-issue-draft-link]");
+    var issues = [];
+
+    function renderIssues() {
+      var query = search ? search.value.trim().toLowerCase() : "";
+      var selectedLabel = label ? label.value : "";
+      var visible = issues.filter(function (issue) {
+        var labels = issue.labels || [];
+        var labelOk = !selectedLabel || labels.indexOf(selectedLabel) !== -1;
+        var text = [issue.title, issue.body || "", labels.join(" "), String(issue.number)].join(" ").toLowerCase();
+        var queryOk = !query || text.indexOf(query) !== -1;
+        return labelOk && queryOk;
+      });
+
+      if (count) {
+        count.textContent = String(issues.length);
+      }
+
+      list.innerHTML = "";
+      if (!visible.length) {
+        list.innerHTML = "<p class='empty-state'>No open issues match this filter. Use the draft tool below to create the next task.</p>";
+        return;
+      }
+
+      visible.forEach(function (issue) {
+        var card = document.createElement("article");
+        card.className = "issue-card";
+        card.innerHTML =
+          "<div class='issue-meta'><span>#" + escapeHtml(issue.number) + "</span>" +
+          "<span>" + escapeHtml(issue.updatedAt || "") + "</span></div>" +
+          "<h2><a href='" + escapeHtml(issue.url) + "'>" + escapeHtml(issue.title) + "</a></h2>" +
+          "<p>" + escapeHtml(issue.bodyPreview || "No description provided.") + "</p>" +
+          "<div class='label-row'>" + issue.labels.map(function (name) {
+            return "<span>" + escapeHtml(name) + "</span>";
+          }).join("") + "</div>";
+        list.appendChild(card);
+      });
+    }
+
+    function loadIssues() {
+      fetch("https://api.github.com/repos/L-js-doctor/personal-website/issues?state=open&per_page=30")
+        .then(function (response) {
+          if (!response.ok) {
+            throw new Error("GitHub Issues unavailable");
+          }
+          return response.json();
+        })
+        .then(function (data) {
+          issues = data.filter(function (item) {
+            return !item.pull_request;
+          }).map(function (item) {
+            return {
+              number: item.number,
+              title: item.title || "Untitled issue",
+              body: item.body || "",
+              bodyPreview: (item.body || "").replace(/\s+/g, " ").slice(0, 220),
+              labels: (item.labels || []).map(function (entry) {
+                return entry.name;
+              }),
+              url: item.html_url,
+              updatedAt: item.updated_at ? item.updated_at.slice(0, 10) : ""
+            };
+          });
+          renderIssues();
+        })
+        .catch(function () {
+          if (count) {
+            count.textContent = "--";
+          }
+          list.innerHTML = "<p class='empty-state'>Could not load GitHub Issues right now. Open the repository Issues link above or use the draft tool below.</p>";
+        });
+    }
+
+    function updateDraftLink() {
+      if (!form || !draftLink) {
+        return;
+      }
+      var fields = readNamedFields(form);
+      var labels = fields.type || "site-feature";
+      var body = [
+        "## Goal",
+        fields.goal || "Describe the concrete output.",
+        "",
+        "## Source or evidence",
+        fields.source || "Add PMID, DOI, PubMed URL, local page, dataset, or notes.",
+        "",
+        "## Expected repository changes",
+        "- Update the relevant HTML page or JSON data file.",
+        "- Link the result from the research graph when useful.",
+        "- Run tools/validate-site.ps1 before publishing."
+      ].join("\n");
+      var params = new URLSearchParams({
+        title: fields.title || "New research task",
+        body: body,
+        labels: labels
+      });
+      draftLink.href = "https://github.com/L-js-doctor/personal-website/issues/new?" + params.toString();
+    }
+
+    if (search) {
+      search.addEventListener("input", renderIssues);
+    }
+    if (label) {
+      label.addEventListener("change", renderIssues);
+    }
+    if (form) {
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        updateDraftLink();
+        draftLink.focus();
+      });
+      form.addEventListener("input", updateDraftLink);
+      form.addEventListener("change", updateDraftLink);
+      updateDraftLink();
+    }
+
+    loadIssues();
+  }
+
   function readNamedFields(form) {
     var fields = {};
     Array.prototype.slice.call(form.elements).forEach(function (field) {
@@ -911,6 +1041,7 @@
   setupFilter();
   setupResearchGraph();
   setupReadingDesk();
+  setupIssueQueue();
 
   setupApp({
     key: "literature",
