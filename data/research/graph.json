@@ -47,6 +47,14 @@
       "description": "Learning page that explains Pages, repository data, Issues, validation, and Actions permissions.",
       "url": "research-ecosystem/github-lab.html",
       "tags": ["GitHub ecosystem", "Pages", "Issues", "Actions", "learning"]
+    },
+    {
+      "id": "research-issue-queue",
+      "type": "workflow",
+      "title": "Research Issue Queue",
+      "description": "Live GitHub Issues board for literature reading, data import, knowledge mapping, validation, and site work.",
+      "url": "research-ecosystem/issue-queue.html",
+      "tags": ["GitHub Issues", "task queue", "research operations", "Codex workflow"]
     }
   ],
   "edges": [
@@ -74,6 +82,21 @@
       "source": "literature-reading-desk",
       "target": "github-lab",
       "label": "uses GitHub Issues and repository data workflow"
+    },
+    {
+      "source": "literature-reading-desk",
+      "target": "research-issue-queue",
+      "label": "can prepare task drafts for"
+    },
+    {
+      "source": "research-issue-queue",
+      "target": "github-lab",
+      "label": "implements the issue workflow explained by"
+    },
+    {
+      "source": "research-issue-queue",
+      "target": "repository-validation",
+      "label": "tracks tasks that must pass"
     },
     {
       "source": "repository-validation",
