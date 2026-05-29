@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GitHub Issue Queue | L-js-doctor</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script defer src="../site.js"></script>
+  </head>
+  <body class="subpage">
+    <header class="site-header">
+      <a class="brand" href="../index.html"><span class="brand-mark">L</span><span>L-js-doctor</span></a>
+      <nav class="nav">
+        <a href="./">Research Hub</a>
+        <a href="literature/">Literature</a>
+        <a href="github-lab.html">GitHub Lab</a>
+        <a href="https://github.com/L-js-doctor/personal-website/issues">GitHub Issues</a>
+      </nav>
+    </header>
+
+    <main class="page-shell" data-issue-queue>
+      <p class="section-kicker">GitHub Workflow</p>
+      <h1>Research Issue Queue</h1>
+      <p class="page-lead">
+        This page connects the public website to the repository's GitHub Issues. Use it to see open research tasks,
+        prepare new task drafts, and understand how selected papers become trackable work for Codex.
+      </p>
+
+      <section class="queue-dashboard" aria-label="Issue queue summary">
+        <article>
+          <span data-issue-count>--</span>
+          <h2>Open tasks</h2>
+          <p>Live count from the GitHub repository when the public API is reachable.</p>
+        </article>
+        <article>
+          <span>6</span>
+          <h2>Research labels</h2>
+          <p>Labels separate literature reading, data import, knowledge mapping, site work, validation, and publication.</p>
+        </article>
+        <article>
+          <span>1</span>
+          <h2>Next action</h2>
+          <p>Each issue should name a concrete output: HTML note, JSON record, graph link, or validation fix.</p>
+        </article>
+      </section>
+
+      <section class="issue-controls">
+        <label>
+          Filter open issues
+          <input data-issue-search type="search" placeholder="Search title, label, PMID, PubMed, graph">
+        </label>
+        <label>
+          Label
+          <select data-issue-label>
+            <option value="">All labels</option>
+            <option value="literature">literature</option>
+            <option value="deep-reading">deep-reading</option>
+            <option value="data-import">data-import</option>
+            <option value="knowledge-map">knowledge-map</option>
+            <option value="site-feature">site-feature</option>
+            <option value="validation">validation</option>
+          </select>
+        </label>
+      </section>
+
+      <section class="issue-list" data-issue-list>
+        <p class="empty-state">Loading GitHub Issues...</p>
+      </section>
+
+      <section class="note-block">
+        <h2>Create a Research Issue Draft</h2>
+        <form class="tool-form issue-draft-form" data-issue-draft-form>
+          <label>Task type
+            <select name="type">
+              <option value="literature,deep-reading">Literature deep reading</option>
+              <option value="data-import">Research data import</option>
+              <option value="knowledge-map">Knowledge map update</option>
+              <option value="site-feature">Website feature</option>
+              <option value="validation">Validation fix</option>
+            </select>
+          </label>
+          <label>Short title<input name="title" required placeholder="Deep-read PMID 42193877"></label>
+          <label class="wide-field">Goal<textarea name="goal" placeholder="What should Codex produce when this issue is done?"></textarea></label>
+          <label class="wide-field">Source or evidence<textarea name="source" placeholder="PMID, DOI, PubMed URL, local page, dataset, or notes"></textarea></label>
+          <button class="button primary" type="submit">Prepare GitHub issue link</button>
+        </form>
+        <a class="button secondary" data-issue-draft-link href="https://github.com/L-js-doctor/personal-website/issues/new">Open draft in GitHub</a>
+      </section>
+    </main>
+  </body>
+</html>
