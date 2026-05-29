@@ -25,6 +25,14 @@
       "tags": ["PubMed", "search", "review"]
     },
     {
+      "id": "literature-reading-desk",
+      "type": "workflow",
+      "title": "Literature Reading Desk",
+      "description": "Interactive workflow that turns a selected paper into a Codex task, repository JSON, GitHub Issue draft, and HTML note skeleton.",
+      "url": "research-ecosystem/literature/reading-desk.html",
+      "tags": ["deep reading", "PubMed", "GitHub Issues", "repository data"]
+    },
+    {
       "id": "repository-validation",
       "type": "workflow",
       "title": "Repository validation workflow",
@@ -51,6 +59,21 @@
       "source": "gbm-immune-search-strategy",
       "target": "pmid-42193877",
       "label": "can retrieve related paper"
+    },
+    {
+      "source": "gbm-immune-search-strategy",
+      "target": "literature-reading-desk",
+      "label": "feeds selected papers into"
+    },
+    {
+      "source": "literature-reading-desk",
+      "target": "pmid-42193877",
+      "label": "creates the same kind of note as"
+    },
+    {
+      "source": "literature-reading-desk",
+      "target": "github-lab",
+      "label": "uses GitHub Issues and repository data workflow"
     },
     {
       "source": "repository-validation",
