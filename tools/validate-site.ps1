@@ -51,6 +51,7 @@ $requiredFiles = @(
   "research-ecosystem/graph.html",
   "research-ecosystem/github-lab.html",
   "research-ecosystem/issue-queue.html",
+  "research-ecosystem/projects.html",
   "research-ecosystem/literature/index.html",
   "research-ecosystem/literature/reading-desk.html",
   "research-ecosystem/literature/pmid-42193877.html",
@@ -73,7 +74,8 @@ $jsonFiles = @(
   "data/research/knowledge.json",
   "data/research/notebook.json",
   "data/research/data-tools.json",
-  "data/research/publication.json"
+  "data/research/publication.json",
+  "data/research/projects.json"
 )
 
 foreach ($file in $jsonFiles) {
@@ -84,6 +86,7 @@ Require-Text "research-ecosystem/literature/index.html" "data-pubmed-form"
 Require-Text "research-ecosystem/index.html" "graph.html"
 Require-Text "research-ecosystem/index.html" "github-lab.html"
 Require-Text "research-ecosystem/index.html" "issue-queue.html"
+Require-Text "research-ecosystem/index.html" "projects.html"
 Require-Text "research-ecosystem/graph.html" "data-research-graph"
 Require-Text "data/research/graph.json" "pmid-42193877"
 Require-Text "data/research/graph.json" "github-lab"
@@ -92,6 +95,8 @@ Require-Text "research-ecosystem/github-lab.html" "tools/validate-site.ps1"
 Require-Text "research-ecosystem/github-lab.html" "Research Issue Queue"
 Require-Text "research-ecosystem/issue-queue.html" "data-issue-queue"
 Require-Text "research-ecosystem/issue-queue.html" "data-issue-draft-form"
+Require-Text "research-ecosystem/projects.html" "data-project-dashboard"
+Require-Text "research-ecosystem/projects.html" "data-project-list"
 Require-Text "research-ecosystem/literature/index.html" "data-reading-form"
 Require-Text "research-ecosystem/literature/index.html" "data-high-relevance"
 Require-Text "research-ecosystem/literature/index.html" "reading-desk.html"
@@ -110,9 +115,13 @@ Require-Text "site.js" "buildReadingBrief"
 Require-Text "site.js" "setupReadingDesk"
 Require-Text "site.js" "buildReadingPackage"
 Require-Text "site.js" "setupIssueQueue"
+Require-Text "site.js" "setupProjectDashboard"
+Require-Text "site.js" "data/research/projects.json"
 Require-Text "site.js" "api.github.com/repos/L-js-doctor/personal-website/issues"
 Require-Text "data/research/graph.json" "literature-reading-desk"
 Require-Text "data/research/graph.json" "research-issue-queue"
+Require-Text "data/research/graph.json" "research-project-dashboard"
+Require-Text "data/research/projects.json" "gbm-immune-microenvironment-project"
 
 if ($errors.Count -gt 0) {
   Write-Error ($errors -join [Environment]::NewLine)
