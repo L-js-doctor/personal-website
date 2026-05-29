@@ -704,6 +704,190 @@
     ].join("\n");
   }
 
+  function setupReadingDesk() {
+    var root = document.querySelector("[data-reading-desk]");
+    if (!root) {
+      return;
+    }
+
+    var form = root.querySelector("[data-reading-desk-form]");
+    var outputs = {};
+
+    Array.prototype.slice.call(root.querySelectorAll("[data-desk-output]")).forEach(function (field) {
+      outputs[field.getAttribute("data-desk-output")] = field;
+    });
+
+    function writeOutputs() {
+      var fields = readNamedFields(form);
+      var packageData = buildReadingPackage(fields);
+
+      outputs.codex.value = packageData.codex;
+      outputs.json.value = packageData.json;
+      outputs.issue.value = packageData.issue;
+      outputs.html.value = packageData.html;
+    }
+
+    if (form) {
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        writeOutputs();
+      });
+
+      form.addEventListener("input", function () {
+        if (form.elements.title && form.elements.title.value.trim()) {
+          writeOutputs();
+        }
+      });
+      form.addEventListener("change", function () {
+        if (form.elements.title && form.elements.title.value.trim()) {
+          writeOutputs();
+        }
+      });
+    }
+
+    Array.prototype.slice.call(root.querySelectorAll("[data-copy-target]")).forEach(function (button) {
+      button.addEventListener("click", function () {
+        var target = outputs[button.getAttribute("data-copy-target")];
+        if (!target) {
+          return;
+        }
+        target.select();
+        document.execCommand("copy");
+        button.textContent = "Copied";
+        window.setTimeout(function () {
+          button.textContent = "Copy";
+        }, 1200);
+      });
+    });
+  }
+
+  function readNamedFields(form) {
+    var fields = {};
+    Array.prototype.slice.call(form.elements).forEach(function (field) {
+      if (field.name) {
+        fields[field.name] = field.value.trim();
+      }
+    });
+    return fields;
+  }
+
+  function slugify(value) {
+    return String(value || "untitled-paper")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 72) || "untitled-paper";
+  }
+
+  function buildReadingPackage(fields) {
+    var identifier = fields.pmid ? "pmid-" + fields.pmid : slugify(fields.title);
+    var page = identifier + ".html";
+    var title = fields.title || "Untitled paper";
+    var question = fields.question || "Not specified yet.";
+    var abstract = fields.abstract || "Not provided yet.";
+    var decision = fields.decision || "Keep only if it changes the research question, mechanism map, method choice, or follow-up search.";
+    var jsonRecord = {
+      id: identifier,
+      pmid: fields.pmid || "",
+      doi: fields.doi || "",
+      title: title,
+      year: fields.year || "",
+      journal: fields.journal || "",
+      category: fields.category || "Mechanism",
+      question: question,
+      finding: "Deep-reading record prepared; complete after Codex review.",
+      next: page,
+      source: "repository-seed",
+      createdAt: new Date().toISOString().slice(0, 10)
+    };
+
+    var codex = [
+      "Please deep-read this paper and turn it into a repository-backed literature note.",
+      "",
+      "Mode: " + (fields.mode || "Research-question deep reading"),
+      "Identifier: " + (fields.pmid || fields.doi || "not provided"),
+      "Title: " + title,
+      "Journal/year: " + [fields.journal, fields.year].filter(Boolean).join(", "),
+      "DOI: " + (fields.doi || "not provided"),
+      "",
+      "Research question:",
+      question,
+      "",
+      "Decision rule:",
+      decision,
+      "",
+      "Abstract or PubMed summary:",
+      abstract,
+      "",
+      "Required output:",
+      "1. One-paragraph high-signal summary.",
+      "2. Why this paper matters to the active research question.",
+      "3. Study type, methods, models/population, and evidence level.",
+      "4. Key findings, mechanism chain, and limitations.",
+      "5. Terms to add to the knowledge map.",
+      "6. Follow-up PubMed query and 3-5 papers to inspect next.",
+      "7. Final HTML note for research-ecosystem/literature/" + page + "."
+    ].join("\n");
+
+    var issue = [
+      "Title: Deep-read " + title,
+      "",
+      "## Paper",
+      "- PMID: " + (fields.pmid || "not provided"),
+      "- DOI: " + (fields.doi || "not provided"),
+      "- Journal/year: " + ([fields.journal, fields.year].filter(Boolean).join(", ") || "not provided"),
+      "- Category: " + (fields.category || "Mechanism"),
+      "",
+      "## Reading goal",
+      question,
+      "",
+      "## Decision rule",
+      decision,
+      "",
+      "## Expected repository changes",
+      "- Add or update data/research/literature.json",
+      "- Add research-ecosystem/literature/" + page,
+      "- Link relevant knowledge-map and graph nodes if the paper is useful"
+    ].join("\n");
+
+    var html = [
+      "<!doctype html>",
+      "<html lang=\"en\">",
+      "  <head>",
+      "    <meta charset=\"utf-8\">",
+      "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
+      "    <title>" + escapeHtml(title) + "</title>",
+      "    <link rel=\"stylesheet\" href=\"../../styles.css\">",
+      "  </head>",
+      "  <body class=\"subpage\">",
+      "    <main class=\"page-shell note-page literature-note\">",
+      "      <a class=\"back-link\" href=\"./\">Back to Literature Lab</a>",
+      "      <p class=\"section-kicker\">Literature Note</p>",
+      "      <h1>" + escapeHtml(title) + "</h1>",
+      "      <dl class=\"metadata-grid\">",
+      "        <div><dt>PMID</dt><dd>" + escapeHtml(fields.pmid || "Not provided") + "</dd></div>",
+      "        <div><dt>DOI</dt><dd>" + escapeHtml(fields.doi || "Not provided") + "</dd></div>",
+      "        <div><dt>Journal</dt><dd>" + escapeHtml(fields.journal || "Not provided") + "</dd></div>",
+      "        <div><dt>Year</dt><dd>" + escapeHtml(fields.year || "Not provided") + "</dd></div>",
+      "      </dl>",
+      "      <section class=\"note-block\"><h2>Research Question</h2><p>" + escapeHtml(question) + "</p></section>",
+      "      <section class=\"note-block\"><h2>High-Signal Summary</h2><p>Complete after deep reading.</p></section>",
+      "      <section class=\"note-block\"><h2>Evidence and Methods</h2><p>Complete after deep reading.</p></section>",
+      "      <section class=\"note-block\"><h2>Mechanism Map Links</h2><p>Complete after deep reading.</p></section>",
+      "      <section class=\"note-block\"><h2>Limitations and Next Search</h2><p>Complete after deep reading.</p></section>",
+      "    </main>",
+      "  </body>",
+      "</html>"
+    ].join("\n");
+
+    return {
+      codex: codex,
+      json: JSON.stringify(jsonRecord, null, 2),
+      issue: issue,
+      html: html
+    };
+  }
+
   function extractYear(value) {
     var match = String(value).match(/\d{4}/);
     return match ? match[0] : "";
@@ -726,6 +910,7 @@
 
   setupFilter();
   setupResearchGraph();
+  setupReadingDesk();
 
   setupApp({
     key: "literature",
