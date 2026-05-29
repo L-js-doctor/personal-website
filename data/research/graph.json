@@ -55,6 +55,14 @@
       "description": "Live GitHub Issues board for literature reading, data import, knowledge mapping, validation, and site work.",
       "url": "research-ecosystem/issue-queue.html",
       "tags": ["GitHub Issues", "task queue", "research operations", "Codex workflow"]
+    },
+    {
+      "id": "research-project-dashboard",
+      "type": "project",
+      "title": "Research Project Dashboard",
+      "description": "Project layer that groups papers, search strategies, knowledge nodes, Issues, next actions, and quality gates.",
+      "url": "research-ecosystem/projects.html",
+      "tags": ["project management", "research operations", "quality gates", "progress"]
     }
   ],
   "edges": [
@@ -97,6 +105,26 @@
       "source": "research-issue-queue",
       "target": "repository-validation",
       "label": "tracks tasks that must pass"
+    },
+    {
+      "source": "research-project-dashboard",
+      "target": "pmid-42193877",
+      "label": "tracks literature evidence from"
+    },
+    {
+      "source": "research-project-dashboard",
+      "target": "glioblastoma-immune-microenvironment",
+      "label": "organizes knowledge node"
+    },
+    {
+      "source": "research-project-dashboard",
+      "target": "research-issue-queue",
+      "label": "uses Issues as active tasks"
+    },
+    {
+      "source": "research-project-dashboard",
+      "target": "gbm-immune-search-strategy",
+      "label": "uses search strategy"
     },
     {
       "source": "repository-validation",
