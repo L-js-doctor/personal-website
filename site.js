@@ -891,6 +891,95 @@
     loadIssues();
   }
 
+  function setupProjectDashboard() {
+    var root = document.querySelector("[data-project-dashboard]");
+    if (!root) {
+      return;
+    }
+
+    var list = root.querySelector("[data-project-list]");
+    var search = root.querySelector("[data-project-search]");
+    var projects = [];
+
+    function renderLinkedItems(items) {
+      if (!items || !items.length) {
+        return "<p class='empty-state'>No linked records yet.</p>";
+      }
+      return "<ul class='linked-record-list'>" + items.map(function (item) {
+        return "<li><a href='" + escapeHtml(item.url || "#") + "'>" +
+          escapeHtml(item.title || "Untitled record") + "</a><span>" +
+          escapeHtml(item.status || "Tracked") + "</span></li>";
+      }).join("") + "</ul>";
+    }
+
+    function renderBullets(items) {
+      if (!items || !items.length) {
+        return "<p class='empty-state'>No items yet.</p>";
+      }
+      return "<ul>" + items.map(function (item) {
+        return "<li>" + escapeHtml(item) + "</li>";
+      }).join("") + "</ul>";
+    }
+
+    function renderProjects() {
+      var query = search ? search.value.trim().toLowerCase() : "";
+      var visible = projects.filter(function (project) {
+        return !query || JSON.stringify(project).toLowerCase().indexOf(query) !== -1;
+      });
+
+      list.innerHTML = "";
+      if (!visible.length) {
+        list.innerHTML = "<p class='empty-state'>No projects match this filter.</p>";
+        return;
+      }
+
+      visible.forEach(function (project) {
+        var progress = Math.max(0, Math.min(100, Number(project.progress || 0)));
+        var card = document.createElement("article");
+        card.className = "project-dashboard-card";
+        card.innerHTML =
+          "<div class='project-card-head'>" +
+          "<div><p class='project-type'>" + escapeHtml(project.status || "Project") + "</p>" +
+          "<h2>" + escapeHtml(project.title || "Untitled project") + "</h2></div>" +
+          "<a class='button secondary' href='" + escapeHtml(project.activeIssue || "issue-queue.html") + "'>Open active issue</a>" +
+          "</div>" +
+          "<div class='progress-track' aria-label='Project progress'><span style='width:" + progress + "%'></span></div>" +
+          "<p class='progress-label'>" + progress + "% organized</p>" +
+          "<section class='project-brief'><h3>Research Question</h3><p>" + escapeHtml(project.question || "Not defined yet.") + "</p></section>" +
+          "<section class='project-brief'><h3>Why It Matters</h3><p>" + escapeHtml(project.why || "Not defined yet.") + "</p></section>" +
+          "<div class='project-link-grid'>" +
+          "<section><h3>Literature</h3>" + renderLinkedItems(project.literature) + "</section>" +
+          "<section><h3>Knowledge Nodes</h3>" + renderLinkedItems(project.knowledge) + "</section>" +
+          "</div>" +
+          "<div class='project-link-grid'>" +
+          "<section><h3>Next Actions</h3>" + renderBullets(project.nextActions) + "</section>" +
+          "<section><h3>Quality Gates</h3>" + renderBullets(project.qualityGates) + "</section>" +
+          "</div>" +
+          "<p class='project-labels'><strong>Issue labels:</strong> " + escapeHtml(project.issueLabel || "none") + "</p>";
+        list.appendChild(card);
+      });
+    }
+
+    if (search) {
+      search.addEventListener("input", renderProjects);
+    }
+
+    fetch("../data/research/projects.json")
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error("project data unavailable");
+        }
+        return response.json();
+      })
+      .then(function (items) {
+        projects = Array.isArray(items) ? items : [];
+        renderProjects();
+      })
+      .catch(function () {
+        list.innerHTML = "<p class='empty-state'>Project data could not be loaded.</p>";
+      });
+  }
+
   function readNamedFields(form) {
     var fields = {};
     Array.prototype.slice.call(form.elements).forEach(function (field) {
@@ -1042,6 +1131,7 @@
   setupResearchGraph();
   setupReadingDesk();
   setupIssueQueue();
+  setupProjectDashboard();
 
   setupApp({
     key: "literature",
