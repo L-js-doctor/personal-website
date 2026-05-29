@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Literature Reading Desk</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <script defer src="../../site.js"></script>
+  </head>
+  <body class="subpage">
+    <main class="page-shell" data-reading-desk>
+      <a class="back-link" href="./">Back to Literature Lab</a>
+      <p class="section-kicker">Literature Deep Reading</p>
+      <h1>Literature Reading Desk</h1>
+      <p class="page-lead">
+        Turn a selected paper into four concrete artifacts: a Codex deep-reading task, a repository JSON record,
+        a GitHub Issue draft, and an HTML note skeleton. This is the bridge from PubMed screening to a permanent
+        research note in the website.
+      </p>
+
+      <section class="desk-grid" aria-label="Deep reading workflow">
+        <article class="desk-step">
+          <span>01</span>
+          <h2>Identify</h2>
+          <p>Capture PMID, DOI, title, journal, abstract, and why this paper matters to the current question.</p>
+        </article>
+        <article class="desk-step">
+          <span>02</span>
+          <h2>Read</h2>
+          <p>Ask Codex for a structured critique: question, methods, evidence, limitations, mechanisms, and next papers.</p>
+        </article>
+        <article class="desk-step">
+          <span>03</span>
+          <h2>Commit</h2>
+          <p>Convert the reading into repository data and a stable HTML card that can be linked from the graph.</p>
+        </article>
+      </section>
+
+      <form class="tool-form desk-form" data-reading-desk-form>
+        <label>PMID<input name="pmid" placeholder="42193877"></label>
+        <label>DOI<input name="doi" placeholder="10.xxxx/xxxxx"></label>
+        <label>Year<input name="year" placeholder="2026"></label>
+        <label>Journal<input name="journal" placeholder="Cells"></label>
+        <label class="wide-field">Paper title<input name="title" required placeholder="Paste the paper title"></label>
+        <label class="wide-field">Abstract or PubMed summary<textarea name="abstract" placeholder="Paste abstract, PubMed summary, or copied result details"></textarea></label>
+        <label>Research category
+          <select name="category">
+            <option value="Mechanism">Mechanism</option>
+            <option value="Clinical evidence">Clinical evidence</option>
+            <option value="Methods">Methods</option>
+            <option value="Review">Review</option>
+            <option value="Guideline">Guideline</option>
+          </select>
+        </label>
+        <label>Reading mode
+          <select name="mode">
+            <option value="Research-question deep reading">Research-question deep reading</option>
+            <option value="Fast screening">Fast screening</option>
+            <option value="Journal club briefing">Journal club briefing</option>
+            <option value="Methods dissection">Methods dissection</option>
+            <option value="Exam-oriented study note">Exam-oriented study note</option>
+          </select>
+        </label>
+        <label class="wide-field">Your research question<textarea name="question" placeholder="Example: how does this paper explain immune suppression in glioblastoma?"></textarea></label>
+        <label class="wide-field">Decision rule<textarea name="decision" placeholder="Example: keep if it changes my mechanism map, explains a method, or gives a follow-up search term"></textarea></label>
+        <button class="button primary" type="submit">Generate reading package</button>
+      </form>
+
+      <section class="desk-output-grid" aria-label="Generated outputs">
+        <article class="output-panel">
+          <div class="output-heading">
+            <h2>Codex Task</h2>
+            <button class="button secondary" type="button" data-copy-target="codex">Copy</button>
+          </div>
+          <textarea class="reading-output compact-output" data-desk-output="codex" readonly></textarea>
+        </article>
+        <article class="output-panel">
+          <div class="output-heading">
+            <h2>Repository JSON</h2>
+            <button class="button secondary" type="button" data-copy-target="json">Copy</button>
+          </div>
+          <textarea class="reading-output compact-output" data-desk-output="json" readonly></textarea>
+        </article>
+        <article class="output-panel">
+          <div class="output-heading">
+            <h2>GitHub Issue Draft</h2>
+            <button class="button secondary" type="button" data-copy-target="issue">Copy</button>
+          </div>
+          <textarea class="reading-output compact-output" data-desk-output="issue" readonly></textarea>
+        </article>
+        <article class="output-panel">
+          <div class="output-heading">
+            <h2>HTML Note Skeleton</h2>
+            <button class="button secondary" type="button" data-copy-target="html">Copy</button>
+          </div>
+          <textarea class="reading-output compact-output" data-desk-output="html" readonly></textarea>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>
