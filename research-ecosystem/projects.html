@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Research Project Dashboard | L-js-doctor</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script defer src="../site.js"></script>
+  </head>
+  <body class="subpage">
+    <header class="site-header">
+      <a class="brand" href="../index.html"><span class="brand-mark">L</span><span>L-js-doctor</span></a>
+      <nav class="nav">
+        <a href="./">Research Hub</a>
+        <a href="literature/">Literature</a>
+        <a href="graph.html">Graph</a>
+        <a href="issue-queue.html">Issue Queue</a>
+      </nav>
+    </header>
+
+    <main class="page-shell" data-project-dashboard>
+      <p class="section-kicker">Research Operations</p>
+      <h1>Research Project Dashboard</h1>
+      <p class="page-lead">
+        Projects connect papers, search strategies, knowledge nodes, GitHub Issues, and quality gates.
+        This is the layer that turns separate notes into long-running research directions.
+      </p>
+
+      <section class="project-controls">
+        <label>
+          Search projects
+          <input data-project-search type="search" placeholder="glioblastoma, PubMed, immune, issue, validation">
+        </label>
+      </section>
+
+      <section class="project-dashboard-list" data-project-list>
+        <p class="empty-state">Loading research projects...</p>
+      </section>
+    </main>
+  </body>
+</html>
