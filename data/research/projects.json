@@ -1,0 +1,42 @@
+[
+  {
+    "id": "gbm-immune-microenvironment-project",
+    "title": "Glioblastoma immune microenvironment project",
+    "status": "Active starter project",
+    "progress": 28,
+    "question": "How can glioblastoma immune suppression be mapped, searched, and converted into useful literature notes?",
+    "why": "This project connects disease learning, PubMed retrieval, mechanism mapping, and GitHub task tracking into one repeatable research workflow.",
+    "activeIssue": "https://github.com/L-js-doctor/personal-website/issues/1",
+    "issueLabel": "literature, deep-reading",
+    "literature": [
+      {
+        "title": "PMID 42193877 starter card",
+        "url": "literature/pmid-42193877.html",
+        "status": "Needs full deep reading"
+      },
+      {
+        "title": "Glioblastoma immune microenvironment PubMed strategy",
+        "url": "literature/search-strategy-glioblastoma-immune-microenvironment.html",
+        "status": "Reusable search seed"
+      }
+    ],
+    "knowledge": [
+      {
+        "title": "Glioblastoma immune microenvironment",
+        "url": "knowledge-map/glioblastoma-immune-microenvironment.html",
+        "status": "Draft mechanism node"
+      }
+    ],
+    "nextActions": [
+      "Use the Reading Desk to complete PMID 42193877 after abstract/full-text review.",
+      "Add 3-5 high-relevance PubMed papers from the same search strategy.",
+      "Split immune suppression mechanisms into evidence-backed knowledge nodes.",
+      "Close or update GitHub Issue #1 only after the literature card and graph links are complete."
+    ],
+    "qualityGates": [
+      "Every paper has a source link, PMID/DOI when available, and a named research question.",
+      "Every knowledge node links to at least one literature note or search strategy.",
+      "tools/validate-site.ps1 passes before publishing."
+    ]
+  }
+]
