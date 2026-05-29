@@ -34,6 +34,7 @@ The long-term goal is to turn this site into a research learning ecosystem:
 - local browser tools for adding, searching, deleting, and exporting research records
 - PubMed search/import for literature records via NCBI E-utilities
 - literature deep-reading briefs that can be handed to Codex for structured HTML notes
+- a Literature Reading Desk that generates Codex tasks, repository JSON, GitHub Issue drafts, and HTML note skeletons from selected papers
 - repository-backed literature cards, starting with PMID 42193877
 - linked knowledge nodes and reusable PubMed search strategies
 - an interactive research graph backed by `data/research/graph.json`
