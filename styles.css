@@ -783,6 +783,66 @@ h1 {
   font: 0.95rem/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
+.desk-grid,
+.desk-output-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 28px 0;
+}
+
+.desk-step,
+.output-panel {
+  padding: 20px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 10px 34px rgba(22, 34, 31, 0.06);
+}
+
+.desk-step span {
+  display: inline-flex;
+  margin-bottom: 28px;
+  color: var(--amber);
+  font-weight: 900;
+}
+
+.desk-step h2,
+.output-panel h2 {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+}
+
+.desk-step p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.desk-form {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.desk-form .wide-field {
+  grid-column: 1 / -1;
+}
+
+.desk-output-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.output-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.compact-output {
+  min-height: 320px;
+  margin: 0;
+}
+
 .import-button {
   display: inline-flex;
   align-items: center;
@@ -936,7 +996,10 @@ h1 {
   }
 
   .graph-controls,
-  .graph-board {
+  .graph-board,
+  .desk-grid,
+  .desk-output-grid,
+  .desk-form {
     grid-template-columns: 1fr;
   }
 
