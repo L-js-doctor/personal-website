@@ -32,7 +32,7 @@ The long-term goal is to turn this site into a research learning ecosystem:
 - data and tool documentation
 - publication and portfolio pages
 - local browser tools for adding, searching, deleting, and exporting research records
-- PubMed search/import for literature records via NCBI E-utilities
+- PubMed search/import for literature records via NCBI E-utilities, including result paging and on-demand abstract retrieval
 - literature deep-reading briefs that can be handed to Codex for structured HTML notes
 - a Literature Reading Desk that generates Codex tasks, repository JSON, GitHub Issue drafts, and HTML note skeletons from selected papers
 - repository-backed literature cards, starting with PMID 42193877
@@ -41,6 +41,7 @@ The long-term goal is to turn this site into a research learning ecosystem:
 - a Research Project Dashboard backed by `data/research/projects.json`
 - a GitHub Lab page explaining Pages, repository data, Issues, validation, and Actions permission boundaries
 - a Research Issue Queue that reads open GitHub Issues and generates structured task drafts
+- a Deployment Architecture page explaining when GitHub Pages is enough and when Vercel/Supabase is needed
 - GitHub Issues/Projects for planning and review
 - GitHub Actions or a static site generator when the site becomes large enough
 
