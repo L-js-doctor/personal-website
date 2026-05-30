@@ -693,6 +693,18 @@
 
       card.appendChild(brief);
 
+      var queueButton = document.createElement("button");
+      queueButton.type = "button";
+      queueButton.className = "button secondary";
+      queueButton.textContent = "Add to deep-reading queue";
+      queueButton.addEventListener("click", function () {
+        addToReadingQueue(paper);
+        queueButton.textContent = "Added to queue";
+        queueButton.disabled = true;
+      });
+
+      card.appendChild(queueButton);
+
       var abstractButton = document.createElement("button");
       abstractButton.type = "button";
       abstractButton.className = "button secondary";
@@ -743,12 +755,41 @@
         paper.url ? "URL: " + paper.url : ""
       ].filter(Boolean).join("\n");
     }
+    if (form.elements.goal && !form.elements.goal.value) {
+      form.elements.goal.value = "Identify the research question, experimental design, key evidence, mechanism, limitations, and how this paper should update the research ecosystem.";
+    }
+    if (form.elements.introduction && !form.elements.introduction.value) {
+      form.elements.introduction.value = "To be completed from the introduction/background after reading.";
+    }
+    if (form.elements.hypothesis && !form.elements.hypothesis.value) {
+      form.elements.hypothesis.value = "To be completed: exact research question or hypothesis.";
+    }
+    if (form.elements.design && !form.elements.design.value) {
+      form.elements.design.value = "To be completed: study type, groups, controls, model/population, intervention/comparison, endpoints.";
+    }
+    if (form.elements.methods && !form.elements.methods.value) {
+      form.elements.methods.value = "To be completed: assays, data sources, statistical methods, and measurements.";
+    }
+    if (form.elements.results && !form.elements.results.value) {
+      form.elements.results.value = "To be completed: main figures/results and evidence strength.";
+    }
+    if (form.elements.mechanism && !form.elements.mechanism.value) {
+      form.elements.mechanism.value = "To be completed: mechanism chain and interpretation.";
+    }
+    if (form.elements.limitations && !form.elements.limitations.value) {
+      form.elements.limitations.value = "To be completed: major limitations and uncertainty.";
+    }
+    if (form.elements.followup && !form.elements.followup.value) {
+      form.elements.followup.value = "To be completed: next papers, search terms, graph nodes, and project updates.";
+    }
   }
 
   function setupDeepReading(root) {
     var form = root.querySelector("[data-reading-form]");
     var output = root.querySelector("[data-reading-output]");
     var copyButton = root.querySelector("[data-copy-reading]");
+    var queueList = root.querySelector("[data-reading-queue]");
+    var exportQueueButton = root.querySelector("[data-export-reading-queue]");
 
     if (!form || !output) {
       return;
@@ -775,6 +816,66 @@
         }, 1200);
       });
     }
+
+    function renderQueue() {
+      if (!queueList) {
+        return;
+      }
+      var queue = readStore("ljsdoctor:deepReadingQueue");
+      queueList.innerHTML = "";
+      if (!queue.length) {
+        queueList.innerHTML = "<p class='empty-state'>No papers in the deep-reading queue yet. Use PubMed search results to add papers.</p>";
+        return;
+      }
+      queue.forEach(function (paper) {
+        var card = document.createElement("article");
+        card.className = "queue-paper-card";
+        card.innerHTML =
+          "<p class='project-type'>PMID " + escapeHtml(paper.pmid || "Pending") + "</p>" +
+          "<h4>" + escapeHtml(paper.title || "Untitled paper") + "</h4>" +
+          "<p>" + escapeHtml([paper.journal, paper.pubdate || paper.year].filter(Boolean).join(" - ") || "Metadata pending") + "</p>";
+
+        var use = document.createElement("button");
+        use.type = "button";
+        use.className = "button secondary";
+        use.textContent = "Use in matrix";
+        use.addEventListener("click", function () {
+          fillDeepReadingForm(paper);
+          form.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+
+        var remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "text-button";
+        remove.textContent = "Remove from queue";
+        remove.addEventListener("click", function () {
+          var next = readStore("ljsdoctor:deepReadingQueue").filter(function (item) {
+            return item.queueId !== paper.queueId;
+          });
+          writeStore("ljsdoctor:deepReadingQueue", next);
+          renderQueue();
+        });
+
+        card.appendChild(use);
+        card.appendChild(remove);
+        queueList.appendChild(card);
+      });
+    }
+
+    if (exportQueueButton) {
+      exportQueueButton.addEventListener("click", function () {
+        var blob = new Blob([JSON.stringify(readStore("ljsdoctor:deepReadingQueue"), null, 2)], { type: "application/json" });
+        var url = URL.createObjectURL(blob);
+        var link = document.createElement("a");
+        link.href = url;
+        link.download = "deep-reading-queue-export.json";
+        link.click();
+        URL.revokeObjectURL(url);
+      });
+    }
+
+    renderQueue();
+    window.addEventListener("deep-reading-queue-updated", renderQueue);
   }
 
   function buildReadingBrief(fields) {
@@ -791,16 +892,53 @@
       "My reading goal:",
       fields.goal || "not provided",
       "",
+      "Deep-reading matrix:",
+      "Introduction / background: " + (fields.introduction || "not filled"),
+      "Research question / hypothesis: " + (fields.hypothesis || "not filled"),
+      "Experimental design: " + (fields.design || "not filled"),
+      "Methods / measurements: " + (fields.methods || "not filled"),
+      "Main results: " + (fields.results || "not filled"),
+      "Mechanism / interpretation: " + (fields.mechanism || "not filled"),
+      "Limitations: " + (fields.limitations || "not filled"),
+      "Follow-up actions: " + (fields.followup || "not filled"),
+      "",
       "Required output:",
       "1. One-paragraph high-signal summary.",
-      "2. Research question and why it matters.",
-      "3. Study type, methods, population/model, and evidence level.",
-      "4. Main findings with mechanisms and limitations.",
-      "5. Important terms and confusing comparisons.",
-      "6. How this connects to pathology/medicine learning.",
-      "7. Follow-up papers or search terms.",
-      "8. A compact HTML note that can be saved into the research ecosystem."
+      "2. Introduction/background logic and knowledge gap.",
+      "3. Research question or hypothesis.",
+      "4. Experimental design: groups, controls, model/population, intervention/comparison, endpoints.",
+      "5. Methods and measurements with evidence level.",
+      "6. Main results mapped to figures or evidence blocks.",
+      "7. Mechanism, pathology/medicine connection, limitations, and bias risks.",
+      "8. Follow-up papers/search terms and a compact HTML note for the research ecosystem."
     ].join("\n");
+  }
+
+  function addToReadingQueue(paper) {
+    var queue = readStore("ljsdoctor:deepReadingQueue");
+    var exists = queue.some(function (item) {
+      return item.pmid && item.pmid === paper.pmid;
+    });
+    if (!exists) {
+      queue.unshift({
+        queueId: "queue-" + Date.now() + "-" + Math.random().toString(16).slice(2),
+        pmid: paper.pmid || "",
+        title: paper.title || "",
+        journal: paper.journal || "",
+        year: paper.year || "",
+        pubdate: paper.pubdate || "",
+        authors: paper.authors || "",
+        pubtypes: paper.pubtypes || "",
+        abstract: paper.abstract || "",
+        url: paper.url || "",
+        relevanceScore: paper.screening && paper.screening.score,
+        relevanceReasons: paper.screening && paper.screening.reasons,
+        addedAt: new Date().toISOString().slice(0, 10),
+        status: "queued-for-deep-reading"
+      });
+      writeStore("ljsdoctor:deepReadingQueue", queue);
+    }
+    window.dispatchEvent(new CustomEvent("deep-reading-queue-updated"));
   }
 
   function setupReadingDesk() {
