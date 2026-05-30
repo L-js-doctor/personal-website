@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI Handoff Lab | L-js-doctor</title>
+    <link rel="stylesheet" href="../styles.css">
+  </head>
+  <body class="subpage">
+    <header class="site-header">
+      <a class="brand" href="../index.html"><span class="brand-mark">L</span><span>L-js-doctor</span></a>
+      <nav class="nav">
+        <a href="./">Research Hub</a>
+        <a href="github-lab.html">GitHub Lab</a>
+        <a href="deployment.html">Deployment</a>
+        <a href="projects.html">Projects</a>
+      </nav>
+    </header>
+
+    <main class="page-shell note-page">
+      <p class="section-kicker">AI Collaboration</p>
+      <h1>AI Handoff Lab</h1>
+      <p class="page-lead">
+        This page records how to hand the website to another GPT, Codex session, or developer without losing context.
+        It turns the project package into a repeatable workflow: summarize, attach source, state constraints, validate,
+        and continue from the current research ecosystem.
+      </p>
+
+      <section class="handoff-grid" aria-label="AI handoff workflow">
+        <article>
+          <span>01</span>
+          <h2>Package</h2>
+          <p>Create a clean project package with handoff docs, source snapshot, data files, and validation notes.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <h2>Prompt</h2>
+          <p>Give GPT the continuation prompt so it understands the site goal, current modules, and safety rules.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h2>Validate</h2>
+          <p>After any change, run the site validator and confirm GitHub Pages or the chosen host still publishes.</p>
+        </article>
+      </section>
+
+      <section class="note-block">
+        <h2>Current Package Contents</h2>
+        <ul>
+          <li>`PROJECT_HANDOFF.md` - project goal, architecture, completed modules, and deployment path.</li>
+          <li>`GPT_CONTINUE_PROMPT.md` - a ready-to-copy prompt for another GPT or Codex agent.</li>
+          <li>`FILE_MANIFEST.md` - core source files and research data map.</li>
+          <li>`VALIDATION.md` - validation command, expected result, and manual checks.</li>
+          <li>`source/` - clean website source snapshot without `.git` or local upload tooling.</li>
+        </ul>
+      </section>
+
+      <section class="note-block">
+        <h2>Copyable Continuation Prompt</h2>
+        <textarea class="reading-output compact-output" readonly>Read PROJECT_HANDOFF.md, FILE_MANIFEST.md, VALIDATION.md, and source/README.md first.
+
+You are continuing the L-js-doctor Research Site: a GitHub Pages static website evolving into a medical research ecosystem.
+
+Preserve these capabilities:
+- PubMed literature search with paging, result counts, and on-demand abstract retrieval.
+- Literature Reading Desk for Codex tasks, repository JSON, GitHub Issue drafts, and HTML note skeletons.
+- Research Graph, Research Issue Queue, Project Dashboard, GitHub Lab, and Deployment Architecture pages.
+- Repository-backed JSON under data/research/.
+- tools/validate-site.ps1 must pass after changes.
+
+Do not put secrets in frontend code. If a feature needs private keys, login, database, or background jobs, propose Vercel API routes and/or Supabase instead of exposing secrets.
+
+Continue by making one concrete, validated improvement to the research ecosystem.</textarea>
+      </section>
+
+      <section class="note-block">
+        <h2>What To Tell The Next AI</h2>
+        <ol>
+          <li>This is currently a static GitHub Pages site, not a server-backed app.</li>
+          <li>Public APIs such as PubMed can be called from the browser; private APIs need a backend.</li>
+          <li>New research modules should update navigation, README, validation, and graph data when relevant.</li>
+          <li>The first active research direction is glioblastoma immune microenvironment.</li>
+        </ol>
+      </section>
+    </main>
+  </body>
+</html>
