@@ -50,6 +50,7 @@ $requiredFiles = @(
   "research-ecosystem/index.html",
   "research-ecosystem/graph.html",
   "research-ecosystem/github-lab.html",
+  "research-ecosystem/deployment.html",
   "research-ecosystem/issue-queue.html",
   "research-ecosystem/projects.html",
   "research-ecosystem/literature/index.html",
@@ -83,16 +84,24 @@ foreach ($file in $jsonFiles) {
 }
 
 Require-Text "research-ecosystem/literature/index.html" "data-pubmed-form"
+Require-Text "research-ecosystem/literature/index.html" "data-pubmed-status"
+Require-Text "research-ecosystem/literature/index.html" "retmax"
+Require-Text "research-ecosystem/literature/index.html" "retstart"
 Require-Text "research-ecosystem/index.html" "graph.html"
 Require-Text "research-ecosystem/index.html" "github-lab.html"
 Require-Text "research-ecosystem/index.html" "issue-queue.html"
 Require-Text "research-ecosystem/index.html" "projects.html"
+Require-Text "research-ecosystem/index.html" "deployment.html"
 Require-Text "research-ecosystem/graph.html" "data-research-graph"
 Require-Text "data/research/graph.json" "pmid-42193877"
 Require-Text "data/research/graph.json" "github-lab"
 Require-Text "research-ecosystem/github-lab.html" "GitHub Pages"
 Require-Text "research-ecosystem/github-lab.html" "tools/validate-site.ps1"
 Require-Text "research-ecosystem/github-lab.html" "Research Issue Queue"
+Require-Text "research-ecosystem/github-lab.html" "deployment.html"
+Require-Text "research-ecosystem/deployment.html" "GitHub Pages"
+Require-Text "research-ecosystem/deployment.html" "Vercel"
+Require-Text "research-ecosystem/deployment.html" "Supabase"
 Require-Text "research-ecosystem/issue-queue.html" "data-issue-queue"
 Require-Text "research-ecosystem/issue-queue.html" "data-issue-draft-form"
 Require-Text "research-ecosystem/projects.html" "data-project-dashboard"
@@ -111,6 +120,8 @@ Require-Text "data/research/knowledge.json" "glioblastoma-immune-microenvironmen
 Require-Text "site.js" "eutils.ncbi.nlm.nih.gov"
 Require-Text "site.js" "buildPubMedQuery"
 Require-Text "site.js" "scorePaper"
+Require-Text "site.js" "fetchPubMedAbstract"
+Require-Text "site.js" "renderPubMedStatus"
 Require-Text "site.js" "buildReadingBrief"
 Require-Text "site.js" "setupReadingDesk"
 Require-Text "site.js" "buildReadingPackage"
