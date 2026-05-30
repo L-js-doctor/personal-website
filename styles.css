@@ -648,6 +648,23 @@ h1 {
   gap: 12px;
 }
 
+.screening-controls {
+  display: grid;
+  gap: 8px;
+}
+
+.abstract-preview {
+  margin: 14px 0;
+  padding: 14px;
+  max-height: 260px;
+  overflow: auto;
+  white-space: pre-wrap;
+  color: var(--muted);
+  background: rgba(247, 248, 244, 0.82);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
 .deep-reading,
 .manual-entry,
 .featured-literature {
@@ -1074,6 +1091,38 @@ h1 {
   margin-top: 18px;
 }
 
+.deployment-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 28px 0;
+}
+
+.deployment-grid article {
+  padding: 20px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 10px 34px rgba(22, 34, 31, 0.06);
+}
+
+.deployment-grid span {
+  display: inline-flex;
+  margin-bottom: 22px;
+  color: var(--amber);
+  font-weight: 900;
+}
+
+.deployment-grid h2 {
+  margin: 0 0 8px;
+  font-size: 1.35rem;
+}
+
+.deployment-grid p,
+.deployment-grid ul {
+  color: var(--muted);
+}
+
 .import-button {
   display: inline-flex;
   align-items: center;
@@ -1235,7 +1284,8 @@ h1 {
   .issue-controls,
   .issue-draft-form,
   .project-card-head,
-  .project-link-grid {
+  .project-link-grid,
+  .deployment-grid {
     grid-template-columns: 1fr;
   }
 
