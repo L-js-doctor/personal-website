@@ -114,24 +114,46 @@
       <section class="deep-reading" id="deep-reading" data-deep-reading>
         <div>
           <p class="section-kicker">Deep Reading</p>
-          <h2>Codex Reading Brief Generator</h2>
+          <h2>Deep Reading Matrix</h2>
           <p>
-            Paste a PMID, DOI, title, abstract, or selected paper details. The page generates a structured brief
-            that you can give to Codex for deep reading and HTML note creation.
+            Turn selected PubMed papers into a structured reading matrix: introduction, research question,
+            experimental design, methods, results, mechanism, limitations, and follow-up actions.
           </p>
         </div>
+
+        <section class="reading-queue-panel" data-reading-queue-panel>
+          <div class="output-heading">
+            <div>
+              <p class="section-kicker">Queue</p>
+              <h3>Selected papers for deep reading</h3>
+            </div>
+            <button class="button secondary" type="button" data-export-reading-queue>Export queue JSON</button>
+          </div>
+          <div class="reading-queue-list" data-reading-queue>
+            <p class="empty-state">No papers in the deep-reading queue yet. Use PubMed search results to add papers.</p>
+          </div>
+        </section>
+
         <form class="tool-form" data-reading-form>
           <label>PMID or DOI<input name="id" placeholder="42193877 or 10.xxxx/xxxxx"></label>
           <label>Paper title<input name="title" placeholder="Paste the title"></label>
           <label>Abstract or key details<textarea name="abstract" placeholder="Paste abstract or key PubMed information"></textarea></label>
           <label>Your reading goal<textarea name="goal" placeholder="Example: identify how this review informs glioblastoma immune microenvironment research"></textarea></label>
+          <label>Introduction / Background<textarea name="introduction" placeholder="Why was this study needed? What prior knowledge or clinical problem motivates it?"></textarea></label>
+          <label>Research question / Hypothesis<textarea name="hypothesis" placeholder="What exact question or hypothesis does the paper test?"></textarea></label>
+          <label>Experimental design<textarea name="design" placeholder="Study type, groups, controls, model, sample size, intervention, comparison"></textarea></label>
+          <label>Methods / Measurements<textarea name="methods" placeholder="Assays, datasets, statistics, endpoints, major measurement methods"></textarea></label>
+          <label>Main results<textarea name="results" placeholder="Key figures/results and what each result supports"></textarea></label>
+          <label>Mechanism / Interpretation<textarea name="mechanism" placeholder="Mechanism chain, biological explanation, pathology connection"></textarea></label>
+          <label>Limitations<textarea name="limitations" placeholder="Bias, model limitations, missing controls, external validity, uncertainty"></textarea></label>
+          <label>Follow-up actions<textarea name="followup" placeholder="Next papers, search terms, experiments, graph nodes, project updates"></textarea></label>
           <label>Output mode
             <select name="mode">
               <option value="exam">Study/exam deep reading</option>
               <option value="research">Research-question deep reading</option>
               <option value="journal-club">Journal club briefing</option>
               <option value="methods">Methods dissection</option>
-            </select>
+          </select>
           </label>
           <button class="button primary" type="submit">Generate Codex brief</button>
         </form>
