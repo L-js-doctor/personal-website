@@ -50,6 +50,7 @@ $requiredFiles = @(
   "research-ecosystem/index.html",
   "research-ecosystem/graph.html",
   "research-ecosystem/github-lab.html",
+  "research-ecosystem/ai-handoff.html",
   "research-ecosystem/deployment.html",
   "research-ecosystem/issue-queue.html",
   "research-ecosystem/projects.html",
@@ -92,6 +93,7 @@ Require-Text "research-ecosystem/index.html" "github-lab.html"
 Require-Text "research-ecosystem/index.html" "issue-queue.html"
 Require-Text "research-ecosystem/index.html" "projects.html"
 Require-Text "research-ecosystem/index.html" "deployment.html"
+Require-Text "research-ecosystem/index.html" "ai-handoff.html"
 Require-Text "research-ecosystem/graph.html" "data-research-graph"
 Require-Text "data/research/graph.json" "pmid-42193877"
 Require-Text "data/research/graph.json" "github-lab"
@@ -99,6 +101,9 @@ Require-Text "research-ecosystem/github-lab.html" "GitHub Pages"
 Require-Text "research-ecosystem/github-lab.html" "tools/validate-site.ps1"
 Require-Text "research-ecosystem/github-lab.html" "Research Issue Queue"
 Require-Text "research-ecosystem/github-lab.html" "deployment.html"
+Require-Text "research-ecosystem/github-lab.html" "ai-handoff.html"
+Require-Text "research-ecosystem/ai-handoff.html" "AI Handoff Lab"
+Require-Text "research-ecosystem/ai-handoff.html" "Copyable Continuation Prompt"
 Require-Text "research-ecosystem/deployment.html" "GitHub Pages"
 Require-Text "research-ecosystem/deployment.html" "Vercel"
 Require-Text "research-ecosystem/deployment.html" "Supabase"
@@ -107,6 +112,9 @@ Require-Text "research-ecosystem/issue-queue.html" "data-issue-draft-form"
 Require-Text "research-ecosystem/projects.html" "data-project-dashboard"
 Require-Text "research-ecosystem/projects.html" "data-project-list"
 Require-Text "research-ecosystem/literature/index.html" "data-reading-form"
+Require-Text "research-ecosystem/literature/index.html" "data-reading-queue"
+Require-Text "research-ecosystem/literature/index.html" "Experimental design"
+Require-Text "research-ecosystem/literature/index.html" "Introduction / Background"
 Require-Text "research-ecosystem/literature/index.html" "data-high-relevance"
 Require-Text "research-ecosystem/literature/index.html" "reading-desk.html"
 Require-Text "research-ecosystem/literature/reading-desk.html" "data-reading-desk"
@@ -123,6 +131,8 @@ Require-Text "site.js" "scorePaper"
 Require-Text "site.js" "fetchPubMedAbstract"
 Require-Text "site.js" "renderPubMedStatus"
 Require-Text "site.js" "buildReadingBrief"
+Require-Text "site.js" "addToReadingQueue"
+Require-Text "site.js" "deepReadingQueue"
 Require-Text "site.js" "setupReadingDesk"
 Require-Text "site.js" "buildReadingPackage"
 Require-Text "site.js" "setupIssueQueue"
@@ -132,6 +142,7 @@ Require-Text "site.js" "api.github.com/repos/L-js-doctor/personal-website/issues
 Require-Text "data/research/graph.json" "literature-reading-desk"
 Require-Text "data/research/graph.json" "research-issue-queue"
 Require-Text "data/research/graph.json" "research-project-dashboard"
+Require-Text "data/research/graph.json" "ai-handoff-lab"
 Require-Text "data/research/projects.json" "gbm-immune-microenvironment-project"
 
 if ($errors.Count -gt 0) {
