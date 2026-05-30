@@ -63,6 +63,14 @@
       "description": "Project layer that groups papers, search strategies, knowledge nodes, Issues, next actions, and quality gates.",
       "url": "research-ecosystem/projects.html",
       "tags": ["project management", "research operations", "quality gates", "progress"]
+    },
+    {
+      "id": "ai-handoff-lab",
+      "type": "workflow",
+      "title": "AI Handoff Lab",
+      "description": "Workflow for packaging the website and handing it to another GPT, Codex session, or developer.",
+      "url": "research-ecosystem/ai-handoff.html",
+      "tags": ["AI collaboration", "handoff", "project package", "continuation prompt"]
     }
   ],
   "edges": [
@@ -125,6 +133,16 @@
       "source": "research-project-dashboard",
       "target": "gbm-immune-search-strategy",
       "label": "uses search strategy"
+    },
+    {
+      "source": "ai-handoff-lab",
+      "target": "github-lab",
+      "label": "extends collaboration workflow from"
+    },
+    {
+      "source": "ai-handoff-lab",
+      "target": "research-project-dashboard",
+      "label": "packages project context from"
     },
     {
       "source": "repository-validation",
