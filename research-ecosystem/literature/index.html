@@ -83,6 +83,20 @@
               <option value="mesh">MeSH oriented</option>
             </select>
           </label>
+          <label>Results per page
+            <select data-pubmed-field="retmax">
+              <option value="8">8</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+            </select>
+          </label>
+          <label>Start at result<input data-pubmed-field="retstart" inputmode="numeric" placeholder="0"></label>
+          <label>Sort by
+            <select data-pubmed-field="sort">
+              <option value="relevance">Relevance</option>
+              <option value="pub_date">Publication date</option>
+            </select>
+          </label>
           <div class="query-preview">
             <span>Generated PubMed query</span>
             <code data-query-preview>Waiting for input...</code>
@@ -92,6 +106,7 @@
         <div class="screening-controls">
           <label><input data-high-relevance type="checkbox"> Show high-relevance results only</label>
           <p>Scoring is local and transparent: title matches, year range, article type, and term coverage increase the score.</p>
+          <p data-pubmed-status>PubMed total count appears after search. Increase the start value to page through more results.</p>
         </div>
         <div class="pubmed-results" id="screening" data-pubmed-results></div>
       </section>
