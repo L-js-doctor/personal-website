@@ -671,6 +671,53 @@ h1 {
   margin: 28px 0;
 }
 
+.reading-queue-panel {
+  margin: 24px 0;
+  padding: 20px;
+  background: #edf6f3;
+  border: 1px solid rgba(31, 111, 107, 0.18);
+  border-radius: 8px;
+}
+
+.reading-queue-list {
+  display: grid;
+  gap: 12px;
+}
+
+.queue-paper-card {
+  padding: 16px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.queue-paper-card h4 {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+}
+
+.queue-paper-card p {
+  margin: 0 0 10px;
+  color: var(--muted);
+}
+
+.deep-reading .tool-form {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.deep-reading .tool-form label:nth-child(3),
+.deep-reading .tool-form label:nth-child(4),
+.deep-reading .tool-form label:nth-child(5),
+.deep-reading .tool-form label:nth-child(6),
+.deep-reading .tool-form label:nth-child(7),
+.deep-reading .tool-form label:nth-child(8),
+.deep-reading .tool-form label:nth-child(9),
+.deep-reading .tool-form label:nth-child(10),
+.deep-reading .tool-form label:nth-child(11),
+.deep-reading .tool-form label:nth-child(12) {
+  grid-column: 1 / -1;
+}
+
 .featured-literature {
   display: flex;
   align-items: center;
@@ -1266,7 +1313,8 @@ h1 {
   .pubmed-search,
   .pubmed-builder,
   .literature-workflow,
-  .metadata-grid {
+  .metadata-grid,
+  .deep-reading .tool-form {
     grid-template-columns: 1fr;
   }
 
