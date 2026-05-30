@@ -317,8 +317,10 @@
     var results = root.querySelector("[data-pubmed-results]");
     var preview = root.querySelector("[data-query-preview]");
     var highRelevance = root.querySelector("[data-high-relevance]");
+    var status = root.querySelector("[data-pubmed-status]");
     var lastPapers = [];
     var lastCriteria = {};
+    var lastSearchMeta = {};
 
     if (!form || !queryInput || !results) {
       return;
@@ -347,14 +349,19 @@
       results.innerHTML = "<p class='empty-state'>Connecting to PubMed...</p>";
       lastCriteria = getSearchCriteria(root);
 
-      searchPubMed(query)
-        .then(function (papers) {
-          lastPapers = papers.map(function (paper) {
+      searchPubMed(query, lastCriteria)
+        .then(function (payload) {
+          lastSearchMeta = payload.meta || {};
+          lastPapers = payload.papers.map(function (paper) {
             paper.screening = scorePaper(paper, lastCriteria);
             return paper;
-          }).sort(function (a, b) {
-            return b.screening.score - a.screening.score;
           });
+          if (lastCriteria.sort !== "pub_date") {
+            lastPapers.sort(function (a, b) {
+              return b.screening.score - a.screening.score;
+            });
+          }
+          renderPubMedStatus(status, lastSearchMeta, lastPapers.length);
           renderPubMedResults(filterPapers(lastPapers, highRelevance), results, storeKey, render);
         })
         .catch(function () {
@@ -364,6 +371,7 @@
 
     if (highRelevance) {
       highRelevance.addEventListener("change", function () {
+        renderPubMedStatus(status, lastSearchMeta, filterPapers(lastPapers, highRelevance).length);
         renderPubMedResults(filterPapers(lastPapers, highRelevance), results, storeKey, render);
       });
     }
@@ -380,7 +388,10 @@
       extra: (root.querySelector("[data-pubmed-query]") || {}).value || "",
       type: getPubMedField(root, "type"),
       fromYear: getPubMedField(root, "fromYear"),
-      toYear: getPubMedField(root, "toYear")
+      toYear: getPubMedField(root, "toYear"),
+      retmax: getPubMedField(root, "retmax") || "8",
+      retstart: getPubMedField(root, "retstart") || "0",
+      sort: getPubMedField(root, "sort") || "relevance"
     };
   }
 
@@ -444,10 +455,21 @@
     return parts.join(" AND ");
   }
 
-  function searchPubMed(query) {
+  function searchPubMed(query, criteria) {
     var base = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/";
     var common = "&tool=ljsdoctor_research_site&email=288302595%2BL-js-doctor%40users.noreply.github.com";
-    var searchUrl = base + "esearch.fcgi?db=pubmed&retmode=json&retmax=8&sort=relevance&term=" + encodeURIComponent(query) + common;
+    var retmax = Math.max(1, Math.min(50, Number(criteria.retmax || 8)));
+    var retstart = Math.max(0, Number(criteria.retstart || 0));
+    var sort = criteria.sort || "relevance";
+    var searchUrl = base + "esearch.fcgi?db=pubmed&retmode=json&retmax=" + retmax +
+      "&retstart=" + retstart + "&sort=" + encodeURIComponent(sort) +
+      "&term=" + encodeURIComponent(query) + common;
+    var meta = {
+      retmax: retmax,
+      retstart: retstart,
+      sort: sort,
+      count: 0
+    };
 
     return fetch(searchUrl)
       .then(function (response) {
@@ -457,31 +479,40 @@
         return response.json();
       })
       .then(function (searchData) {
-        var ids = searchData.esearchresult && searchData.esearchresult.idlist;
+        var searchResult = searchData.esearchresult || {};
+        var ids = searchResult.idlist;
+        meta.count = Number(searchResult.count || 0);
         if (!ids || ids.length === 0) {
-          return [];
+          return { papers: [], meta: meta };
         }
 
         var summaryUrl = base + "esummary.fcgi?db=pubmed&retmode=json&id=" + ids.join(",") + common;
-        return fetch(summaryUrl);
+        return fetch(summaryUrl).then(function (response) {
+          return { response: response, meta: meta };
+        });
       })
-      .then(function (response) {
-        if (Array.isArray(response)) {
-          return response;
+      .then(function (payload) {
+        if (payload.papers) {
+          return payload;
         }
+        var response = payload.response;
         if (!response.ok) {
           throw new Error("PubMed summary failed");
         }
-        return response.json();
+        return response.json().then(function (summaryData) {
+          return { summaryData: summaryData, meta: payload.meta };
+        });
       })
-      .then(function (summaryData) {
-        if (Array.isArray(summaryData)) {
-          return summaryData;
+      .then(function (payload) {
+        if (payload.papers) {
+          return payload;
         }
 
-        var result = summaryData.result || {};
+        var result = payload.summaryData.result || {};
         var uids = result.uids || [];
-        return uids.map(function (uid) {
+        return {
+          meta: payload.meta,
+          papers: uids.map(function (uid) {
           var item = result[uid] || {};
           return {
             pmid: uid,
@@ -493,7 +524,46 @@
             pubtypes: Array.isArray(item.pubtype) ? item.pubtype.join(", ") : "",
             url: "https://pubmed.ncbi.nlm.nih.gov/" + uid + "/"
           };
-        });
+          })
+        };
+      });
+  }
+
+  function renderPubMedStatus(target, meta, shown) {
+    if (!target || !meta) {
+      return;
+    }
+    var start = Number(meta.retstart || 0) + 1;
+    var end = Number(meta.retstart || 0) + Number(shown || 0);
+    var total = Number(meta.count || 0);
+    if (!total) {
+      target.textContent = "No PubMed records found for this query.";
+      return;
+    }
+    target.textContent = "PubMed matched " + total + " records. Showing " + start + "-" + end +
+      ". To page forward, set Start at result to " + (Number(meta.retstart || 0) + Number(meta.retmax || 8)) + ".";
+  }
+
+  function fetchPubMedAbstract(pmid) {
+    var base = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/";
+    var common = "&tool=ljsdoctor_research_site&email=288302595%2BL-js-doctor%40users.noreply.github.com";
+    var url = base + "efetch.fcgi?db=pubmed&retmode=xml&id=" + encodeURIComponent(pmid) + common;
+
+    return fetch(url)
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error("PubMed abstract fetch failed");
+        }
+        return response.text();
+      })
+      .then(function (xmlText) {
+        var doc = new DOMParser().parseFromString(xmlText, "application/xml");
+        var parts = Array.prototype.slice.call(doc.querySelectorAll("AbstractText")).map(function (node) {
+          var label = node.getAttribute("Label");
+          var text = node.textContent.trim();
+          return label ? label + ": " + text : text;
+        }).filter(Boolean);
+        return parts.join("\n\n") || "No abstract was returned by PubMed for this record.";
       });
   }
 
@@ -577,7 +647,8 @@
         "<p><strong>Date:</strong> " + escapeHtml(paper.pubdate || paper.year || "Not provided") + "</p>" +
         "<p><strong>Type:</strong> " + escapeHtml(paper.pubtypes || "Not provided") + "</p>" +
         "<p><strong>Authors:</strong> " + escapeHtml(paper.authors || "Not provided") + "</p>" +
-        "<p><a href='" + escapeHtml(paper.url) + "'>Open PubMed page</a></p>";
+        "<p><a href='" + escapeHtml(paper.url) + "'>Open PubMed page</a></p>" +
+        "<div class='abstract-preview' data-abstract-preview>Abstract not loaded yet.</div>";
 
       var save = document.createElement("button");
       save.type = "button";
@@ -621,6 +692,33 @@
       });
 
       card.appendChild(brief);
+
+      var abstractButton = document.createElement("button");
+      abstractButton.type = "button";
+      abstractButton.className = "button secondary";
+      abstractButton.textContent = "Fetch abstract";
+      abstractButton.addEventListener("click", function () {
+        var abstractBox = card.querySelector("[data-abstract-preview]");
+        abstractButton.textContent = "Fetching...";
+        abstractButton.disabled = true;
+        fetchPubMedAbstract(paper.pmid)
+          .then(function (abstractText) {
+            paper.abstract = abstractText;
+            if (abstractBox) {
+              abstractBox.textContent = abstractText;
+            }
+            abstractButton.textContent = "Abstract loaded";
+          })
+          .catch(function () {
+            if (abstractBox) {
+              abstractBox.textContent = "PubMed did not return an abstract for this record or the request failed.";
+            }
+            abstractButton.textContent = "Try abstract again";
+            abstractButton.disabled = false;
+          });
+      });
+
+      card.appendChild(abstractButton);
       target.appendChild(card);
     });
   }
@@ -641,6 +739,7 @@
         paper.journal ? "Journal: " + paper.journal : "",
         paper.pubdate ? "Date: " + paper.pubdate : "",
         paper.authors ? "Authors: " + paper.authors : "",
+        paper.abstract ? "Abstract: " + paper.abstract : "",
         paper.url ? "URL: " + paper.url : ""
       ].filter(Boolean).join("\n");
     }
