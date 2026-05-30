@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Deployment Architecture | L-js-doctor</title>
+    <link rel="stylesheet" href="../styles.css">
+  </head>
+  <body class="subpage">
+    <header class="site-header">
+      <a class="brand" href="../index.html"><span class="brand-mark">L</span><span>L-js-doctor</span></a>
+      <nav class="nav">
+        <a href="./">Research Hub</a>
+        <a href="github-lab.html">GitHub Lab</a>
+        <a href="projects.html">Projects</a>
+        <a href="issue-queue.html">Issue Queue</a>
+      </nav>
+    </header>
+
+    <main class="page-shell note-page">
+      <p class="section-kicker">Deployment</p>
+      <h1>Website, Server, and Hosting Map</h1>
+      <p class="page-lead">
+        The current site is a GitHub Pages static website. That is enough for public pages,
+        repository-backed JSON, PubMed search from the browser, and GitHub Issues. A server becomes
+        necessary when the site needs secrets, accounts, databases, scheduled jobs, or private APIs.
+      </p>
+
+      <section class="deployment-grid" aria-label="Deployment layers">
+        <article>
+          <span>Now</span>
+          <h2>GitHub Pages</h2>
+          <p>Publishes HTML, CSS, JavaScript, images, and JSON directly from the repository.</p>
+          <ul>
+            <li>Good for public research notes and dashboards.</li>
+            <li>Can call public APIs such as PubMed from the browser.</li>
+            <li>Cannot safely store private API keys or user secrets.</li>
+          </ul>
+        </article>
+        <article>
+          <span>Next</span>
+          <h2>Vercel</h2>
+          <p>Adds serverless API routes and automatic deploy previews from GitHub.</p>
+          <ul>
+            <li>Good for OpenAI API calls, protected PubMed enrichment, and backend helpers.</li>
+            <li>Stores environment variables outside public website code.</li>
+            <li>Still keeps GitHub as the source of truth.</li>
+          </ul>
+        </article>
+        <article>
+          <span>Data</span>
+          <h2>Supabase</h2>
+          <p>Adds database, login, file storage, and row-level permissions when the site becomes private or collaborative.</p>
+          <ul>
+            <li>Good for personal literature libraries and research logs.</li>
+            <li>Can support private notes that should not live in a public repository.</li>
+            <li>Works well beside Vercel APIs.</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="note-block">
+        <h2>What Codex Can Do</h2>
+        <p>
+          Codex can write the frontend, backend API routes, database schema, deployment configuration,
+          validation scripts, GitHub Issues, and documentation. You still approve account-level actions:
+          GitHub permissions, Vercel project connection, Supabase project creation, billing choices, and secret values.
+        </p>
+      </section>
+
+      <section class="note-block">
+        <h2>When To Upgrade</h2>
+        <ol>
+          <li>Stay on GitHub Pages while the site is public, static, and repository-backed.</li>
+          <li>Add Vercel when we need secure server-side API calls or environment variables.</li>
+          <li>Add Supabase when we need login, private records, database queries, or file storage.</li>
+          <li>Keep GitHub Issues and the project dashboard as the planning layer throughout.</li>
+        </ol>
+      </section>
+    </main>
+  </body>
+</html>
