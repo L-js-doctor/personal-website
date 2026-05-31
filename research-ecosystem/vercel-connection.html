@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vercel Connection Checklist | L-js-doctor</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script defer src="../site.js"></script>
+  </head>
+  <body class="subpage">
+    <header class="site-header">
+      <a class="brand" href="../index.html"><span class="brand-mark">L</span><span>L-js-doctor</span></a>
+      <nav class="nav">
+        <a href="./">Research Hub</a>
+        <a href="translation-api.html">Translation API</a>
+        <a href="deployment.html">Deployment</a>
+        <a href="literature/">Literature Lab</a>
+      </nav>
+    </header>
+
+    <main class="page-shell note-page">
+      <p class="section-kicker">Vercel Setup</p>
+      <h1>Vercel Connection Checklist</h1>
+      <p class="page-lead">
+        This is the practical handoff checklist for connecting the research website to a real AI backend.
+        The code is already prepared; this page records the account-level steps that must be completed in Vercel.
+      </p>
+
+      <section class="note-block">
+        <h2>What Success Looks Like</h2>
+        <ol>
+          <li>Vercel imports the GitHub repository <code>L-js-doctor/personal-website</code>.</li>
+          <li>The deployed project includes <code>api/deep-read.js</code>.</li>
+          <li>Vercel environment variables include <code>OPENAI_API_KEY</code>.</li>
+          <li>The endpoint <code>https://your-vercel-project.vercel.app/api/deep-read</code> returns <code>ok: true</code>.</li>
+          <li>The Literature Lab <strong>Test endpoint</strong> button reports that the endpoint is online.</li>
+          <li>The Literature Lab <strong>AI deep read</strong> button returns a structured paper reading note.</li>
+        </ol>
+      </section>
+
+      <section class="note-block">
+        <h2>Dashboard Steps</h2>
+        <ol>
+          <li>Open Vercel and sign in with GitHub.</li>
+          <li>Create a new project and choose <code>L-js-doctor/personal-website</code>.</li>
+          <li>Keep the default framework setting unless Vercel detects a static project automatically.</li>
+          <li>Before or after first deploy, open Project Settings, then Environment Variables.</li>
+          <li>Add <code>OPENAI_API_KEY</code> with the real key from your OpenAI account.</li>
+          <li>Optional: add <code>OPENAI_MODEL</code> with <code>gpt-5.4</code>.</li>
+          <li>Optional but recommended: add <code>ALLOWED_ORIGIN</code> with <code>https://l-js-doctor.github.io</code>.</li>
+          <li>Redeploy after adding environment variables.</li>
+        </ol>
+      </section>
+
+      <section class="note-block">
+        <h2>Website Test Steps</h2>
+        <ol>
+          <li>Copy the deployed API URL, ending in <code>/api/deep-read</code>.</li>
+          <li>Open Literature Lab.</li>
+          <li>Paste the URL into <strong>AI endpoint URL</strong>.</li>
+          <li>Click <strong>Save endpoint</strong>.</li>
+          <li>Click <strong>Test endpoint</strong>.</li>
+          <li>If it says <code>OPENAI_API_KEY is configured</code>, paste a paper abstract and click <strong>AI deep read</strong>.</li>
+        </ol>
+      </section>
+
+      <section class="note-block">
+        <h2>Command Line Test</h2>
+        <p>After Vercel deploys, this PowerShell check should report endpoint health:</p>
+        <pre><code>powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\test-ai-endpoint.ps1 -Endpoint https://your-vercel-project.vercel.app/api/deep-read</code></pre>
+        <p>To send a real sample request, add <code>-PostSample</code>. That test uses OpenAI credits.</p>
+      </section>
+
+      <section class="note-block">
+        <h2>If Something Fails</h2>
+        <ol>
+          <li><strong>404:</strong> Vercel did not deploy <code>api/deep-read.js</code> or the endpoint URL is wrong.</li>
+          <li><strong>OPENAI_API_KEY missing:</strong> add the environment variable in Vercel and redeploy.</li>
+          <li><strong>Origin is not allowed:</strong> check that <code>ALLOWED_ORIGIN</code> matches the website origin exactly.</li>
+          <li><strong>OpenAI request failed:</strong> check the API key, billing, model name, and Vercel function logs.</li>
+        </ol>
+      </section>
+    </main>
+  </body>
+</html>
