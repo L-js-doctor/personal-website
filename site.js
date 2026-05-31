@@ -951,6 +951,7 @@
     var aiButton = root.querySelector("[data-ai-deep-read]");
     var aiStatus = root.querySelector("[data-ai-deep-read-status]");
     var aiEndpointForm = root.querySelector("[data-ai-endpoint-form]");
+    var aiEndpointTest = root.querySelector("[data-ai-endpoint-test]");
     var aiEndpointReset = root.querySelector("[data-ai-endpoint-reset]");
     var queueList = root.querySelector("[data-reading-queue]");
     var exportQueueButton = root.querySelector("[data-export-reading-queue]");
@@ -977,7 +978,7 @@
       });
     }
 
-    setupAiEndpointControls(aiEndpointForm, aiEndpointReset, aiStatus);
+    setupAiEndpointControls(aiEndpointForm, aiEndpointReset, aiEndpointTest, aiStatus);
 
     if (copyButton) {
       copyButton.addEventListener("click", function () {
@@ -1121,7 +1122,7 @@
     return "/api/deep-read";
   }
 
-  function setupAiEndpointControls(form, resetButton, status) {
+  function setupAiEndpointControls(form, resetButton, testButton, status) {
     if (form && form.elements.endpoint) {
       form.elements.endpoint.value = localStorage.getItem("ljsdoctor:deepReadEndpoint") || "";
       form.addEventListener("submit", function (event) {
@@ -1148,6 +1149,35 @@
           form.elements.endpoint.value = "";
         }
         writeStatus(status, "Using same-site AI endpoint: /api/deep-read.");
+      });
+    }
+
+    if (testButton) {
+      testButton.addEventListener("click", function () {
+        var endpoint = form && form.elements.endpoint && form.elements.endpoint.value.trim()
+          ? form.elements.endpoint.value.trim()
+          : getAiEndpoint();
+        testButton.disabled = true;
+        writeStatus(status, "Testing AI endpoint...");
+        fetch(endpoint, { method: "GET" })
+          .then(function (response) {
+            return response.json().then(function (data) {
+              if (!response.ok) {
+                throw new Error(data.error || "Endpoint test failed.");
+              }
+              return data;
+            });
+          })
+          .then(function (data) {
+            var keyState = data.openaiConfigured ? "OPENAI_API_KEY is configured" : "OPENAI_API_KEY is missing";
+            writeStatus(status, "Endpoint online: " + (data.service || endpoint) + ". " + keyState + ". Model: " + (data.model || "unknown") + ".");
+          })
+          .catch(function (error) {
+            writeStatus(status, "Endpoint test failed: " + error.message);
+          })
+          .finally(function () {
+            testButton.disabled = false;
+          });
       });
     }
   }
