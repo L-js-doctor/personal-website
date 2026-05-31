@@ -950,6 +950,8 @@
     var downloadButton = root.querySelector("[data-download-reading]");
     var aiButton = root.querySelector("[data-ai-deep-read]");
     var aiStatus = root.querySelector("[data-ai-deep-read-status]");
+    var aiEndpointForm = root.querySelector("[data-ai-endpoint-form]");
+    var aiEndpointReset = root.querySelector("[data-ai-endpoint-reset]");
     var queueList = root.querySelector("[data-reading-queue]");
     var exportQueueButton = root.querySelector("[data-export-reading-queue]");
 
@@ -974,6 +976,8 @@
         requestAiDeepRead(fields, output, aiStatus, aiButton);
       });
     }
+
+    setupAiEndpointControls(aiEndpointForm, aiEndpointReset, aiStatus);
 
     if (copyButton) {
       copyButton.addEventListener("click", function () {
@@ -1110,7 +1114,42 @@
     if (window.LJS_DEEP_READ_ENDPOINT) {
       return window.LJS_DEEP_READ_ENDPOINT;
     }
+    var saved = localStorage.getItem("ljsdoctor:deepReadEndpoint");
+    if (saved) {
+      return saved;
+    }
     return "/api/deep-read";
+  }
+
+  function setupAiEndpointControls(form, resetButton, status) {
+    if (form && form.elements.endpoint) {
+      form.elements.endpoint.value = localStorage.getItem("ljsdoctor:deepReadEndpoint") || "";
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        var endpoint = form.elements.endpoint.value.trim();
+        if (!endpoint) {
+          localStorage.removeItem("ljsdoctor:deepReadEndpoint");
+          writeStatus(status, "Using same-site AI endpoint: /api/deep-read.");
+          return;
+        }
+        if (!/^https:\/\/.+\/api\/deep-read$/.test(endpoint) && endpoint !== "/api/deep-read") {
+          writeStatus(status, "Endpoint should look like https://your-vercel-project.vercel.app/api/deep-read.");
+          return;
+        }
+        localStorage.setItem("ljsdoctor:deepReadEndpoint", endpoint);
+        writeStatus(status, "AI endpoint saved for this browser: " + endpoint);
+      });
+    }
+
+    if (resetButton) {
+      resetButton.addEventListener("click", function () {
+        localStorage.removeItem("ljsdoctor:deepReadEndpoint");
+        if (form && form.elements.endpoint) {
+          form.elements.endpoint.value = "";
+        }
+        writeStatus(status, "Using same-site AI endpoint: /api/deep-read.");
+      });
+    }
   }
 
   function writeStatus(node, message) {
