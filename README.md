@@ -55,10 +55,13 @@ Deployment route:
 1. Import this repository into Vercel.
 2. Add `OPENAI_API_KEY` in Vercel Project Settings -> Environment Variables.
 3. Optional: set `OPENAI_MODEL` to change the model without editing code. The example default is `gpt-5.4`.
-4. Deploy the project.
-5. If the visible site stays on GitHub Pages, paste the Vercel endpoint into Literature Lab:
+4. Optional but recommended: set `ALLOWED_ORIGIN=https://l-js-doctor.github.io` so browser calls are limited to the GitHub Pages site.
+5. Deploy the project.
+6. Test the endpoint:
+   `powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\test-ai-endpoint.ps1 -Endpoint https://your-vercel-project.vercel.app/api/deep-read`
+7. If the visible site stays on GitHub Pages, paste the Vercel endpoint into Literature Lab:
    `https://your-vercel-project.vercel.app/api/deep-read`
-6. If the whole site runs on Vercel, the default same-site endpoint `/api/deep-read` works.
+8. If the whole site runs on Vercel, the default same-site endpoint `/api/deep-read` works.
 
 Never commit real API keys. `.env.example` is only a template.
 
