@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Deployment Architecture | L-js-doctor</title>
     <link rel="stylesheet" href="../styles.css">
+    <script defer src="../site.js"></script>
   </head>
   <body class="subpage">
     <header class="site-header">
@@ -90,6 +91,25 @@
           <li>If the feature needs login, private notes, editable records from multiple devices, or file uploads, add Supabase.</li>
           <li>If the feature needs both AI and private saved data, use Vercel for server logic and Supabase for data.</li>
         </ol>
+      </section>
+
+      <section class="note-block" data-deployment-advisor>
+        <h2>Feature Routing Tool</h2>
+        <form class="tool-form" data-deployment-advisor-form>
+          <label>Feature you want to build
+            <select name="feature">
+              <option value="static">Public learning page, HTML note, or dashboard</option>
+              <option value="pubmed">Realtime PubMed search or screening workflow</option>
+              <option value="ai">AI literature summary or paper deep-reading assistant</option>
+              <option value="private">Private literature library, login, or personal notes</option>
+              <option value="automation">Scheduled PubMed monitor or weekly research digest</option>
+            </select>
+          </label>
+          <button class="button primary" type="submit">Recommend stack</button>
+        </form>
+        <div class="tool-card" data-deployment-advisor-output>
+          <p class="empty-state">Choose a feature type to see where it should live and what approvals are needed.</p>
+        </div>
       </section>
 
       <section class="note-block">
