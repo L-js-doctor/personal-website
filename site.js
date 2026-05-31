@@ -144,6 +144,7 @@
     var list = root.querySelector("[data-list]");
     var search = root.querySelector("[data-search]");
     var exportButton = root.querySelector("[data-export]");
+    var exportHtmlButton = root.querySelector("[data-export-html]");
     var importInput = root.querySelector("[data-import]");
     var clearButton = root.querySelector("[data-clear]");
     var storeKey = "ljsdoctor:" + config.key;
@@ -250,13 +251,13 @@
 
     if (exportButton) {
       exportButton.addEventListener("click", function () {
-        var blob = new Blob([JSON.stringify(readStore(storeKey), null, 2)], { type: "application/json" });
-        var url = URL.createObjectURL(blob);
-        var link = document.createElement("a");
-        link.href = url;
-        link.download = config.key + "-export.json";
-        link.click();
-        URL.revokeObjectURL(url);
+        downloadTextFile(config.key + "-visible-records.json", JSON.stringify(getFilteredItems(), null, 2), "application/json");
+      });
+    }
+
+    if (exportHtmlButton) {
+      exportHtmlButton.addEventListener("click", function () {
+        downloadTextFile(config.key + "-visible-records.html", buildRecordsHtmlExport(config.key, getFilteredItems()), "text/html");
       });
     }
 
@@ -788,6 +789,7 @@
     var form = root.querySelector("[data-reading-form]");
     var output = root.querySelector("[data-reading-output]");
     var copyButton = root.querySelector("[data-copy-reading]");
+    var downloadButton = root.querySelector("[data-download-reading]");
     var queueList = root.querySelector("[data-reading-queue]");
     var exportQueueButton = root.querySelector("[data-export-reading-queue]");
 
@@ -814,6 +816,20 @@
         window.setTimeout(function () {
           copyButton.textContent = "Copy artifact";
         }, 1200);
+      });
+    }
+
+    if (downloadButton) {
+      downloadButton.addEventListener("click", function () {
+        var content = output.value.trim();
+        if (!content) {
+          return;
+        }
+        var artifact = form.elements.artifact ? form.elements.artifact.value : "codex";
+        var title = form.elements.title ? form.elements.title.value : "literature-note";
+        var extension = artifact === "html" ? "html" : artifact === "json" ? "json" : artifact === "matrix" ? "md" : "txt";
+        var mime = artifact === "html" ? "text/html" : artifact === "json" ? "application/json" : "text/plain";
+        downloadTextFile(slugify(title || "literature-note") + "-" + artifact + "." + extension, content, mime);
       });
     }
 
@@ -892,6 +908,58 @@
       return buildReadingHtmlSkeleton(fields);
     }
     return buildReadingBrief(fields);
+  }
+
+  function downloadTextFile(filename, content, mimeType) {
+    var blob = new Blob([content], { type: mimeType || "text/plain" });
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function buildRecordsHtmlExport(title, items) {
+    var rows = items.map(function (item) {
+      var heading = item.title || item.concept || item.topic || item.name || "Untitled record";
+      var meta = [item.year, item.pmid, item.journal, item.category, item.status].filter(Boolean).join(" - ");
+      var body = item.question || item.finding || item.mechanism || item.done || item.output || item.message || JSON.stringify(item, null, 2);
+      var next = item.next || item.followup || item.createdAt || "";
+      return [
+        "      <article class=\"record-card\">",
+        "        <p class=\"meta\">" + escapeHtml(meta || item.source || "Record") + "</p>",
+        "        <h2>" + escapeHtml(heading) + "</h2>",
+        "        <p>" + escapeHtml(body || "No summary provided.") + "</p>",
+        next ? "        <p><strong>Next:</strong> " + escapeHtml(next) + "</p>" : "",
+        "      </article>"
+      ].join("\n");
+    }).join("\n");
+
+    return [
+      "<!doctype html>",
+      "<html lang=\"en\">",
+      "  <head>",
+      "    <meta charset=\"utf-8\">",
+      "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
+      "    <title>" + escapeHtml(title) + " export</title>",
+      "    <style>",
+      "      body{margin:0;font-family:Arial,sans-serif;background:#f6f8fb;color:#17202a;line-height:1.6}",
+      "      main{max-width:960px;margin:0 auto;padding:40px 20px}",
+      "      h1{font-size:2rem;margin:0 0 12px}",
+      "      .record-card{margin:16px 0;padding:18px;background:#fff;border:1px solid #d9e2ea;border-radius:8px}",
+      "      .meta{color:#176b66;font-weight:700;font-size:.85rem}",
+      "    </style>",
+      "  </head>",
+      "  <body>",
+      "    <main>",
+      "      <h1>" + escapeHtml(title) + " export</h1>",
+      "      <p>Exported from L-js-doctor research site on " + new Date().toISOString().slice(0, 10) + ".</p>",
+      rows || "      <p>No records matched this export.</p>",
+      "    </main>",
+      "  </body>",
+      "</html>"
+    ].join("\n");
   }
 
   function buildReadingBrief(fields) {
