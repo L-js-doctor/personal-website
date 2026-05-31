@@ -125,6 +125,18 @@
       </section>
 
       <section class="note-block">
+        <h2>Deployment Checklist</h2>
+        <ol>
+          <li>Connect the GitHub repository to Vercel.</li>
+          <li>Confirm Vercel sees <code>vercel.json</code> and <code>api/deep-read.js</code>.</li>
+          <li>Add <code>OPENAI_API_KEY</code> in Vercel environment variables.</li>
+          <li>Optional: add <code>OPENAI_MODEL</code>, matching the template in <code>.env.example</code>.</li>
+          <li>Deploy, then test <code>/api/deep-read</code> through the Literature Lab button.</li>
+          <li>If the frontend remains on GitHub Pages, paste the full Vercel API URL into the AI endpoint setting.</li>
+        </ol>
+      </section>
+
+      <section class="note-block">
         <h2>Why This Cannot Be Just Frontend</h2>
         <p>
           GitHub Pages publishes static files. Anyone can view the JavaScript sent to their browser. If a private API
