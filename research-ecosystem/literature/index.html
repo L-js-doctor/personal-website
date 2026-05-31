@@ -178,6 +178,13 @@
           <button class="button secondary" type="button" data-ai-deep-read>AI deep read</button>
         </form>
         <p class="empty-state" data-ai-deep-read-status>AI deep reading needs a Vercel backend with OPENAI_API_KEY. The local artifact generator works without a backend.</p>
+        <form class="tool-form compact-form" data-ai-endpoint-form>
+          <label>AI endpoint URL
+            <input name="endpoint" placeholder="https://your-vercel-project.vercel.app/api/deep-read">
+          </label>
+          <button class="button secondary" type="submit">Save endpoint</button>
+          <button class="text-button" type="button" data-ai-endpoint-reset>Use same-site endpoint</button>
+        </form>
         <textarea class="reading-output" data-reading-output readonly placeholder="The selected deep-reading artifact will appear here."></textarea>
         <div class="export-actions">
           <button class="button secondary" type="button" data-copy-reading>Copy artifact</button>
