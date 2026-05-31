@@ -71,7 +71,7 @@
         <ol>
           <li>User searches PubMed or pastes a paper abstract in Literature Lab.</li>
           <li>User chooses output language: Chinese, English, Japanese, Russian, or German.</li>
-          <li>The browser sends only the selected paper data to our protected Vercel endpoint.</li>
+          <li>The browser sends only the selected paper data to our protected Vercel endpoint. If the visible site stays on GitHub Pages, paste the Vercel endpoint URL into the Literature Lab endpoint setting.</li>
           <li>The endpoint calls OpenAI for deep reading, DeepL for direct translation, or both if needed.</li>
           <li>The site receives structured output and lets the user export Markdown, JSON, or HTML.</li>
         </ol>
@@ -96,7 +96,8 @@
           The repository now includes <code>api/deep-read.js</code>, a deployable Vercel serverless function.
           It calls OpenAI from the server, asks for a strict literature deep-reading JSON object, and keeps the API key
           out of public browser code. The Literature Lab has an <strong>AI deep read</strong> button that calls this
-          endpoint when the site is hosted with the backend.
+          endpoint when the site is hosted with the backend. If the frontend remains on GitHub Pages, the Literature Lab
+          can save a Vercel endpoint such as <code>https://your-project.vercel.app/api/deep-read</code> in browser storage.
         </p>
       </section>
 
