@@ -153,12 +153,21 @@
               <option value="research">Research-question deep reading</option>
               <option value="journal-club">Journal club briefing</option>
               <option value="methods">Methods dissection</option>
-          </select>
+            </select>
           </label>
-          <button class="button primary" type="submit">Generate Codex brief</button>
+          <label>Output artifact
+            <select name="artifact">
+              <option value="codex">Codex deep-reading task</option>
+              <option value="matrix">Reading matrix Markdown</option>
+              <option value="design">Experimental design checklist</option>
+              <option value="json">Repository JSON record</option>
+              <option value="html">HTML literature note skeleton</option>
+            </select>
+          </label>
+          <button class="button primary" type="submit">Generate reading artifact</button>
         </form>
-        <textarea class="reading-output" data-reading-output readonly placeholder="The Codex deep-reading brief will appear here."></textarea>
-        <button class="button secondary" type="button" data-copy-reading>Copy brief</button>
+        <textarea class="reading-output" data-reading-output readonly placeholder="The selected deep-reading artifact will appear here."></textarea>
+        <button class="button secondary" type="button" data-copy-reading>Copy artifact</button>
       </section>
 
       <section class="manual-entry">
