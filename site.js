@@ -803,7 +803,7 @@
           fields[field.name] = field.value.trim();
         }
       });
-      output.value = buildReadingBrief(fields);
+      output.value = buildReadingArtifact(fields);
     });
 
     if (copyButton) {
@@ -812,7 +812,7 @@
         document.execCommand("copy");
         copyButton.textContent = "Copied";
         window.setTimeout(function () {
-          copyButton.textContent = "Copy brief";
+          copyButton.textContent = "Copy artifact";
         }, 1200);
       });
     }
@@ -878,6 +878,22 @@
     window.addEventListener("deep-reading-queue-updated", renderQueue);
   }
 
+  function buildReadingArtifact(fields) {
+    if (fields.artifact === "matrix") {
+      return buildReadingMatrixMarkdown(fields);
+    }
+    if (fields.artifact === "design") {
+      return buildExperimentalDesignChecklist(fields);
+    }
+    if (fields.artifact === "json") {
+      return JSON.stringify(buildReadingJsonRecord(fields), null, 2);
+    }
+    if (fields.artifact === "html") {
+      return buildReadingHtmlSkeleton(fields);
+    }
+    return buildReadingBrief(fields);
+  }
+
   function buildReadingBrief(fields) {
     return [
       "Please perform a deep reading of this paper and create an HTML-ready literature note.",
@@ -911,6 +927,125 @@
       "6. Main results mapped to figures or evidence blocks.",
       "7. Mechanism, pathology/medicine connection, limitations, and bias risks.",
       "8. Follow-up papers/search terms and a compact HTML note for the research ecosystem."
+    ].join("\n");
+  }
+
+  function buildReadingMatrixMarkdown(fields) {
+    return [
+      "# Deep Reading Matrix",
+      "",
+      "## Paper",
+      "- Identifier: " + (fields.id || "not provided"),
+      "- Title: " + (fields.title || "not provided"),
+      "- Reading mode: " + (fields.mode || "research"),
+      "",
+      "## 1. Introduction / Background",
+      fields.introduction || "Not filled. Extract the clinical/scientific problem, prior evidence, and knowledge gap.",
+      "",
+      "## 2. Research Question / Hypothesis",
+      fields.hypothesis || fields.goal || "Not filled. State the exact question or hypothesis.",
+      "",
+      "## 3. Experimental Design",
+      fields.design || "Not filled. Specify study type, groups, controls, sample/model, intervention, comparison, endpoints.",
+      "",
+      "## 4. Methods / Measurements",
+      fields.methods || "Not filled. List assays, datasets, statistical methods, primary/secondary endpoints.",
+      "",
+      "## 5. Main Results",
+      fields.results || "Not filled. Map findings to figures/tables and judge evidence strength.",
+      "",
+      "## 6. Mechanism / Interpretation",
+      fields.mechanism || "Not filled. Explain the biological mechanism and pathology/medicine connection.",
+      "",
+      "## 7. Limitations",
+      fields.limitations || "Not filled. Identify bias, missing controls, model limitations, and uncertainty.",
+      "",
+      "## 8. Follow-up Actions",
+      fields.followup || "Not filled. Add next papers, search terms, graph nodes, and project updates.",
+      "",
+      "## Source Details",
+      fields.abstract || "No abstract/details pasted yet."
+    ].join("\n");
+  }
+
+  function buildExperimentalDesignChecklist(fields) {
+    return [
+      "Experimental Design Checklist",
+      "",
+      "Paper: " + (fields.title || "not provided"),
+      "Identifier: " + (fields.id || "not provided"),
+      "",
+      "[ ] Study type is identified: observational / experimental / clinical trial / review / meta-analysis / other.",
+      "[ ] Population, sample, model, or dataset is clearly described.",
+      "[ ] Inclusion and exclusion criteria are captured when applicable.",
+      "[ ] Groups, controls, intervention, and comparison are identified.",
+      "[ ] Primary and secondary endpoints are identified.",
+      "[ ] Main assays, measurements, and statistical methods are listed.",
+      "[ ] Result claims are mapped to figures, tables, or evidence blocks.",
+      "[ ] Mechanism claim is separated from direct evidence.",
+      "[ ] Limitations and bias risks are explicitly listed.",
+      "[ ] Follow-up paper search terms are generated.",
+      "",
+      "Current design notes:",
+      fields.design || "Not filled.",
+      "",
+      "Current methods notes:",
+      fields.methods || "Not filled.",
+      "",
+      "Current limitations:",
+      fields.limitations || "Not filled."
+    ].join("\n");
+  }
+
+  function buildReadingJsonRecord(fields) {
+    var identifier = fields.id || "unidentified-paper";
+    return {
+      id: "deep-reading-" + slugify(identifier + "-" + (fields.title || "paper")),
+      identifier: identifier,
+      title: fields.title || "",
+      mode: fields.mode || "research",
+      goal: fields.goal || "",
+      introduction: fields.introduction || "",
+      hypothesis: fields.hypothesis || "",
+      experimentalDesign: fields.design || "",
+      methods: fields.methods || "",
+      results: fields.results || "",
+      mechanism: fields.mechanism || "",
+      limitations: fields.limitations || "",
+      followup: fields.followup || "",
+      abstractOrDetails: fields.abstract || "",
+      status: "draft-deep-reading",
+      createdAt: new Date().toISOString().slice(0, 10)
+    };
+  }
+
+  function buildReadingHtmlSkeleton(fields) {
+    var title = fields.title || "Untitled literature note";
+    return [
+      "<!doctype html>",
+      "<html lang=\"en\">",
+      "  <head>",
+      "    <meta charset=\"utf-8\">",
+      "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
+      "    <title>" + escapeHtml(title) + "</title>",
+      "    <link rel=\"stylesheet\" href=\"../../styles.css\">",
+      "  </head>",
+      "  <body class=\"subpage\">",
+      "    <main class=\"page-shell note-page literature-note\">",
+      "      <a class=\"back-link\" href=\"./\">Back to Literature Lab</a>",
+      "      <p class=\"section-kicker\">Deep Reading Note</p>",
+      "      <h1>" + escapeHtml(title) + "</h1>",
+      "      <section class=\"note-block\"><h2>Introduction / Background</h2><p>" + escapeHtml(fields.introduction || "Complete after reading.") + "</p></section>",
+      "      <section class=\"note-block\"><h2>Research Question / Hypothesis</h2><p>" + escapeHtml(fields.hypothesis || fields.goal || "Complete after reading.") + "</p></section>",
+      "      <section class=\"note-block\"><h2>Experimental Design</h2><p>" + escapeHtml(fields.design || "Complete after reading.") + "</p></section>",
+      "      <section class=\"note-block\"><h2>Methods / Measurements</h2><p>" + escapeHtml(fields.methods || "Complete after reading.") + "</p></section>",
+      "      <section class=\"note-block\"><h2>Main Results</h2><p>" + escapeHtml(fields.results || "Complete after reading.") + "</p></section>",
+      "      <section class=\"note-block\"><h2>Mechanism / Interpretation</h2><p>" + escapeHtml(fields.mechanism || "Complete after reading.") + "</p></section>",
+      "      <section class=\"note-block\"><h2>Limitations</h2><p>" + escapeHtml(fields.limitations || "Complete after reading.") + "</p></section>",
+      "      <section class=\"note-block\"><h2>Follow-up Actions</h2><p>" + escapeHtml(fields.followup || "Complete after reading.") + "</p></section>",
+      "    </main>",
+      "  </body>",
+      "</html>"
     ].join("\n");
   }
 
