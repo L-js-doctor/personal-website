@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Translation API Plan | L-js-doctor</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script defer src="../site.js"></script>
+  </head>
+  <body class="subpage">
+    <header class="site-header">
+      <a class="brand" href="../index.html"><span class="brand-mark">L</span><span>L-js-doctor</span></a>
+      <nav class="nav">
+        <a href="./">Research Hub</a>
+        <a href="literature/">Literature Lab</a>
+        <a href="deployment.html">Deployment</a>
+        <a href="github-lab.html">GitHub Lab</a>
+      </nav>
+    </header>
+
+    <main class="page-shell note-page">
+      <p class="section-kicker">AI Translation</p>
+      <h1>Real Translation API Plan</h1>
+      <p class="page-lead">
+        The current website can search PubMed and generate translation-ready reading artifacts in the browser.
+        The next real upgrade is a protected backend API that sends abstracts, notes, or selected papers to an AI
+        or translation service without exposing private keys in public website code.
+      </p>
+
+      <section class="note-block">
+        <h2>Short Answer</h2>
+        <p>
+          Yes, this site can connect to real translation APIs. The safe path is GitHub Pages for the visible website,
+          Vercel for protected API routes, OpenAI for literature deep reading and structured translation, and optional
+          DeepL for pure high-quality translation. PubMed stays as the literature data source.
+        </p>
+      </section>
+
+      <section class="deployment-grid" aria-label="Translation API layers">
+        <article>
+          <span>01</span>
+          <h2>Browser</h2>
+          <p>The page collects the paper title, PMID, abstract, reading goal, and target language.</p>
+          <ul>
+            <li>Good for forms, search results, previews, downloads, and local export.</li>
+            <li>Should not contain OpenAI, DeepL, or NCBI private API keys.</li>
+          </ul>
+        </article>
+        <article>
+          <span>02</span>
+          <h2>Backend API</h2>
+          <p>A Vercel API route receives the request, checks size, adds prompts, and calls the external provider.</p>
+          <ul>
+            <li>Stores keys as environment variables.</li>
+            <li>Can limit request rate, log errors, and normalize output.</li>
+          </ul>
+        </article>
+        <article>
+          <span>03</span>
+          <h2>Provider</h2>
+          <p>OpenAI or DeepL returns translated text, structured reading notes, or JSON fields for the website.</p>
+          <ul>
+            <li>OpenAI is best for reasoning, summaries, methods, limitations, and study design extraction.</li>
+            <li>DeepL is best when the task is mostly direct translation.</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="note-block">
+        <h2>How The Data Would Flow</h2>
+        <ol>
+          <li>User searches PubMed or pastes a paper abstract in Literature Lab.</li>
+          <li>User chooses output language: Chinese, English, Japanese, Russian, or German.</li>
+          <li>The browser sends only the selected paper data to our protected Vercel endpoint.</li>
+          <li>The endpoint calls OpenAI for deep reading, DeepL for direct translation, or both if needed.</li>
+          <li>The site receives structured output and lets the user export Markdown, JSON, or HTML.</li>
+        </ol>
+      </section>
+
+      <section class="note-block">
+        <h2>Recommended First Build</h2>
+        <ol>
+          <li>Create a Vercel project connected to this GitHub repository.</li>
+          <li>Add one endpoint: <code>/api/deep-read</code>.</li>
+          <li>Store <code>OPENAI_API_KEY</code> in Vercel environment variables.</li>
+          <li>Send title, abstract, PMID, goal, and target language from the Literature Lab form.</li>
+          <li>Return a strict JSON object with summary, introduction, hypothesis, design, methods, results, mechanism, limitations, and follow-up search terms.</li>
+          <li>Add buttons on the website: Translate, Deep read, Export HTML, Export JSON.</li>
+        </ol>
+      </section>
+
+      <section class="note-block">
+        <h2>Provider Choice</h2>
+        <ul>
+          <li><strong>OpenAI first:</strong> best fit for this site because the goal is not only translation; it also needs paper triage, experimental design extraction, and structured literature notes.</li>
+          <li><strong>DeepL optional:</strong> add later if you want polished direct translation of long paragraphs or finished notes.</li>
+          <li><strong>NCBI API key optional:</strong> useful only if PubMed usage grows beyond basic browser searching or needs higher request limits.</li>
+        </ul>
+      </section>
+
+      <section class="note-block">
+        <h2>What You Would Need To Provide</h2>
+        <ol>
+          <li>A Vercel account connected to GitHub.</li>
+          <li>An OpenAI API key for real AI deep reading and translation.</li>
+          <li>Optional: a DeepL API key for direct translation quality.</li>
+          <li>Optional: an NCBI API key if the PubMed connector becomes high-volume.</li>
+        </ol>
+        <p>
+          These keys should be pasted only into the hosting provider's secret settings, not into website files,
+          chat messages that will be committed, or public GitHub code.
+        </p>
+      </section>
+
+      <section class="note-block">
+        <h2>Why This Cannot Be Just Frontend</h2>
+        <p>
+          GitHub Pages publishes static files. Anyone can view the JavaScript sent to their browser. If a private API
+          key is placed there, it becomes public. A backend route solves this by keeping the key on the server, while
+          the website calls only our own safe endpoint.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
