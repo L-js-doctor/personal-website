@@ -167,7 +167,10 @@
           <button class="button primary" type="submit">Generate reading artifact</button>
         </form>
         <textarea class="reading-output" data-reading-output readonly placeholder="The selected deep-reading artifact will appear here."></textarea>
-        <button class="button secondary" type="button" data-copy-reading>Copy artifact</button>
+        <div class="export-actions">
+          <button class="button secondary" type="button" data-copy-reading>Copy artifact</button>
+          <button class="button secondary" type="button" data-download-reading>Download artifact</button>
+        </div>
       </section>
 
       <section class="manual-entry">
@@ -187,7 +190,8 @@
 
       <div class="tool-bar">
         <input data-search type="search" placeholder="Search saved literature records">
-        <button class="button secondary" type="button" data-export>Export JSON</button>
+        <button class="button secondary" type="button" data-export>Export visible JSON</button>
+        <button class="button secondary" type="button" data-export-html>Export visible HTML</button>
         <label class="import-button">Import JSON<input data-import type="file" accept="application/json,.json"></label>
         <button class="button secondary" type="button" data-clear>Clear local data</button>
       </div>
