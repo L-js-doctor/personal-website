@@ -98,6 +98,8 @@
           out of public browser code. The Literature Lab has an <strong>AI deep read</strong> button that calls this
           endpoint when the site is hosted with the backend. If the frontend remains on GitHub Pages, the Literature Lab
           can save a Vercel endpoint such as <code>https://your-project.vercel.app/api/deep-read</code> in browser storage.
+          The same endpoint also supports a simple GET health check so the page can test whether the backend is online
+          and whether <code>OPENAI_API_KEY</code> is configured.
         </p>
       </section>
 
@@ -131,7 +133,7 @@
           <li>Confirm Vercel sees <code>vercel.json</code> and <code>api/deep-read.js</code>.</li>
           <li>Add <code>OPENAI_API_KEY</code> in Vercel environment variables.</li>
           <li>Optional: add <code>OPENAI_MODEL</code>, matching the template in <code>.env.example</code>.</li>
-          <li>Deploy, then test <code>/api/deep-read</code> through the Literature Lab button.</li>
+          <li>Deploy, then test <code>/api/deep-read</code> through the Literature Lab endpoint test button.</li>
           <li>If the frontend remains on GitHub Pages, paste the full Vercel API URL into the AI endpoint setting.</li>
         </ol>
       </section>
