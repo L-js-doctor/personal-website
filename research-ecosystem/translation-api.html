@@ -83,10 +83,21 @@
           <li>Create a Vercel project connected to this GitHub repository.</li>
           <li>Add one endpoint: <code>/api/deep-read</code>.</li>
           <li>Store <code>OPENAI_API_KEY</code> in Vercel environment variables.</li>
+          <li>Optional: set <code>OPENAI_MODEL</code> in Vercel if we want to change the default model without editing code. The scaffold defaults to <code>gpt-5.4</code>.</li>
           <li>Send title, abstract, PMID, goal, and target language from the Literature Lab form.</li>
           <li>Return a strict JSON object with summary, introduction, hypothesis, design, methods, results, mechanism, limitations, and follow-up search terms.</li>
           <li>Add buttons on the website: Translate, Deep read, Export HTML, Export JSON.</li>
         </ol>
+      </section>
+
+      <section class="note-block">
+        <h2>Current Project Scaffold</h2>
+        <p>
+          The repository now includes <code>api/deep-read.js</code>, a deployable Vercel serverless function.
+          It calls OpenAI from the server, asks for a strict literature deep-reading JSON object, and keeps the API key
+          out of public browser code. The Literature Lab has an <strong>AI deep read</strong> button that calls this
+          endpoint when the site is hosted with the backend.
+        </p>
       </section>
 
       <section class="note-block">
