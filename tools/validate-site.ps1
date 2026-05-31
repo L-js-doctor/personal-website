@@ -54,6 +54,7 @@ $requiredFiles = @(
   "research-ecosystem/github-lab.html",
   "research-ecosystem/ai-handoff.html",
   "research-ecosystem/deployment.html",
+  "research-ecosystem/vercel-connection.html",
   "research-ecosystem/issue-queue.html",
   "research-ecosystem/projects.html",
   "research-ecosystem/literature/index.html",
@@ -95,6 +96,7 @@ Require-Text "research-ecosystem/index.html" "github-lab.html"
 Require-Text "research-ecosystem/index.html" "issue-queue.html"
 Require-Text "research-ecosystem/index.html" "projects.html"
 Require-Text "research-ecosystem/index.html" "deployment.html"
+Require-Text "research-ecosystem/index.html" "vercel-connection.html"
 Require-Text "research-ecosystem/index.html" "ai-handoff.html"
 Require-Text "research-ecosystem/graph.html" "data-research-graph"
 Require-Text "data/research/graph.json" "pmid-42193877"
@@ -114,11 +116,17 @@ Require-Text "research-ecosystem/deployment.html" "Decision Checklist"
 Require-Text "research-ecosystem/deployment.html" "Feature Routing Tool"
 Require-Text "research-ecosystem/deployment.html" "data-deployment-advisor"
 Require-Text "research-ecosystem/deployment.html" "Research Site Upgrade Path"
+Require-Text "research-ecosystem/deployment.html" "vercel-connection.html"
+Require-Text "research-ecosystem/vercel-connection.html" "Vercel Connection Checklist"
+Require-Text "research-ecosystem/vercel-connection.html" "OPENAI_API_KEY"
+Require-Text "research-ecosystem/vercel-connection.html" "Test endpoint"
+Require-Text "research-ecosystem/vercel-connection.html" "tools\test-ai-endpoint.ps1"
 Require-File "research-ecosystem/translation-api.html"
 Require-Text "research-ecosystem/translation-api.html" "Real Translation API Plan"
 Require-Text "research-ecosystem/translation-api.html" "OPENAI_API_KEY"
 Require-Text "research-ecosystem/translation-api.html" "api/deep-read.js"
 Require-Text "research-ecosystem/translation-api.html" "Deployment Checklist"
+Require-Text "research-ecosystem/translation-api.html" "vercel-connection.html"
 Require-Text "research-ecosystem/translation-api.html" "DeepL"
 Require-Text "research-ecosystem/translation-api.html" "NCBI API key"
 Require-File "api/deep-read.js"
