@@ -43,6 +43,13 @@ const RESPONSE_SCHEMA = {
 module.exports = async function handler(request, response) {
   setCors(response);
 
+  if (!isAllowedOrigin(request)) {
+    response.status(403).json({
+      error: "Origin is not allowed for this API endpoint."
+    });
+    return;
+  }
+
   if (request.method === "OPTIONS") {
     response.status(204).end();
     return;
@@ -83,9 +90,18 @@ module.exports = async function handler(request, response) {
 };
 
 function setCors(response) {
-  response.setHeader("Access-Control-Allow-Origin", "*");
+  response.setHeader("Access-Control-Allow-Origin", process.env.ALLOWED_ORIGIN || "*");
   response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+}
+
+function isAllowedOrigin(request) {
+  const allowedOrigin = process.env.ALLOWED_ORIGIN;
+  if (!allowedOrigin) {
+    return true;
+  }
+  const origin = request.headers.origin;
+  return !origin || origin === allowedOrigin;
 }
 
 function readJsonBody(request) {
