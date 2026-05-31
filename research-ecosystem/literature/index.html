@@ -175,7 +175,9 @@
             </select>
           </label>
           <button class="button primary" type="submit">Generate reading artifact</button>
+          <button class="button secondary" type="button" data-ai-deep-read>AI deep read</button>
         </form>
+        <p class="empty-state" data-ai-deep-read-status>AI deep reading needs a Vercel backend with OPENAI_API_KEY. The local artifact generator works without a backend.</p>
         <textarea class="reading-output" data-reading-output readonly placeholder="The selected deep-reading artifact will appear here."></textarea>
         <div class="export-actions">
           <button class="button secondary" type="button" data-copy-reading>Copy artifact</button>
