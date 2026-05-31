@@ -91,6 +91,49 @@ a {
   background: #eef3f7;
 }
 
+.language-switcher {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 30;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: min(420px, calc(100% - 36px));
+  gap: 6px;
+  align-items: center;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 10px 28px rgba(23, 32, 42, 0.1);
+}
+
+.language-switcher span {
+  padding: 0 6px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.language-switcher button {
+  min-height: 30px;
+  padding: 5px 8px;
+  color: var(--ink);
+  background: #f7f9fc;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.language-switcher button.active {
+  color: #fff;
+  background: var(--teal);
+  border-color: var(--teal);
+}
+
 .hero {
   position: relative;
   display: grid;
