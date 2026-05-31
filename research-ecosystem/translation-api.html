@@ -133,7 +133,9 @@
           <li>Confirm Vercel sees <code>vercel.json</code> and <code>api/deep-read.js</code>.</li>
           <li>Add <code>OPENAI_API_KEY</code> in Vercel environment variables.</li>
           <li>Optional: add <code>OPENAI_MODEL</code>, matching the template in <code>.env.example</code>.</li>
+          <li>Optional but recommended: add <code>ALLOWED_ORIGIN=https://l-js-doctor.github.io</code> to limit browser calls to the public site.</li>
           <li>Deploy, then test <code>/api/deep-read</code> through the Literature Lab endpoint test button.</li>
+          <li>For a command-line check, run <code>tools/test-ai-endpoint.ps1</code> with the deployed endpoint URL.</li>
           <li>If the frontend remains on GitHub Pages, paste the full Vercel API URL into the AI endpoint setting.</li>
         </ol>
       </section>
