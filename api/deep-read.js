@@ -48,6 +48,16 @@ module.exports = async function handler(request, response) {
     return;
   }
 
+  if (request.method === "GET") {
+    response.status(200).json({
+      ok: true,
+      service: "ljsdoctor-deep-read",
+      openaiConfigured: Boolean(process.env.OPENAI_API_KEY),
+      model: process.env.OPENAI_MODEL || "gpt-5.4"
+    });
+    return;
+  }
+
   if (request.method !== "POST") {
     response.status(405).json({ error: "Method not allowed" });
     return;
@@ -74,7 +84,7 @@ module.exports = async function handler(request, response) {
 
 function setCors(response) {
   response.setHeader("Access-Control-Allow-Origin", "*");
-  response.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   response.setHeader("Access-Control-Allow-Headers", "Content-Type");
 }
 
