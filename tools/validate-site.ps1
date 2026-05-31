@@ -45,6 +45,8 @@ function Require-JsonArray {
 $requiredFiles = @(
   "index.html",
   ".nojekyll",
+  ".env.example",
+  "vercel.json",
   "styles.css",
   "site.js",
   "research-ecosystem/index.html",
@@ -116,12 +118,16 @@ Require-File "research-ecosystem/translation-api.html"
 Require-Text "research-ecosystem/translation-api.html" "Real Translation API Plan"
 Require-Text "research-ecosystem/translation-api.html" "OPENAI_API_KEY"
 Require-Text "research-ecosystem/translation-api.html" "api/deep-read.js"
+Require-Text "research-ecosystem/translation-api.html" "Deployment Checklist"
 Require-Text "research-ecosystem/translation-api.html" "DeepL"
 Require-Text "research-ecosystem/translation-api.html" "NCBI API key"
 Require-File "api/deep-read.js"
 Require-Text "api/deep-read.js" "https://api.openai.com/v1/responses"
 Require-Text "api/deep-read.js" "OPENAI_API_KEY"
 Require-Text "api/deep-read.js" "json_schema"
+Require-Text ".env.example" "OPENAI_MODEL"
+Require-Text "vercel.json" "api/deep-read.js"
+Require-Text "README.md" "AI Deep Reading API"
 Require-Text "research-ecosystem/issue-queue.html" "data-issue-queue"
 Require-Text "research-ecosystem/issue-queue.html" "data-issue-draft-form"
 Require-Text "research-ecosystem/projects.html" "data-project-dashboard"
