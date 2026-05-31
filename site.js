@@ -1425,6 +1425,70 @@
       });
   }
 
+  function setupDeploymentAdvisor() {
+    var root = document.querySelector("[data-deployment-advisor]");
+    if (!root) {
+      return;
+    }
+
+    var form = root.querySelector("[data-deployment-advisor-form]");
+    var output = root.querySelector("[data-deployment-advisor-output]");
+    if (!form || !output) {
+      return;
+    }
+
+    var routes = {
+      static: {
+        stack: "GitHub Pages",
+        codex: "I can build the page, connect local JSON, add validation, commit it, and publish it to GitHub Pages.",
+        approval: "No new account approval is usually needed after GitHub publishing is connected.",
+        next: "Best next build: richer HTML literature notes, project dashboards, knowledge maps, and downloadable study files."
+      },
+      pubmed: {
+        stack: "GitHub Pages plus browser-side PubMed API calls",
+        codex: "I can build targeted search forms, relevance scoring, abstract retrieval, reading queues, and export tools.",
+        approval: "No private key is needed for basic PubMed E-utilities, but heavy usage may later need an NCBI API key.",
+        next: "Best next build: save PubMed searches as reusable strategies and turn selected papers into deep-reading pages."
+      },
+      ai: {
+        stack: "Vercel API routes plus GitHub Pages or Vercel frontend",
+        codex: "I can write the API route, prompt structure, frontend controls, and safety checks.",
+        approval: "You must provide or approve protected API keys in Vercel environment variables. They should never be pasted into public frontend code.",
+        next: "Best next build: AI paper triage, structured abstract extraction, and Codex-ready deep-reading tasks."
+      },
+      private: {
+        stack: "Supabase database/auth/storage plus Vercel API routes when needed",
+        codex: "I can design tables, login flows, storage buckets, import/export tools, and privacy-aware UI.",
+        approval: "You must create or approve the Supabase project, login settings, and any billing/storage choices.",
+        next: "Best next build: private literature library, PDF storage, reading status, and personal research notes."
+      },
+      automation: {
+        stack: "Vercel scheduled functions, GitHub Actions, or Codex automations depending on the job",
+        codex: "I can define the scheduled task, output format, issue template, and dashboard integration.",
+        approval: "You may need to approve scheduled jobs, GitHub permissions, or Vercel cron settings.",
+        next: "Best next build: weekly PubMed digest and automatic GitHub Issue drafts for papers worth reading."
+      }
+    };
+
+    function renderAdvisor() {
+      var choice = form.elements.feature.value;
+      var route = routes[choice] || routes.static;
+      output.innerHTML =
+        "<p class='project-type'>Recommended stack</p>" +
+        "<h3>" + escapeHtml(route.stack) + "</h3>" +
+        "<p><strong>What I can do:</strong> " + escapeHtml(route.codex) + "</p>" +
+        "<p><strong>What you approve:</strong> " + escapeHtml(route.approval) + "</p>" +
+        "<p><strong>Next practical build:</strong> " + escapeHtml(route.next) + "</p>";
+    }
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      renderAdvisor();
+    });
+    form.elements.feature.addEventListener("change", renderAdvisor);
+    renderAdvisor();
+  }
+
   function readNamedFields(form) {
     var fields = {};
     Array.prototype.slice.call(form.elements).forEach(function (field) {
@@ -1577,6 +1641,7 @@
   setupReadingDesk();
   setupIssueQueue();
   setupProjectDashboard();
+  setupDeploymentAdvisor();
 
   setupApp({
     key: "literature",
