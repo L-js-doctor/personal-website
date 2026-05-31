@@ -948,6 +948,8 @@
     var output = root.querySelector("[data-reading-output]");
     var copyButton = root.querySelector("[data-copy-reading]");
     var downloadButton = root.querySelector("[data-download-reading]");
+    var aiButton = root.querySelector("[data-ai-deep-read]");
+    var aiStatus = root.querySelector("[data-ai-deep-read-status]");
     var queueList = root.querySelector("[data-reading-queue]");
     var exportQueueButton = root.querySelector("[data-export-reading-queue]");
 
@@ -965,6 +967,13 @@
       });
       output.value = buildReadingArtifact(fields);
     });
+
+    if (aiButton) {
+      aiButton.addEventListener("click", function () {
+        var fields = readNamedFields(form);
+        requestAiDeepRead(fields, output, aiStatus, aiButton);
+      });
+    }
 
     if (copyButton) {
       copyButton.addEventListener("click", function () {
@@ -1050,6 +1059,104 @@
 
     renderQueue();
     window.addEventListener("deep-reading-queue-updated", renderQueue);
+  }
+
+  function requestAiDeepRead(fields, output, status, button) {
+    var endpoint = getAiEndpoint();
+    if (!fields.title && !fields.abstract) {
+      writeStatus(status, "Add a paper title or abstract before requesting AI deep reading.");
+      return;
+    }
+
+    button.disabled = true;
+    writeStatus(status, "Sending selected paper details to the protected AI endpoint...");
+
+    fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        id: fields.id,
+        title: fields.title,
+        abstract: fields.abstract,
+        goal: fields.goal,
+        mode: fields.mode,
+        language: fields.language
+      })
+    })
+      .then(function (response) {
+        return response.json().then(function (data) {
+          if (!response.ok) {
+            throw new Error(data.error || "AI deep-reading request failed.");
+          }
+          return data;
+        });
+      })
+      .then(function (data) {
+        output.value = formatAiDeepReadResult(data);
+        writeStatus(status, "AI deep-reading result received. You can copy or download it now.");
+      })
+      .catch(function (error) {
+        output.value = buildReadingArtifact(fields);
+        writeStatus(status, "AI endpoint is not connected yet: " + error.message + " The page generated the local artifact instead.");
+      })
+      .finally(function () {
+        button.disabled = false;
+      });
+  }
+
+  function getAiEndpoint() {
+    if (window.LJS_DEEP_READ_ENDPOINT) {
+      return window.LJS_DEEP_READ_ENDPOINT;
+    }
+    return "/api/deep-read";
+  }
+
+  function writeStatus(node, message) {
+    if (node) {
+      node.textContent = message;
+    }
+  }
+
+  function formatAiDeepReadResult(data) {
+    var result = data.result || {};
+    return [
+      "# AI Literature Deep Read",
+      "",
+      "Provider: " + (data.provider || "unknown"),
+      "Model: " + (data.model || "unknown"),
+      "",
+      "## High-Signal Summary",
+      result.summary || "Not returned.",
+      "",
+      "## Introduction / Background",
+      result.introduction || "Not returned.",
+      "",
+      "## Research Question / Hypothesis",
+      result.hypothesis || "Not returned.",
+      "",
+      "## Experimental Design",
+      result.design || "Not returned.",
+      "",
+      "## Methods / Measurements",
+      result.methods || "Not returned.",
+      "",
+      "## Main Results",
+      result.results || "Not returned.",
+      "",
+      "## Mechanism / Interpretation",
+      result.mechanism || "Not returned.",
+      "",
+      "## Limitations",
+      result.limitations || "Not returned.",
+      "",
+      "## Follow-up Actions",
+      Array.isArray(result.followup) ? result.followup.map(function (item) { return "- " + item; }).join("\n") : "Not returned.",
+      "",
+      "## HTML Note",
+      result.html || "Not returned."
+    ].join("\n");
   }
 
   function buildReadingArtifact(fields) {
