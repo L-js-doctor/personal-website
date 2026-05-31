@@ -1021,6 +1021,8 @@
 
   function buildReadingHtmlSkeleton(fields) {
     var title = fields.title || "Untitled literature note";
+    var identifier = fields.id || "Not provided";
+    var summary = fields.goal || fields.abstract || "Add a high-signal summary after reading the abstract and full text.";
     return [
       "<!doctype html>",
       "<html lang=\"en\">",
@@ -1035,18 +1037,89 @@
       "      <a class=\"back-link\" href=\"./\">Back to Literature Lab</a>",
       "      <p class=\"section-kicker\">Deep Reading Note</p>",
       "      <h1>" + escapeHtml(title) + "</h1>",
-      "      <section class=\"note-block\"><h2>Introduction / Background</h2><p>" + escapeHtml(fields.introduction || "Complete after reading.") + "</p></section>",
-      "      <section class=\"note-block\"><h2>Research Question / Hypothesis</h2><p>" + escapeHtml(fields.hypothesis || fields.goal || "Complete after reading.") + "</p></section>",
-      "      <section class=\"note-block\"><h2>Experimental Design</h2><p>" + escapeHtml(fields.design || "Complete after reading.") + "</p></section>",
-      "      <section class=\"note-block\"><h2>Methods / Measurements</h2><p>" + escapeHtml(fields.methods || "Complete after reading.") + "</p></section>",
-      "      <section class=\"note-block\"><h2>Main Results</h2><p>" + escapeHtml(fields.results || "Complete after reading.") + "</p></section>",
-      "      <section class=\"note-block\"><h2>Mechanism / Interpretation</h2><p>" + escapeHtml(fields.mechanism || "Complete after reading.") + "</p></section>",
-      "      <section class=\"note-block\"><h2>Limitations</h2><p>" + escapeHtml(fields.limitations || "Complete after reading.") + "</p></section>",
-      "      <section class=\"note-block\"><h2>Follow-up Actions</h2><p>" + escapeHtml(fields.followup || "Complete after reading.") + "</p></section>",
+      "      <p class=\"page-lead\">" + escapeHtml(summary) + "</p>",
+      "",
+      "      <section class=\"note-block\">",
+      "        <h2>Source Metadata</h2>",
+      "        <dl class=\"metadata-grid\">",
+      "          <div><dt>Identifier</dt><dd>" + escapeHtml(identifier) + "</dd></div>",
+      "          <div><dt>Reading mode</dt><dd>" + escapeHtml(fields.mode || "research") + "</dd></div>",
+      "          <div><dt>Status</dt><dd>Draft deep-reading note</dd></div>",
+      "          <div><dt>PubMed</dt><dd>" + buildPubMedLinkHtml(identifier) + "</dd></div>",
+      "        </dl>",
+      "      </section>",
+      "",
+      "      <section class=\"note-block\">",
+      "        <h2>High-Signal Summary</h2>",
+      "        <p>" + escapeHtml(fields.abstract || "Add the abstract-level answer: what the paper claims, why it matters, and what decision it changes.") + "</p>",
+      "      </section>",
+      "",
+      "      <section class=\"note-block\">",
+      "        <h2>Introduction / Background</h2>",
+      "        <p>" + escapeHtml(fields.introduction || "Explain the clinical/scientific problem, prior evidence, and knowledge gap that motivates this study.") + "</p>",
+      "      </section>",
+      "",
+      "      <section class=\"note-block\">",
+      "        <h2>Research Question / Hypothesis</h2>",
+      "        <p>" + escapeHtml(fields.hypothesis || fields.goal || "State the exact question or hypothesis tested by the paper.") + "</p>",
+      "      </section>",
+      "",
+      "      <section class=\"note-block\">",
+      "        <h2>Experimental Design</h2>",
+      "        <p>" + escapeHtml(fields.design || "Describe study type, groups, controls, model/population, sample size, intervention/comparison, and endpoints.") + "</p>",
+      "        <ul>",
+      "          <li><strong>Study type:</strong> fill after reading.</li>",
+      "          <li><strong>Population/model/dataset:</strong> fill after reading.</li>",
+      "          <li><strong>Groups and controls:</strong> fill after reading.</li>",
+      "          <li><strong>Primary endpoint:</strong> fill after reading.</li>",
+      "        </ul>",
+      "      </section>",
+      "",
+      "      <section class=\"note-block\">",
+      "        <h2>Methods / Measurements</h2>",
+      "        <p>" + escapeHtml(fields.methods || "List assays, datasets, statistical methods, endpoints, and measurement quality.") + "</p>",
+      "      </section>",
+      "",
+      "      <section class=\"note-block\">",
+      "        <h2>Main Results And Evidence</h2>",
+      "        <p>" + escapeHtml(fields.results || "Map each major result to figures, tables, or evidence blocks. Separate direct evidence from interpretation.") + "</p>",
+      "        <ol>",
+      "          <li><strong>Result 1:</strong> finding, evidence source, confidence.</li>",
+      "          <li><strong>Result 2:</strong> finding, evidence source, confidence.</li>",
+      "          <li><strong>Result 3:</strong> finding, evidence source, confidence.</li>",
+      "        </ol>",
+      "      </section>",
+      "",
+      "      <section class=\"note-block\">",
+      "        <h2>Mechanism / Interpretation</h2>",
+      "        <p>" + escapeHtml(fields.mechanism || "Write the mechanism chain and connect it to pathology, clinical medicine, or the current research map.") + "</p>",
+      "      </section>",
+      "",
+      "      <section class=\"note-block\">",
+      "        <h2>Limitations And Bias Risk</h2>",
+      "        <p>" + escapeHtml(fields.limitations || "Identify bias, missing controls, model limitations, external validity, and uncertainty.") + "</p>",
+      "      </section>",
+      "",
+      "      <section class=\"note-block\">",
+      "        <h2>Follow-up Actions</h2>",
+      "        <ol>",
+      "          <li>" + escapeHtml(fields.followup || "Add next papers, search terms, experiments, knowledge graph nodes, and project updates.") + "</li>",
+      "          <li>Decide whether this paper should become a repository literature JSON record.</li>",
+      "          <li>Link this note to the relevant knowledge-map and project pages.</li>",
+      "        </ol>",
+      "      </section>",
       "    </main>",
       "  </body>",
       "</html>"
     ].join("\n");
+  }
+
+  function buildPubMedLinkHtml(identifier) {
+    var normalized = (identifier || "").trim();
+    if (/^\d+$/.test(normalized)) {
+      return "<a href=\"https://pubmed.ncbi.nlm.nih.gov/" + escapeHtml(normalized) + "/\">Open record</a>";
+    }
+    return "Add PMID to create a PubMed link.";
   }
 
   function addToReadingQueue(paper) {
