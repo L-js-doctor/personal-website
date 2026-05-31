@@ -1,4 +1,120 @@
 (function () {
+  var LANGUAGE_PACKS = {
+    zh: {
+      label: "ZH",
+      navAbout: "About",
+      navLibrary: "Library",
+      navResearch: "Research",
+      navWorkflow: "Workflow",
+      navContact: "Contact",
+      heroCopy: "Your personal medical learning and research workspace. Medical notes, coding practice, PubMed search, deep-reading templates, exports, and project archives all live behind practical entrances.",
+      enterLibrary: "Enter library",
+      viewRepo: "View repository",
+      aboutTitle: "A practical desk for study, research, and long-term notes.",
+      aboutCopy: "This site is meant to store real work: course notes, pathology summaries, literature deep reads, coding practice, and project records. New material can become HTML, JSON, or downloadable files and then be linked from the right section.",
+      libraryTitle: "Resource entrances",
+      medicalTitle: "Medical learning",
+      medicalCopy: "Pathology, basic medicine, course review material, and HTML study packs.",
+      medicalOpen: "Open medical resources",
+      codingTitle: "Technical practice",
+      codingCopy: "Programming practice, web experiments, automation scripts, and coding notes.",
+      codingOpen: "Open technical resources",
+      archiveTitle: "Project archive",
+      archiveCopy: "Personal website work, test repositories, portfolio pages, and future projects.",
+      archiveOpen: "Open project archive",
+      researchTitle: "A research ecosystem that grows over time.",
+      researchCopy: "Literature reading, medical knowledge maps, research logs, data tools, and publication outputs connect inside one site.",
+      researchOpen: "Enter research hub",
+      workflowTitle: "How this site works with GitHub",
+      workflowOneTitle: "Organize",
+      workflowOneCopy: "You send notes, PDFs, slides, or ideas; I turn them into clear HTML pages.",
+      workflowTwoTitle: "File",
+      workflowTwoCopy: "Medical content goes to medical-learning, code to coding-practice, and research work to research-ecosystem.",
+      workflowThreeTitle: "Link",
+      workflowThreeCopy: "I update the directory pages so you can find everything from the website.",
+      contactTitle: "Keep growing this into your long-term archive.",
+      visitSite: "Visit site",
+      githubHome: "GitHub profile"
+    },
+    en: {
+      label: "EN",
+      navAbout: "About",
+      navLibrary: "Library",
+      navResearch: "Research",
+      navWorkflow: "Workflow",
+      navContact: "Contact",
+      heroCopy: "Your personal medical learning and research workspace. Medical notes, coding practice, PubMed search, deep-reading templates, exports, and project archives all live behind practical entrances.",
+      enterLibrary: "Enter library",
+      viewRepo: "View repository",
+      aboutTitle: "A practical desk for study, research, and long-term notes.",
+      aboutCopy: "This site is meant to store real work: course notes, pathology summaries, literature deep reads, coding practice, and project records. New material can become HTML, JSON, or downloadable files and then be linked from the right section.",
+      libraryTitle: "Resource entrances",
+      medicalTitle: "Medical learning",
+      medicalCopy: "Pathology, basic medicine, course review material, and HTML study packs.",
+      medicalOpen: "Open medical resources",
+      codingTitle: "Technical practice",
+      codingCopy: "Programming practice, web experiments, automation scripts, and coding notes.",
+      codingOpen: "Open technical resources",
+      archiveTitle: "Project archive",
+      archiveCopy: "Personal website work, test repositories, portfolio pages, and future projects.",
+      archiveOpen: "Open project archive",
+      researchTitle: "A research ecosystem that grows over time.",
+      researchCopy: "Literature reading, medical knowledge maps, research logs, data tools, and publication outputs connect inside one site.",
+      researchOpen: "Enter research hub",
+      workflowTitle: "How this site works with GitHub",
+      workflowOneTitle: "Organize",
+      workflowOneCopy: "You send notes, PDFs, slides, or ideas; I turn them into clear HTML pages.",
+      workflowTwoTitle: "File",
+      workflowTwoCopy: "Medical content goes to medical-learning, code to coding-practice, and research work to research-ecosystem.",
+      workflowThreeTitle: "Link",
+      workflowThreeCopy: "I update the directory pages so you can find everything from the website.",
+      contactTitle: "Keep growing this into your long-term archive.",
+      visitSite: "Visit site",
+      githubHome: "GitHub profile"
+    },
+    ja: null,
+    ru: null,
+    de: null
+  };
+
+  LANGUAGE_PACKS.ja = Object.assign({}, LANGUAGE_PACKS.en, {
+    label: "JA",
+    navAbout: "Overview",
+    navLibrary: "Resources",
+    navResearch: "Research",
+    navWorkflow: "Workflow",
+    navContact: "Contact",
+    heroCopy: "Medical learning, PubMed search, literature reading, coding practice, and project records in one practical workspace. Deep-reading outputs can be prepared for Japanese translation.",
+    enterLibrary: "Open resources",
+    aboutTitle: "A focused workspace for learning and research.",
+    researchOpen: "Open research hub"
+  });
+
+  LANGUAGE_PACKS.ru = Object.assign({}, LANGUAGE_PACKS.en, {
+    label: "RU",
+    navAbout: "Overview",
+    navLibrary: "Resources",
+    navResearch: "Research",
+    navWorkflow: "Workflow",
+    navContact: "Contact",
+    heroCopy: "Medical learning, PubMed search, literature reading, coding practice, and project records in one practical workspace. Deep-reading outputs can be prepared for Russian translation.",
+    enterLibrary: "Open resources",
+    aboutTitle: "A focused workspace for learning and research.",
+    researchOpen: "Open research hub"
+  });
+
+  LANGUAGE_PACKS.de = Object.assign({}, LANGUAGE_PACKS.en, {
+    label: "DE",
+    navAbout: "About",
+    navLibrary: "Resources",
+    navResearch: "Research",
+    navWorkflow: "Workflow",
+    navContact: "Contact",
+    heroCopy: "Medical learning, PubMed search, literature reading, coding practice, and project records in one practical workspace. Deep-reading outputs can be prepared for German translation.",
+    enterLibrary: "Open resources",
+    aboutTitle: "A focused workspace for learning and research.",
+    researchOpen: "Open research hub"
+  });
   function setupFilter() {
     var input = document.querySelector("[data-filter-input]");
     var list = document.querySelector("[data-filter-list]");
@@ -16,6 +132,48 @@
         var text = item.textContent.toLowerCase();
         item.hidden = query.length > 0 && text.indexOf(query) === -1;
       });
+    });
+  }
+
+  function setupLanguageSwitcher() {
+    if (document.querySelector("[data-language-switcher]")) {
+      return;
+    }
+
+    var saved = localStorage.getItem("ljsdoctor:language") || "zh";
+    var switcher = document.createElement("div");
+    switcher.className = "language-switcher";
+    switcher.setAttribute("data-language-switcher", "");
+    switcher.innerHTML =
+      "<span>Language</span>" +
+      ["zh", "en", "ja", "ru", "de"].map(function (code) {
+        return "<button type='button' data-language-option='" + code + "'>" + LANGUAGE_PACKS[code].label + "</button>";
+      }).join("");
+    document.body.appendChild(switcher);
+
+    switcher.addEventListener("click", function (event) {
+      var button = event.target.closest("[data-language-option]");
+      if (!button) {
+        return;
+      }
+      applyLanguage(button.getAttribute("data-language-option"));
+    });
+
+    applyLanguage(saved);
+  }
+
+  function applyLanguage(code) {
+    var pack = LANGUAGE_PACKS[code] || LANGUAGE_PACKS.zh;
+    localStorage.setItem("ljsdoctor:language", code);
+    document.documentElement.lang = code === "zh" ? "zh-CN" : code;
+    Array.prototype.slice.call(document.querySelectorAll("[data-i18n]")).forEach(function (node) {
+      var key = node.getAttribute("data-i18n");
+      if (pack[key]) {
+        node.textContent = pack[key];
+      }
+    });
+    Array.prototype.slice.call(document.querySelectorAll("[data-language-option]")).forEach(function (button) {
+      button.classList.toggle("active", button.getAttribute("data-language-option") === code);
     });
   }
 
@@ -963,105 +1121,95 @@
   }
 
   function buildReadingBrief(fields) {
+    var lang = getReadingLanguage(fields.language);
     return [
-      "Please perform a deep reading of this paper and create an HTML-ready literature note.",
+      lang.taskIntro,
       "",
-      "Reading mode: " + (fields.mode || "research"),
-      "Identifier: " + (fields.id || "not provided"),
-      "Title: " + (fields.title || "not provided"),
+      lang.outputLanguage + ": " + lang.name,
+      lang.readingMode + ": " + (fields.mode || "research"),
+      lang.identifier + ": " + (fields.id || lang.notProvided),
+      lang.title + ": " + (fields.title || lang.notProvided),
       "",
-      "Abstract or key details:",
-      fields.abstract || "not provided",
+      lang.abstract + ":",
+      fields.abstract || lang.notProvided,
       "",
-      "My reading goal:",
-      fields.goal || "not provided",
+      lang.goal + ":",
+      fields.goal || lang.notProvided,
       "",
-      "Deep-reading matrix:",
-      "Introduction / background: " + (fields.introduction || "not filled"),
-      "Research question / hypothesis: " + (fields.hypothesis || "not filled"),
-      "Experimental design: " + (fields.design || "not filled"),
-      "Methods / measurements: " + (fields.methods || "not filled"),
-      "Main results: " + (fields.results || "not filled"),
-      "Mechanism / interpretation: " + (fields.mechanism || "not filled"),
-      "Limitations: " + (fields.limitations || "not filled"),
-      "Follow-up actions: " + (fields.followup || "not filled"),
+      lang.matrix + ":",
+      lang.introduction + ": " + (fields.introduction || lang.notFilled),
+      lang.hypothesis + ": " + (fields.hypothesis || lang.notFilled),
+      lang.design + ": " + (fields.design || lang.notFilled),
+      lang.methods + ": " + (fields.methods || lang.notFilled),
+      lang.results + ": " + (fields.results || lang.notFilled),
+      lang.mechanism + ": " + (fields.mechanism || lang.notFilled),
+      lang.limitations + ": " + (fields.limitations || lang.notFilled),
+      lang.followup + ": " + (fields.followup || lang.notFilled),
       "",
-      "Required output:",
-      "1. One-paragraph high-signal summary.",
-      "2. Introduction/background logic and knowledge gap.",
-      "3. Research question or hypothesis.",
-      "4. Experimental design: groups, controls, model/population, intervention/comparison, endpoints.",
-      "5. Methods and measurements with evidence level.",
-      "6. Main results mapped to figures or evidence blocks.",
-      "7. Mechanism, pathology/medicine connection, limitations, and bias risks.",
-      "8. Follow-up papers/search terms and a compact HTML note for the research ecosystem."
+      lang.requiredOutput + ":",
+      lang.briefRules.join("\n")
     ].join("\n");
   }
 
   function buildReadingMatrixMarkdown(fields) {
+    var lang = getReadingLanguage(fields.language);
     return [
-      "# Deep Reading Matrix",
+      "# " + lang.matrix,
       "",
-      "## Paper",
-      "- Identifier: " + (fields.id || "not provided"),
-      "- Title: " + (fields.title || "not provided"),
-      "- Reading mode: " + (fields.mode || "research"),
+      "## " + lang.paper,
+      "- " + lang.identifier + ": " + (fields.id || lang.notProvided),
+      "- " + lang.title + ": " + (fields.title || lang.notProvided),
+      "- " + lang.readingMode + ": " + (fields.mode || "research"),
+      "- " + lang.outputLanguage + ": " + lang.name,
       "",
-      "## 1. Introduction / Background",
-      fields.introduction || "Not filled. Extract the clinical/scientific problem, prior evidence, and knowledge gap.",
+      "## 1. " + lang.introduction,
+      fields.introduction || lang.defaultIntroduction,
       "",
-      "## 2. Research Question / Hypothesis",
-      fields.hypothesis || fields.goal || "Not filled. State the exact question or hypothesis.",
+      "## 2. " + lang.hypothesis,
+      fields.hypothesis || fields.goal || lang.defaultHypothesis,
       "",
-      "## 3. Experimental Design",
-      fields.design || "Not filled. Specify study type, groups, controls, sample/model, intervention, comparison, endpoints.",
+      "## 3. " + lang.design,
+      fields.design || lang.defaultDesign,
       "",
-      "## 4. Methods / Measurements",
-      fields.methods || "Not filled. List assays, datasets, statistical methods, primary/secondary endpoints.",
+      "## 4. " + lang.methods,
+      fields.methods || lang.defaultMethods,
       "",
-      "## 5. Main Results",
-      fields.results || "Not filled. Map findings to figures/tables and judge evidence strength.",
+      "## 5. " + lang.results,
+      fields.results || lang.defaultResults,
       "",
-      "## 6. Mechanism / Interpretation",
-      fields.mechanism || "Not filled. Explain the biological mechanism and pathology/medicine connection.",
+      "## 6. " + lang.mechanism,
+      fields.mechanism || lang.defaultMechanism,
       "",
-      "## 7. Limitations",
-      fields.limitations || "Not filled. Identify bias, missing controls, model limitations, and uncertainty.",
+      "## 7. " + lang.limitations,
+      fields.limitations || lang.defaultLimitations,
       "",
-      "## 8. Follow-up Actions",
-      fields.followup || "Not filled. Add next papers, search terms, graph nodes, and project updates.",
+      "## 8. " + lang.followup,
+      fields.followup || lang.defaultFollowup,
       "",
-      "## Source Details",
-      fields.abstract || "No abstract/details pasted yet."
+      "## " + lang.sourceDetails,
+      fields.abstract || lang.noAbstract
     ].join("\n");
   }
 
   function buildExperimentalDesignChecklist(fields) {
+    var lang = getReadingLanguage(fields.language);
     return [
-      "Experimental Design Checklist",
+      lang.designChecklist,
       "",
-      "Paper: " + (fields.title || "not provided"),
-      "Identifier: " + (fields.id || "not provided"),
+      lang.paper + ": " + (fields.title || lang.notProvided),
+      lang.identifier + ": " + (fields.id || lang.notProvided),
+      lang.outputLanguage + ": " + lang.name,
       "",
-      "[ ] Study type is identified: observational / experimental / clinical trial / review / meta-analysis / other.",
-      "[ ] Population, sample, model, or dataset is clearly described.",
-      "[ ] Inclusion and exclusion criteria are captured when applicable.",
-      "[ ] Groups, controls, intervention, and comparison are identified.",
-      "[ ] Primary and secondary endpoints are identified.",
-      "[ ] Main assays, measurements, and statistical methods are listed.",
-      "[ ] Result claims are mapped to figures, tables, or evidence blocks.",
-      "[ ] Mechanism claim is separated from direct evidence.",
-      "[ ] Limitations and bias risks are explicitly listed.",
-      "[ ] Follow-up paper search terms are generated.",
+      lang.designChecklistItems.map(function (item) { return "[ ] " + item; }).join("\n"),
       "",
-      "Current design notes:",
-      fields.design || "Not filled.",
+      lang.currentDesign + ":",
+      fields.design || lang.notFilled,
       "",
-      "Current methods notes:",
-      fields.methods || "Not filled.",
+      lang.currentMethods + ":",
+      fields.methods || lang.notFilled,
       "",
-      "Current limitations:",
-      fields.limitations || "Not filled."
+      lang.currentLimitations + ":",
+      fields.limitations || lang.notFilled
     ].join("\n");
   }
 
@@ -1072,6 +1220,7 @@
       identifier: identifier,
       title: fields.title || "",
       mode: fields.mode || "research",
+      outputLanguage: fields.language || "zh",
       goal: fields.goal || "",
       introduction: fields.introduction || "",
       hypothesis: fields.hypothesis || "",
@@ -1088,12 +1237,13 @@
   }
 
   function buildReadingHtmlSkeleton(fields) {
+    var lang = getReadingLanguage(fields.language);
     var title = fields.title || "Untitled literature note";
-    var identifier = fields.id || "Not provided";
-    var summary = fields.goal || fields.abstract || "Add a high-signal summary after reading the abstract and full text.";
+    var identifier = fields.id || lang.notProvided;
+    var summary = fields.goal || fields.abstract || lang.defaultSummary;
     return [
       "<!doctype html>",
-      "<html lang=\"en\">",
+      "<html lang=\"" + escapeHtml(lang.htmlLang) + "\">",
       "  <head>",
       "    <meta charset=\"utf-8\">",
       "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
@@ -1102,78 +1252,79 @@
       "  </head>",
       "  <body class=\"subpage\">",
       "    <main class=\"page-shell note-page literature-note\">",
-      "      <a class=\"back-link\" href=\"./\">Back to Literature Lab</a>",
-      "      <p class=\"section-kicker\">Deep Reading Note</p>",
+      "      <a class=\"back-link\" href=\"./\">" + escapeHtml(lang.backToLab) + "</a>",
+      "      <p class=\"section-kicker\">" + escapeHtml(lang.deepReadingNote) + "</p>",
       "      <h1>" + escapeHtml(title) + "</h1>",
       "      <p class=\"page-lead\">" + escapeHtml(summary) + "</p>",
       "",
       "      <section class=\"note-block\">",
-      "        <h2>Source Metadata</h2>",
+      "        <h2>" + escapeHtml(lang.sourceMetadata) + "</h2>",
       "        <dl class=\"metadata-grid\">",
-      "          <div><dt>Identifier</dt><dd>" + escapeHtml(identifier) + "</dd></div>",
-      "          <div><dt>Reading mode</dt><dd>" + escapeHtml(fields.mode || "research") + "</dd></div>",
-      "          <div><dt>Status</dt><dd>Draft deep-reading note</dd></div>",
+      "          <div><dt>" + escapeHtml(lang.identifier) + "</dt><dd>" + escapeHtml(identifier) + "</dd></div>",
+      "          <div><dt>" + escapeHtml(lang.readingMode) + "</dt><dd>" + escapeHtml(fields.mode || "research") + "</dd></div>",
+      "          <div><dt>" + escapeHtml(lang.outputLanguage) + "</dt><dd>" + escapeHtml(lang.name) + "</dd></div>",
+      "          <div><dt>" + escapeHtml(lang.status) + "</dt><dd>" + escapeHtml(lang.draftStatus) + "</dd></div>",
       "          <div><dt>PubMed</dt><dd>" + buildPubMedLinkHtml(identifier) + "</dd></div>",
       "        </dl>",
       "      </section>",
       "",
       "      <section class=\"note-block\">",
-      "        <h2>High-Signal Summary</h2>",
-      "        <p>" + escapeHtml(fields.abstract || "Add the abstract-level answer: what the paper claims, why it matters, and what decision it changes.") + "</p>",
+      "        <h2>" + escapeHtml(lang.highSignalSummary) + "</h2>",
+      "        <p>" + escapeHtml(fields.abstract || lang.defaultHighSignal) + "</p>",
       "      </section>",
       "",
       "      <section class=\"note-block\">",
-      "        <h2>Introduction / Background</h2>",
-      "        <p>" + escapeHtml(fields.introduction || "Explain the clinical/scientific problem, prior evidence, and knowledge gap that motivates this study.") + "</p>",
+      "        <h2>" + escapeHtml(lang.introduction) + "</h2>",
+      "        <p>" + escapeHtml(fields.introduction || lang.defaultIntroduction) + "</p>",
       "      </section>",
       "",
       "      <section class=\"note-block\">",
-      "        <h2>Research Question / Hypothesis</h2>",
-      "        <p>" + escapeHtml(fields.hypothesis || fields.goal || "State the exact question or hypothesis tested by the paper.") + "</p>",
+      "        <h2>" + escapeHtml(lang.hypothesis) + "</h2>",
+      "        <p>" + escapeHtml(fields.hypothesis || fields.goal || lang.defaultHypothesis) + "</p>",
       "      </section>",
       "",
       "      <section class=\"note-block\">",
-      "        <h2>Experimental Design</h2>",
-      "        <p>" + escapeHtml(fields.design || "Describe study type, groups, controls, model/population, sample size, intervention/comparison, and endpoints.") + "</p>",
+      "        <h2>" + escapeHtml(lang.design) + "</h2>",
+      "        <p>" + escapeHtml(fields.design || lang.defaultDesign) + "</p>",
       "        <ul>",
-      "          <li><strong>Study type:</strong> fill after reading.</li>",
-      "          <li><strong>Population/model/dataset:</strong> fill after reading.</li>",
-      "          <li><strong>Groups and controls:</strong> fill after reading.</li>",
-      "          <li><strong>Primary endpoint:</strong> fill after reading.</li>",
+      "          <li><strong>" + escapeHtml(lang.studyType) + ":</strong> " + escapeHtml(lang.fillAfterReading) + "</li>",
+      "          <li><strong>" + escapeHtml(lang.populationModel) + ":</strong> " + escapeHtml(lang.fillAfterReading) + "</li>",
+      "          <li><strong>" + escapeHtml(lang.groupsControls) + ":</strong> " + escapeHtml(lang.fillAfterReading) + "</li>",
+      "          <li><strong>" + escapeHtml(lang.primaryEndpoint) + ":</strong> " + escapeHtml(lang.fillAfterReading) + "</li>",
       "        </ul>",
       "      </section>",
       "",
       "      <section class=\"note-block\">",
-      "        <h2>Methods / Measurements</h2>",
-      "        <p>" + escapeHtml(fields.methods || "List assays, datasets, statistical methods, endpoints, and measurement quality.") + "</p>",
+      "        <h2>" + escapeHtml(lang.methods) + "</h2>",
+      "        <p>" + escapeHtml(fields.methods || lang.defaultMethods) + "</p>",
       "      </section>",
       "",
       "      <section class=\"note-block\">",
-      "        <h2>Main Results And Evidence</h2>",
-      "        <p>" + escapeHtml(fields.results || "Map each major result to figures, tables, or evidence blocks. Separate direct evidence from interpretation.") + "</p>",
+      "        <h2>" + escapeHtml(lang.resultsEvidence) + "</h2>",
+      "        <p>" + escapeHtml(fields.results || lang.defaultResults) + "</p>",
       "        <ol>",
-      "          <li><strong>Result 1:</strong> finding, evidence source, confidence.</li>",
-      "          <li><strong>Result 2:</strong> finding, evidence source, confidence.</li>",
-      "          <li><strong>Result 3:</strong> finding, evidence source, confidence.</li>",
+      "          <li><strong>" + escapeHtml(lang.resultOne) + ":</strong> " + escapeHtml(lang.resultPlaceholder) + "</li>",
+      "          <li><strong>" + escapeHtml(lang.resultTwo) + ":</strong> " + escapeHtml(lang.resultPlaceholder) + "</li>",
+      "          <li><strong>" + escapeHtml(lang.resultThree) + ":</strong> " + escapeHtml(lang.resultPlaceholder) + "</li>",
       "        </ol>",
       "      </section>",
       "",
       "      <section class=\"note-block\">",
-      "        <h2>Mechanism / Interpretation</h2>",
-      "        <p>" + escapeHtml(fields.mechanism || "Write the mechanism chain and connect it to pathology, clinical medicine, or the current research map.") + "</p>",
+      "        <h2>" + escapeHtml(lang.mechanism) + "</h2>",
+      "        <p>" + escapeHtml(fields.mechanism || lang.defaultMechanism) + "</p>",
       "      </section>",
       "",
       "      <section class=\"note-block\">",
-      "        <h2>Limitations And Bias Risk</h2>",
-      "        <p>" + escapeHtml(fields.limitations || "Identify bias, missing controls, model limitations, external validity, and uncertainty.") + "</p>",
+      "        <h2>" + escapeHtml(lang.limitationsBias) + "</h2>",
+      "        <p>" + escapeHtml(fields.limitations || lang.defaultLimitations) + "</p>",
       "      </section>",
       "",
       "      <section class=\"note-block\">",
-      "        <h2>Follow-up Actions</h2>",
+      "        <h2>" + escapeHtml(lang.followup) + "</h2>",
       "        <ol>",
-      "          <li>" + escapeHtml(fields.followup || "Add next papers, search terms, experiments, knowledge graph nodes, and project updates.") + "</li>",
-      "          <li>Decide whether this paper should become a repository literature JSON record.</li>",
-      "          <li>Link this note to the relevant knowledge-map and project pages.</li>",
+      "          <li>" + escapeHtml(fields.followup || lang.defaultFollowup) + "</li>",
+      "          <li>" + escapeHtml(lang.jsonDecision) + "</li>",
+      "          <li>" + escapeHtml(lang.linkDecision) + "</li>",
       "        </ol>",
       "      </section>",
       "    </main>",
@@ -1182,6 +1333,101 @@
     ].join("\n");
   }
 
+  function getReadingLanguage(code) {
+    var base = {
+      name: "Chinese",
+      htmlLang: "zh-CN",
+      taskIntro: "Please deep-read this paper and prepare an HTML-ready literature note in Chinese. Preserve key biomedical terms in English when useful, and translate the explanation for the selected target language.",
+      outputLanguage: "Output language",
+      readingMode: "Reading mode",
+      identifier: "Identifier",
+      title: "Title",
+      abstract: "Abstract or key details",
+      goal: "My reading goal",
+      matrix: "Deep Reading Matrix",
+      paper: "Paper",
+      introduction: "Introduction / Background",
+      hypothesis: "Research Question / Hypothesis",
+      design: "Experimental Design",
+      methods: "Methods / Measurements",
+      results: "Main Results",
+      resultsEvidence: "Main Results And Evidence",
+      mechanism: "Mechanism / Interpretation",
+      limitations: "Limitations",
+      limitationsBias: "Limitations And Bias Risk",
+      followup: "Follow-up Actions",
+      sourceDetails: "Source Details",
+      sourceMetadata: "Source Metadata",
+      highSignalSummary: "High-Signal Summary",
+      status: "Status",
+      draftStatus: "Draft deep-reading note",
+      deepReadingNote: "Deep Reading Note",
+      backToLab: "Back to Literature Lab",
+      designChecklist: "Experimental Design Checklist",
+      currentDesign: "Current design notes",
+      currentMethods: "Current methods notes",
+      currentLimitations: "Current limitations",
+      studyType: "Study type",
+      populationModel: "Population/model/dataset",
+      groupsControls: "Groups and controls",
+      primaryEndpoint: "Primary endpoint",
+      fillAfterReading: "fill after reading",
+      resultOne: "Result 1",
+      resultTwo: "Result 2",
+      resultThree: "Result 3",
+      resultPlaceholder: "finding, evidence source, confidence",
+      notProvided: "not provided",
+      notFilled: "not filled",
+      noAbstract: "No abstract/details pasted yet.",
+      defaultSummary: "Add a high-signal summary after reading the abstract and full text.",
+      defaultHighSignal: "Add the abstract-level answer: what the paper claims, why it matters, and what decision it changes.",
+      defaultIntroduction: "Extract the clinical/scientific problem, prior evidence, and knowledge gap.",
+      defaultHypothesis: "State the exact question or hypothesis tested by the paper.",
+      defaultDesign: "Specify study type, groups, controls, sample/model, intervention, comparison, endpoints.",
+      defaultMethods: "List assays, datasets, statistical methods, primary/secondary endpoints.",
+      defaultResults: "Map findings to figures/tables and judge evidence strength.",
+      defaultMechanism: "Explain the biological mechanism and pathology/medicine connection.",
+      defaultLimitations: "Identify bias, missing controls, model limitations, and uncertainty.",
+      defaultFollowup: "Add next papers, search terms, graph nodes, and project updates.",
+      jsonDecision: "Decide whether this paper should become a repository literature JSON record.",
+      linkDecision: "Link this note to the relevant knowledge-map and project pages.",
+      requiredOutput: "Required output",
+      briefRules: [
+        "1. One-paragraph high-signal summary.",
+        "2. Introduction/background logic and knowledge gap.",
+        "3. Research question or hypothesis.",
+        "4. Experimental design: groups, controls, model/population, intervention/comparison, endpoints.",
+        "5. Methods and measurements with evidence level.",
+        "6. Main results mapped to figures or evidence blocks.",
+        "7. Mechanism, medicine connection, limitations, and bias risks.",
+        "8. Follow-up papers/search terms and a compact HTML note."
+      ],
+      designChecklistItems: [
+        "Study type is identified: observational / experimental / clinical trial / review / meta-analysis / other.",
+        "Population, sample, model, or dataset is clearly described.",
+        "Inclusion and exclusion criteria are captured when applicable.",
+        "Groups, controls, intervention, and comparison are identified.",
+        "Primary and secondary endpoints are identified.",
+        "Main assays, measurements, and statistical methods are listed.",
+        "Result claims are mapped to figures, tables, or evidence blocks.",
+        "Mechanism claim is separated from direct evidence.",
+        "Limitations and bias risks are explicitly listed.",
+        "Follow-up paper search terms are generated."
+      ]
+    };
+
+    var languages = {
+      zh: { name: "Chinese", htmlLang: "zh-CN" },
+      en: { name: "English", htmlLang: "en" },
+      ja: { name: "Japanese", htmlLang: "ja" },
+      ru: { name: "Russian", htmlLang: "ru" },
+      de: { name: "German", htmlLang: "de" }
+    };
+    var selected = languages[code] || languages.zh;
+    return Object.assign({}, base, selected, {
+      taskIntro: "Please deep-read this paper and prepare an HTML-ready literature note in " + selected.name + ". Preserve key biomedical terms in English when useful, translate the explanations for the selected target language, and keep the experimental design, methods, evidence, limitations, and follow-up plan explicit."
+    });
+  }
   function buildPubMedLinkHtml(identifier) {
     var normalized = (identifier || "").trim();
     if (/^\d+$/.test(normalized)) {
@@ -1705,6 +1951,7 @@
   }
 
   setupFilter();
+  setupLanguageSwitcher();
   setupResearchGraph();
   setupReadingDesk();
   setupIssueQueue();
