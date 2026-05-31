@@ -26,6 +26,20 @@
         necessary when the site needs secrets, accounts, databases, scheduled jobs, or private APIs.
       </p>
 
+      <section class="note-block">
+        <h2>Short Answer For This Website</h2>
+        <p>
+          I can keep building the current website without VS Code and without a traditional server. GitHub is the
+          source folder, GitHub Pages is the public website, and Codex can edit, validate, commit, and upload the files.
+          VS Code is optional for you: useful if you want to open files yourself, but not required for me to keep working.
+        </p>
+        <p>
+          Vercel becomes useful when we want server-side code, protected environment variables, OpenAI API calls,
+          PubMed enrichment that should not run in the browser, login, or deployment previews. Supabase becomes useful
+          when the website needs a real private database, user accounts, file storage, or per-user permissions.
+        </p>
+      </section>
+
       <section class="deployment-grid" aria-label="Deployment layers">
         <article>
           <span>Now</span>
@@ -66,6 +80,26 @@
           validation scripts, GitHub Issues, and documentation. You still approve account-level actions:
           GitHub permissions, Vercel project connection, Supabase project creation, billing choices, and secret values.
         </p>
+      </section>
+
+      <section class="note-block">
+        <h2>Decision Checklist</h2>
+        <ol>
+          <li>If the feature is a public page, public JSON, local browser tool, PubMed search, or downloadable HTML note, keep it on GitHub Pages.</li>
+          <li>If the feature needs an API key, OpenAI call, background processing, or protected request, add Vercel API routes.</li>
+          <li>If the feature needs login, private notes, editable records from multiple devices, or file uploads, add Supabase.</li>
+          <li>If the feature needs both AI and private saved data, use Vercel for server logic and Supabase for data.</li>
+        </ol>
+      </section>
+
+      <section class="note-block">
+        <h2>Research Site Upgrade Path</h2>
+        <ol>
+          <li>Now: keep PubMed search, literature queue, deep-reading templates, knowledge maps, and project dashboards on GitHub Pages.</li>
+          <li>Next: connect Vercel so the site can call protected AI services without exposing keys in the browser.</li>
+          <li>Then: connect Supabase for a private literature database, saved reading history, login, and uploaded PDFs.</li>
+          <li>Later: add scheduled jobs to refresh PubMed searches, create GitHub Issues, and prepare weekly research digests.</li>
+        </ol>
       </section>
 
       <section class="note-block">
