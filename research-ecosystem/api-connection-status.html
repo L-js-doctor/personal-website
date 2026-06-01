@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>API Connection Status | L-js-doctor</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script defer src="../site.js"></script>
+  </head>
+  <body class="subpage">
+    <header class="site-header">
+      <a class="brand" href="../index.html"><span class="brand-mark">L</span><span>L-js-doctor</span></a>
+      <nav class="nav">
+        <a href="./">Research Hub</a>
+        <a href="vercel-connection.html">Vercel Setup</a>
+        <a href="translation-api.html">Translation API</a>
+        <a href="literature/">Literature Lab</a>
+      </nav>
+    </header>
+
+    <main class="page-shell note-page">
+      <p class="section-kicker">Live Connection</p>
+      <h1>API Connection Status</h1>
+      <p class="page-lead">
+        This page records the current status of the real AI translation and deep-reading connection.
+        The repository code is ready for Vercel, but account authorization still has to be completed before live API calls work.
+      </p>
+
+      <section class="note-block">
+        <h2>Ready In Code</h2>
+        <ol>
+          <li><code>api/deep-read.js</code> exists and calls OpenAI from the server.</li>
+          <li><code>vercel.json</code> exists for Vercel deployment.</li>
+          <li><code>.env.example</code> lists <code>OPENAI_API_KEY</code>, <code>OPENAI_MODEL</code>, and <code>ALLOWED_ORIGIN</code>.</li>
+          <li>Literature Lab has <strong>AI deep read</strong>, <strong>AI endpoint URL</strong>, and <strong>Test endpoint</strong>.</li>
+          <li><code>tools/test-ai-endpoint.ps1</code> can test the deployed endpoint.</li>
+        </ol>
+      </section>
+
+      <section class="note-block">
+        <h2>Still Needed</h2>
+        <ol>
+          <li>Re-authenticate GitHub if local publishing is needed again.</li>
+          <li>Create or connect a Vercel account.</li>
+          <li>Import <code>L-js-doctor/personal-website</code> into Vercel.</li>
+          <li>Add <code>OPENAI_API_KEY</code> in Vercel environment variables.</li>
+          <li>Deploy the project and copy the URL ending in <code>/api/deep-read</code>.</li>
+          <li>Paste that URL into Literature Lab and click <strong>Test endpoint</strong>.</li>
+        </ol>
+      </section>
+
+      <section class="note-block">
+        <h2>Current Local Findings</h2>
+        <ul>
+          <li>Vercel CLI is not currently installed in this workspace.</li>
+          <li>The project is not currently linked to Vercel because no <code>.vercel</code> folder exists.</li>
+          <li>The local GitHub CLI token needs re-authentication before the upload helper can publish again.</li>
+        </ul>
+      </section>
+
+      <section class="note-block">
+        <h2>Best Next Action</h2>
+        <p>
+          Open Vercel in the browser, sign in with GitHub, import the repository, and add the environment variables.
+          After that, Codex can test the endpoint and wire the deployed URL into Literature Lab.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

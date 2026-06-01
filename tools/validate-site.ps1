@@ -55,6 +55,7 @@ $requiredFiles = @(
   "research-ecosystem/ai-handoff.html",
   "research-ecosystem/deployment.html",
   "research-ecosystem/vercel-connection.html",
+  "research-ecosystem/api-connection-status.html",
   "research-ecosystem/issue-queue.html",
   "research-ecosystem/projects.html",
   "research-ecosystem/literature/index.html",
@@ -97,6 +98,7 @@ Require-Text "research-ecosystem/index.html" "issue-queue.html"
 Require-Text "research-ecosystem/index.html" "projects.html"
 Require-Text "research-ecosystem/index.html" "deployment.html"
 Require-Text "research-ecosystem/index.html" "vercel-connection.html"
+Require-Text "research-ecosystem/index.html" "api-connection-status.html"
 Require-Text "research-ecosystem/index.html" "ai-handoff.html"
 Require-Text "research-ecosystem/graph.html" "data-research-graph"
 Require-Text "data/research/graph.json" "pmid-42193877"
@@ -121,6 +123,11 @@ Require-Text "research-ecosystem/vercel-connection.html" "Vercel Connection Chec
 Require-Text "research-ecosystem/vercel-connection.html" "OPENAI_API_KEY"
 Require-Text "research-ecosystem/vercel-connection.html" "Test endpoint"
 Require-Text "research-ecosystem/vercel-connection.html" "tools\test-ai-endpoint.ps1"
+Require-Text "research-ecosystem/vercel-connection.html" "api-connection-status.html"
+Require-Text "research-ecosystem/api-connection-status.html" "API Connection Status"
+Require-Text "research-ecosystem/api-connection-status.html" "Vercel CLI is not currently installed"
+Require-Text "research-ecosystem/api-connection-status.html" "GitHub CLI token needs re-authentication"
+Require-Text "research-ecosystem/api-connection-status.html" "OPENAI_API_KEY"
 Require-File "research-ecosystem/translation-api.html"
 Require-Text "research-ecosystem/translation-api.html" "Real Translation API Plan"
 Require-Text "research-ecosystem/translation-api.html" "OPENAI_API_KEY"
