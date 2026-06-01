@@ -1122,6 +1122,10 @@
     return "/api/deep-read";
   }
 
+  function isGitHubPagesSite() {
+    return window.location.hostname === "l-js-doctor.github.io";
+  }
+
   function setupAiEndpointControls(form, resetButton, testButton, status) {
     if (form && form.elements.endpoint) {
       form.elements.endpoint.value = localStorage.getItem("ljsdoctor:deepReadEndpoint") || "";
@@ -1130,7 +1134,9 @@
         var endpoint = form.elements.endpoint.value.trim();
         if (!endpoint) {
           localStorage.removeItem("ljsdoctor:deepReadEndpoint");
-          writeStatus(status, "Using same-site AI endpoint: /api/deep-read.");
+          writeStatus(status, isGitHubPagesSite()
+            ? "Saved endpoint cleared. GitHub Pages cannot run /api/deep-read, so paste a Vercel endpoint before testing AI deep reading."
+            : "Using same-site AI endpoint: /api/deep-read.");
           return;
         }
         if (!/^https:\/\/.+\/api\/deep-read$/.test(endpoint) && endpoint !== "/api/deep-read") {
@@ -1148,7 +1154,9 @@
         if (form && form.elements.endpoint) {
           form.elements.endpoint.value = "";
         }
-        writeStatus(status, "Using same-site AI endpoint: /api/deep-read.");
+        writeStatus(status, isGitHubPagesSite()
+          ? "Saved endpoint cleared. GitHub Pages cannot run /api/deep-read, so paste a Vercel endpoint before testing AI deep reading."
+          : "Using same-site AI endpoint: /api/deep-read.");
       });
     }
 
@@ -1157,6 +1165,10 @@
         var endpoint = form && form.elements.endpoint && form.elements.endpoint.value.trim()
           ? form.elements.endpoint.value.trim()
           : getAiEndpoint();
+        if (isGitHubPagesSite() && endpoint === "/api/deep-read") {
+          writeStatus(status, "This site is running on GitHub Pages, which cannot host /api/deep-read. Paste the Vercel endpoint first, then test again.");
+          return;
+        }
         testButton.disabled = true;
         writeStatus(status, "Testing AI endpoint...");
         fetch(endpoint, { method: "GET" })
