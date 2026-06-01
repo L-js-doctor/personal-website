@@ -175,9 +175,10 @@
             </select>
           </label>
           <button class="button primary" type="submit">Generate reading artifact</button>
+          <button class="button secondary" type="button" data-manual-ai-prompt>Manual AI prompt</button>
           <button class="button secondary" type="button" data-ai-deep-read>AI deep read</button>
         </form>
-        <p class="empty-state" data-ai-deep-read-status>AI deep reading needs a Vercel backend with OPENAI_API_KEY. On GitHub Pages, paste the Vercel endpoint before testing. The local artifact generator works without a backend.</p>
+        <p class="empty-state" data-ai-deep-read-status>AI deep reading needs a Vercel backend with OPENAI_API_KEY. If Vercel login is blocked, use Manual AI prompt and paste it into ChatGPT/Codex. The local artifact generator works without a backend.</p>
         <form class="tool-form compact-form" data-ai-endpoint-form>
           <label>AI endpoint URL
             <input name="endpoint" placeholder="https://your-vercel-project.vercel.app/api/deep-read">

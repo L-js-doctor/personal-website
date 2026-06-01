@@ -948,6 +948,7 @@
     var output = root.querySelector("[data-reading-output]");
     var copyButton = root.querySelector("[data-copy-reading]");
     var downloadButton = root.querySelector("[data-download-reading]");
+    var manualAiPromptButton = root.querySelector("[data-manual-ai-prompt]");
     var aiButton = root.querySelector("[data-ai-deep-read]");
     var aiStatus = root.querySelector("[data-ai-deep-read-status]");
     var aiEndpointForm = root.querySelector("[data-ai-endpoint-form]");
@@ -975,6 +976,14 @@
       aiButton.addEventListener("click", function () {
         var fields = readNamedFields(form);
         requestAiDeepRead(fields, output, aiStatus, aiButton);
+      });
+    }
+
+    if (manualAiPromptButton) {
+      manualAiPromptButton.addEventListener("click", function () {
+        var fields = readNamedFields(form);
+        output.value = buildManualAiPrompt(fields);
+        writeStatus(aiStatus, "Manual AI prompt generated. Copy it into ChatGPT/Codex, then paste the answer back into your notes.");
       });
     }
 
@@ -1109,6 +1118,39 @@
       .finally(function () {
         button.disabled = false;
       });
+  }
+
+  function buildManualAiPrompt(fields) {
+    var language = getReadingLanguage(fields.language || "zh");
+    return [
+      "You are helping me perform a beginner-friendly but rigorous medical literature deep read.",
+      "Output language: " + language.label + ". Keep key biomedical terms in English when useful.",
+      "",
+      "Paper ID / DOI / PMID:",
+      fields.id || "not provided",
+      "",
+      "Paper title:",
+      fields.title || "not provided",
+      "",
+      "Abstract or copied PubMed details:",
+      fields.abstract || "not provided",
+      "",
+      "My reading goal:",
+      fields.goal || "not provided",
+      "",
+      "Please produce the following sections:",
+      "1. One-sentence take-home message.",
+      "2. Background and why the study matters.",
+      "3. Research question or hypothesis.",
+      "4. Experimental design: groups, controls, samples, model, intervention, comparison, endpoints.",
+      "5. Methods explained for a beginner.",
+      "6. Main results and what each result proves.",
+      "7. Mechanism chain and pathology/clinical meaning.",
+      "8. Limitations and possible bias.",
+      "9. Terms I should learn before reading the full text.",
+      "10. Follow-up PubMed search terms and 3-5 next papers to inspect.",
+      "11. A compact HTML note skeleton I can save into my website."
+    ].join("\n");
   }
 
   function getAiEndpoint() {
