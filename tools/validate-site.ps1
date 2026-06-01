@@ -56,6 +56,7 @@ $requiredFiles = @(
   "research-ecosystem/deployment.html",
   "research-ecosystem/vercel-connection.html",
   "research-ecosystem/api-connection-status.html",
+  "research-ecosystem/web-pet.html",
   "research-ecosystem/issue-queue.html",
   "research-ecosystem/projects.html",
   "research-ecosystem/literature/index.html",
@@ -99,6 +100,7 @@ Require-Text "research-ecosystem/index.html" "projects.html"
 Require-Text "research-ecosystem/index.html" "deployment.html"
 Require-Text "research-ecosystem/index.html" "vercel-connection.html"
 Require-Text "research-ecosystem/index.html" "api-connection-status.html"
+Require-Text "research-ecosystem/index.html" "web-pet.html"
 Require-Text "research-ecosystem/index.html" "ai-handoff.html"
 Require-Text "research-ecosystem/graph.html" "data-research-graph"
 Require-Text "data/research/graph.json" "pmid-42193877"
@@ -128,6 +130,10 @@ Require-Text "research-ecosystem/api-connection-status.html" "API Connection Sta
 Require-Text "research-ecosystem/api-connection-status.html" "Vercel CLI is not currently installed"
 Require-Text "research-ecosystem/api-connection-status.html" "GitHub publishing has been restored"
 Require-Text "research-ecosystem/api-connection-status.html" "OPENAI_API_KEY"
+Require-Text "research-ecosystem/web-pet.html" "Web Pet Research Companion"
+Require-Text "research-ecosystem/web-pet.html" "Action Map"
+Require-Text "research-ecosystem/web-pet.html" "AI deep read"
+Require-Text "research-ecosystem/roadmap.html" "网页宠物研究伙伴"
 Require-File "research-ecosystem/translation-api.html"
 Require-Text "research-ecosystem/translation-api.html" "Real Translation API Plan"
 Require-Text "research-ecosystem/translation-api.html" "OPENAI_API_KEY"
@@ -216,7 +222,9 @@ Require-Text "data/research/graph.json" "literature-reading-desk"
 Require-Text "data/research/graph.json" "research-issue-queue"
 Require-Text "data/research/graph.json" "research-project-dashboard"
 Require-Text "data/research/graph.json" "ai-handoff-lab"
+Require-Text "data/research/graph.json" "web-pet-research-companion"
 Require-Text "data/research/projects.json" "gbm-immune-microenvironment-project"
+Require-Text "data/research/projects.json" "Web Pet Research Companion"
 
 if ($errors.Count -gt 0) {
   Write-Error ($errors -join [Environment]::NewLine)

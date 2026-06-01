@@ -31,6 +31,7 @@
       "Use the Reading Desk to complete PMID 42193877 after abstract/full-text review.",
       "Add 3-5 high-relevance PubMed papers from the same search strategy.",
       "Split immune suppression mechanisms into evidence-backed knowledge nodes.",
+      "Prototype the Web Pet Research Companion as a non-blocking Literature Lab feedback layer.",
       "Close or update GitHub Issue #1 only after the literature card and graph links are complete."
     ],
     "qualityGates": [

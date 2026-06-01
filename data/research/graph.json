@@ -71,6 +71,14 @@
       "description": "Workflow for packaging the website and handing it to another GPT, Codex session, or developer.",
       "url": "research-ecosystem/ai-handoff.html",
       "tags": ["AI collaboration", "handoff", "project package", "continuation prompt"]
+    },
+    {
+      "id": "web-pet-research-companion",
+      "type": "interface",
+      "title": "Web Pet Research Companion",
+      "description": "Future interface layer where a small cat reacts to PubMed search, paper intake, AI prompting, writing, export, and setup errors.",
+      "url": "research-ecosystem/web-pet.html",
+      "tags": ["web pet", "interaction design", "literature workflow", "AI companion"]
     }
   ],
   "edges": [
@@ -143,6 +151,21 @@
       "source": "ai-handoff-lab",
       "target": "research-project-dashboard",
       "label": "packages project context from"
+    },
+    {
+      "source": "web-pet-research-companion",
+      "target": "literature-reading-desk",
+      "label": "visualizes paper intake and deep-reading output from"
+    },
+    {
+      "source": "web-pet-research-companion",
+      "target": "ai-handoff-lab",
+      "label": "can explain manual AI handoff when backend setup is blocked"
+    },
+    {
+      "source": "web-pet-research-companion",
+      "target": "research-project-dashboard",
+      "label": "belongs to the long-term interface roadmap for"
     },
     {
       "source": "repository-validation",

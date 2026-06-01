@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Web Pet Research Companion | L-js-doctor</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script defer src="../site.js"></script>
+  </head>
+  <body class="subpage">
+    <header class="site-header">
+      <a class="brand" href="../index.html"><span class="brand-mark">L</span><span>L-js-doctor</span></a>
+      <nav class="nav">
+        <a href="./">Research Hub</a>
+        <a href="literature/">Literature Lab</a>
+        <a href="roadmap.html">Roadmap</a>
+        <a href="deployment.html">Deployment</a>
+      </nav>
+    </header>
+
+    <main class="page-shell note-page">
+      <p class="section-kicker">Experimental Interface</p>
+      <h1>Web Pet Research Companion</h1>
+      <p class="page-lead">
+        A future website companion that turns research actions into visible feedback.
+        The first concept is a small cat that reacts to literature search, paper intake,
+        deep-reading generation, export, and errors.
+      </p>
+
+      <section class="note-block">
+        <h2>Core Idea</h2>
+        <p>
+          The pet should not be decoration only. It should make the research workflow easier to understand:
+          every input, processing step, and output gets a small visible action.
+        </p>
+      </section>
+
+      <section class="note-block">
+        <h2>Action Map</h2>
+        <ol>
+          <li><strong>PubMed search:</strong> the cat looks through a magnifying glass and waits for papers.</li>
+          <li><strong>Add paper to queue:</strong> a paper card slides toward the cat, and the cat carries it away.</li>
+          <li><strong>Manual AI prompt:</strong> the cat stamps the paper as ready for ChatGPT/Codex.</li>
+          <li><strong>AI deep read:</strong> the cat eats the paper, pauses to think, then starts writing.</li>
+          <li><strong>Generate artifact:</strong> the cat writes a note and pushes it toward the output box.</li>
+          <li><strong>Download/export:</strong> the cat files the note into a folder.</li>
+          <li><strong>Error or missing endpoint:</strong> the cat shows a question mark and points to the setup checklist.</li>
+        </ol>
+      </section>
+
+      <section class="note-block">
+        <h2>Build Phases</h2>
+        <ol>
+          <li><strong>Phase A:</strong> CSS-only companion in the lower-right corner with idle, thinking, writing, done, and confused states.</li>
+          <li><strong>Phase B:</strong> connect state changes to Literature Lab buttons and PubMed events.</li>
+          <li><strong>Phase C:</strong> add paper movement, small speech bubbles, and accessible reduced-motion behavior.</li>
+          <li><strong>Phase D:</strong> make the companion context-aware, suggesting missing fields, next reading steps, and export options.</li>
+        </ol>
+      </section>
+
+      <section class="note-block">
+        <h2>Design Rules</h2>
+        <ul>
+          <li>It must never block reading or cover important text.</li>
+          <li>It must work without AI or Vercel.</li>
+          <li>It should react to real actions rather than looping random animations.</li>
+          <li>It needs a quiet mode for focused reading.</li>
+          <li>It should explain setup problems in friendly language.</li>
+        </ul>
+      </section>
+
+      <section class="note-block">
+        <h2>First Implementable Version</h2>
+        <p>
+          Start with a lightweight companion on Literature Lab only. The first version can be built with HTML,
+          CSS, and small JavaScript state changes. Later, it can become a richer animated character.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
