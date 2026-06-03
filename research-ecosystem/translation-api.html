@@ -32,8 +32,8 @@
         <h2>Short Answer</h2>
         <p>
           Yes, this site can connect to real translation APIs. The safe path is GitHub Pages for the visible website,
-          Vercel for protected API routes, OpenAI for literature deep reading and structured translation, and optional
-          DeepL for pure high-quality translation. PubMed stays as the literature data source.
+          Vercel or Cloudflare Worker for protected API routes, OpenAI for literature deep reading and structured
+          translation, and optional DeepL for pure high-quality translation. PubMed stays as the literature data source.
         </p>
       </section>
 
@@ -50,7 +50,7 @@
         <article>
           <span>02</span>
           <h2>Backend API</h2>
-          <p>A Vercel API route receives the request, checks size, adds prompts, and calls the external provider.</p>
+          <p>A Vercel API route or Cloudflare Worker receives the request, checks size, adds prompts, and calls the external provider.</p>
           <ul>
             <li>Stores keys as environment variables.</li>
             <li>Can limit request rate, log errors, and normalize output.</li>
@@ -72,7 +72,7 @@
         <ol>
           <li>User searches PubMed or pastes a paper abstract in Literature Lab.</li>
           <li>User chooses output language: Chinese, English, Japanese, Russian, or German.</li>
-          <li>The browser sends only the selected paper data to our protected Vercel endpoint. If the visible site stays on GitHub Pages, paste the Vercel endpoint URL into the Literature Lab endpoint setting.</li>
+          <li>The browser sends only the selected paper data to our protected backend endpoint. If the visible site stays on GitHub Pages, paste the Vercel or Cloudflare Worker endpoint URL into the Literature Lab endpoint setting.</li>
           <li>The endpoint calls OpenAI for deep reading, DeepL for direct translation, or both if needed.</li>
           <li>The site receives structured output and lets the user export Markdown, JSON, or HTML.</li>
         </ol>
@@ -81,10 +81,10 @@
       <section class="note-block">
         <h2>Recommended First Build</h2>
         <ol>
-          <li>Create a Vercel project connected to this GitHub repository.</li>
-          <li>Add one endpoint: <code>/api/deep-read</code>.</li>
-          <li>Store <code>OPENAI_API_KEY</code> in Vercel environment variables.</li>
-          <li>Optional: set <code>OPENAI_MODEL</code> in Vercel if we want to change the default model without editing code. The scaffold defaults to <code>gpt-5.4</code>.</li>
+          <li>Use Vercel if account login works; otherwise create a Cloudflare Worker.</li>
+          <li>Use one endpoint: <code>/api/deep-read</code> on Vercel, or the Worker URL from <code>api/deep-read-worker.js</code>.</li>
+          <li>Store <code>OPENAI_API_KEY</code> in the host's secret environment variables.</li>
+          <li>Optional: set <code>OPENAI_MODEL</code> if we want to change the default model without editing code. The scaffold defaults to <code>gpt-5.4</code>.</li>
           <li>Send title, abstract, PMID, goal, and target language from the Literature Lab form.</li>
           <li>Return a strict JSON object with summary, introduction, hypothesis, design, methods, results, mechanism, limitations, and follow-up search terms.</li>
           <li>Add buttons on the website: Translate, Deep read, Export HTML, Export JSON.</li>
@@ -94,11 +94,13 @@
       <section class="note-block">
         <h2>Current Project Scaffold</h2>
         <p>
-          The repository now includes <code>api/deep-read.js</code>, a deployable Vercel serverless function.
-          It calls OpenAI from the server, asks for a strict literature deep-reading JSON object, and keeps the API key
+          The repository now includes <code>api/deep-read.js</code>, a deployable Vercel serverless function,
+          and <code>api/deep-read-worker.js</code>, a Cloudflare Worker fallback. Both call OpenAI from the server,
+          ask for a strict literature deep-reading JSON object, and keep the API key
           out of public browser code. The Literature Lab has an <strong>AI deep read</strong> button that calls this
           endpoint when the site is hosted with the backend. If the frontend remains on GitHub Pages, the Literature Lab
-          can save a Vercel endpoint such as <code>https://your-project.vercel.app/api/deep-read</code> in browser storage.
+          can save a Vercel endpoint such as <code>https://your-project.vercel.app/api/deep-read</code> or a Worker endpoint
+          such as <code>https://ljsdoctor-deep-read-worker.your-subdomain.workers.dev</code> in browser storage.
           The same endpoint also supports a simple GET health check so the page can test whether the backend is online
           and whether <code>OPENAI_API_KEY</code> is configured.
         </p>
@@ -116,7 +118,7 @@
       <section class="note-block">
         <h2>What You Would Need To Provide</h2>
         <ol>
-          <li>A Vercel account connected to GitHub.</li>
+          <li>A Vercel account connected to GitHub, or a Cloudflare account for the Worker fallback.</li>
           <li>An OpenAI API key for real AI deep reading and translation.</li>
           <li>Optional: a DeepL API key for direct translation quality.</li>
           <li>Optional: an NCBI API key if the PubMed connector becomes high-volume.</li>
@@ -130,14 +132,15 @@
       <section class="note-block">
         <h2>Deployment Checklist</h2>
         <ol>
-          <li>Connect the GitHub repository to Vercel.</li>
-          <li>Confirm Vercel sees <code>vercel.json</code> and <code>api/deep-read.js</code>.</li>
-          <li>Add <code>OPENAI_API_KEY</code> in Vercel environment variables.</li>
+          <li>Use Vercel if login is available, or create a Cloudflare Worker if Vercel remains blocked.</li>
+          <li>For Vercel, confirm it sees <code>vercel.json</code> and <code>api/deep-read.js</code>.</li>
+          <li>For Cloudflare Worker, paste <code>api/deep-read-worker.js</code> into a Worker named <code>ljsdoctor-deep-read-worker</code>.</li>
+          <li>Add <code>OPENAI_API_KEY</code> in the backend environment variables or Worker secrets.</li>
           <li>Optional: add <code>OPENAI_MODEL</code>, matching the template in <code>.env.example</code>.</li>
           <li>Optional but recommended: add <code>ALLOWED_ORIGIN=https://l-js-doctor.github.io</code> to limit browser calls to the public site.</li>
           <li>Deploy, then test <code>/api/deep-read</code> through the Literature Lab endpoint test button.</li>
           <li>For a command-line check, run <code>tools/test-ai-endpoint.ps1</code> with the deployed endpoint URL.</li>
-          <li>If the frontend remains on GitHub Pages, paste the full Vercel API URL into the AI endpoint setting.</li>
+          <li>If the frontend remains on GitHub Pages, paste the full backend API URL into the AI endpoint setting.</li>
         </ol>
         <p>For a click-by-click setup guide, open <a href="vercel-connection.html">Vercel Connection Checklist</a>.</p>
       </section>

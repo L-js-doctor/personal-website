@@ -49,6 +49,11 @@ $requiredFiles = @(
   "vercel.json",
   "styles.css",
   "site.js",
+  "lib/pet/petTypes.js",
+  "lib/pet/petEvents.js",
+  "components/pet/PetProvider.js",
+  "components/pet/PetWidget.js",
+  "components/pet/PetWidget.css",
   "research-ecosystem/index.html",
   "research-ecosystem/graph.html",
   "research-ecosystem/github-lab.html",
@@ -129,6 +134,8 @@ Require-Text "research-ecosystem/vercel-connection.html" "api-connection-status.
 Require-Text "research-ecosystem/api-connection-status.html" "API Connection Status"
 Require-Text "research-ecosystem/api-connection-status.html" "Vercel CLI is not currently installed"
 Require-Text "research-ecosystem/api-connection-status.html" "GitHub publishing has been restored"
+Require-Text "research-ecosystem/api-connection-status.html" "Cloudflare Worker"
+Require-Text "research-ecosystem/api-connection-status.html" "ljsdoctor-deep-read-worker"
 Require-Text "research-ecosystem/api-connection-status.html" "OPENAI_API_KEY"
 Require-Text "research-ecosystem/web-pet.html" "Web Pet Research Companion"
 Require-Text "research-ecosystem/web-pet.html" "Action Map"
@@ -138,17 +145,26 @@ Require-File "research-ecosystem/translation-api.html"
 Require-Text "research-ecosystem/translation-api.html" "Real Translation API Plan"
 Require-Text "research-ecosystem/translation-api.html" "OPENAI_API_KEY"
 Require-Text "research-ecosystem/translation-api.html" "api/deep-read.js"
+Require-Text "research-ecosystem/translation-api.html" "api/deep-read-worker.js"
 Require-Text "research-ecosystem/translation-api.html" "Deployment Checklist"
 Require-Text "research-ecosystem/translation-api.html" "vercel-connection.html"
 Require-Text "research-ecosystem/translation-api.html" "DeepL"
 Require-Text "research-ecosystem/translation-api.html" "NCBI API key"
 Require-File "api/deep-read.js"
+Require-File "api/deep-read-worker.js"
 Require-Text "api/deep-read.js" "https://api.openai.com/v1/responses"
 Require-Text "api/deep-read.js" "OPENAI_API_KEY"
 Require-Text "api/deep-read.js" "json_schema"
 Require-Text "api/deep-read.js" "openaiConfigured"
 Require-Text "api/deep-read.js" "GET, POST, OPTIONS"
 Require-Text "api/deep-read.js" "ALLOWED_ORIGIN"
+Require-Text "api/deep-read-worker.js" "https://api.openai.com/v1/responses"
+Require-Text "api/deep-read-worker.js" "OPENAI_API_KEY"
+Require-Text "api/deep-read-worker.js" "json_schema"
+Require-Text "api/deep-read-worker.js" "openaiConfigured"
+Require-Text "api/deep-read-worker.js" "GET, POST, OPTIONS"
+Require-Text "api/deep-read-worker.js" "ALLOWED_ORIGIN"
+Require-Text "api/deep-read-worker.js" "ljsdoctor-deep-read-worker"
 Require-Text ".env.example" "OPENAI_MODEL"
 Require-Text ".env.example" "ALLOWED_ORIGIN"
 Require-Text "vercel.json" "api/deep-read.js"
@@ -195,6 +211,7 @@ Require-Text "site.js" "buildExperimentalDesignChecklist"
 Require-Text "site.js" "downloadTextFile"
 Require-Text "site.js" "buildRecordsHtmlExport"
 Require-Text "site.js" "setupLanguageSwitcher"
+Require-Text "site.js" "setupPetWidget"
 Require-Text "site.js" "getReadingLanguage"
 Require-Text "site.js" "requestAiDeepRead"
 Require-Text "site.js" "buildManualAiPrompt"
@@ -225,6 +242,14 @@ Require-Text "data/research/graph.json" "ai-handoff-lab"
 Require-Text "data/research/graph.json" "web-pet-research-companion"
 Require-Text "data/research/projects.json" "gbm-immune-microenvironment-project"
 Require-Text "data/research/projects.json" "Web Pet Research Companion"
+Require-Text "lib/pet/petTypes.js" "eatPaper"
+Require-Text "lib/pet/petTypes.js" "我先吃下这篇论文"
+Require-Text "lib/pet/petEvents.js" "triggerPetEvent"
+Require-Text "lib/pet/petEvents.js" "ai_output_start"
+Require-Text "components/pet/PetWidget.js" "data-pet-state"
+Require-Text "components/pet/PetWidget.js" "petDev"
+Require-Text "components/pet/PetProvider.js" "setPetState"
+Require-Text "components/pet/PetWidget.css" "pet-widget"
 
 if ($errors.Count -gt 0) {
   Write-Error ($errors -join [Environment]::NewLine)

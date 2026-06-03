@@ -23,13 +23,14 @@
       <h1>API Connection Status</h1>
       <p class="page-lead">
         This page records the current status of the real AI translation and deep-reading connection.
-        GitHub publishing is working again. The repository code is ready for Vercel, but the Vercel project and OpenAI key still have to be connected before live AI calls work.
+        GitHub publishing is working again. Vercel is currently blocked by account login assistance, so the project now keeps a Vercel route, a Cloudflare Worker fallback, and a manual AI prompt path.
       </p>
 
       <section class="note-block">
         <h2>Ready In Code</h2>
         <ol>
           <li><code>api/deep-read.js</code> exists and calls OpenAI from the server.</li>
+          <li><code>api/deep-read-worker.js</code> exists as a Cloudflare Worker fallback with the same request and response shape.</li>
           <li><code>vercel.json</code> exists for Vercel deployment.</li>
           <li><code>.env.example</code> lists <code>OPENAI_API_KEY</code>, <code>OPENAI_MODEL</code>, and <code>ALLOWED_ORIGIN</code>.</li>
           <li>Literature Lab has <strong>Manual AI prompt</strong>, <strong>AI deep read</strong>, <strong>AI endpoint URL</strong>, and <strong>Test endpoint</strong>.</li>
@@ -40,12 +41,21 @@
       <section class="note-block">
         <h2>Still Needed</h2>
         <ol>
-          <li>Create or connect a Vercel account.</li>
-          <li>Import <code>L-js-doctor/personal-website</code> into Vercel.</li>
-          <li>Add <code>OPENAI_API_KEY</code> in Vercel environment variables.</li>
-          <li>Deploy the project and copy the URL ending in <code>/api/deep-read</code>.</li>
+          <li>Choose the backend route: Vercel when account login works, or Cloudflare Worker if Vercel remains blocked.</li>
+          <li>Add <code>OPENAI_API_KEY</code> in the chosen host's secret environment variables.</li>
+          <li>Optional: add <code>OPENAI_MODEL</code> and <code>ALLOWED_ORIGIN</code>.</li>
+          <li>Deploy the backend and copy the endpoint URL.</li>
           <li>Paste that URL into Literature Lab and click <strong>Test endpoint</strong>.</li>
         </ol>
+      </section>
+
+      <section class="note-block">
+        <h2>Backend Routes</h2>
+        <ul>
+          <li><strong>Route A, Vercel:</strong> import the GitHub repository, set <code>OPENAI_API_KEY</code>, then use <code>https://your-project.vercel.app/api/deep-read</code>.</li>
+          <li><strong>Route B, Cloudflare Worker:</strong> create a Worker named <code>ljsdoctor-deep-read-worker</code>, paste <code>api/deep-read-worker.js</code>, add <code>OPENAI_API_KEY</code>, then use the Worker URL.</li>
+          <li><strong>Route C, Manual AI prompt:</strong> use Literature Lab's <strong>Manual AI prompt</strong> button while hosted backends are still being connected.</li>
+        </ul>
       </section>
 
       <section class="note-block">
@@ -54,16 +64,17 @@
           <li>GitHub publishing has been restored and this status page is now live on GitHub Pages.</li>
           <li>Vercel CLI is not currently installed in this workspace.</li>
           <li>The project is not currently linked to Vercel because no <code>.vercel</code> folder exists.</li>
-          <li>Live AI calls are still waiting on Vercel deployment and a real <code>OPENAI_API_KEY</code>.</li>
+          <li>Vercel login is blocked by account assistance, so live AI calls should use Cloudflare Worker or the manual prompt until that account is recovered.</li>
+          <li>Live AI calls still require a protected backend and a real <code>OPENAI_API_KEY</code>.</li>
         </ul>
       </section>
 
       <section class="note-block">
         <h2>Best Next Action</h2>
         <p>
-          If Vercel login is blocked, use Literature Lab's <strong>Manual AI prompt</strong> button first.
-          When Vercel login works, open Vercel in the browser, sign in with GitHub, import the repository, and add the environment variables.
-          After that, Codex can test the endpoint and wire the deployed URL into Literature Lab.
+          If Vercel login is blocked, complete Vercel's assistance form separately and keep building with the
+          <strong>Manual AI prompt</strong> or the Cloudflare Worker route. After any backend is deployed,
+          Codex can test the endpoint and wire the deployed URL into Literature Lab.
         </p>
       </section>
     </main>

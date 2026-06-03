@@ -507,6 +507,7 @@
 
       results.innerHTML = "<p class='empty-state'>Connecting to PubMed...</p>";
       lastCriteria = getSearchCriteria(root);
+      triggerPet("literature_search_start");
 
       searchPubMed(query, lastCriteria)
         .then(function (payload) {
@@ -522,9 +523,11 @@
           }
           renderPubMedStatus(status, lastSearchMeta, lastPapers.length);
           renderPubMedResults(filterPapers(lastPapers, highRelevance), results, storeKey, render);
+          triggerPet("literature_search_done");
         })
         .catch(function () {
           results.innerHTML = "<p class='empty-state'>PubMed is not reachable right now. Try again later or use a more specific English query.</p>";
+          triggerPet("task_error");
         });
     });
 
@@ -982,8 +985,10 @@
     if (manualAiPromptButton) {
       manualAiPromptButton.addEventListener("click", function () {
         var fields = readNamedFields(form);
+        triggerPet("ai_output_start");
         output.value = buildManualAiPrompt(fields);
         writeStatus(aiStatus, "Manual AI prompt generated. Copy it into ChatGPT/Codex, then paste the answer back into your notes.");
+        triggerPet("ai_output_done");
       });
     }
 
@@ -1084,6 +1089,7 @@
 
     button.disabled = true;
     writeStatus(status, "Sending selected paper details to the protected AI endpoint...");
+    triggerPet("ai_reading_start");
 
     fetch(endpoint, {
       method: "POST",
@@ -1108,12 +1114,15 @@
         });
       })
       .then(function (data) {
+        triggerPet("ai_output_start");
         output.value = formatAiDeepReadResult(data);
         writeStatus(status, "AI deep-reading result received. You can copy or download it now.");
+        triggerPet("ai_output_done");
       })
       .catch(function (error) {
         output.value = buildReadingArtifact(fields);
         writeStatus(status, "AI endpoint is not connected yet: " + error.message + " The page generated the local artifact instead.");
+        triggerPet("task_error");
       })
       .finally(function () {
         button.disabled = false;
@@ -2180,8 +2189,54 @@
       .replace(/'/g, "&#039;");
   }
 
+  function getSiteBasePath() {
+    var script = document.querySelector("script[src$='site.js']");
+    if (!script) {
+      return "";
+    }
+    return script.getAttribute("src").replace(/site\.js.*$/, "");
+  }
+
+  function loadScriptOnce(src) {
+    if (document.querySelector("script[src='" + src + "']")) {
+      return Promise.resolve();
+    }
+    return new Promise(function (resolve, reject) {
+      var script = document.createElement("script");
+      script.src = src;
+      script.defer = true;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+
+  function setupPetWidget() {
+    var base = getSiteBasePath();
+    loadScriptOnce(base + "lib/pet/petTypes.js")
+      .then(function () {
+        return loadScriptOnce(base + "lib/pet/petEvents.js");
+      })
+      .then(function () {
+        return loadScriptOnce(base + "components/pet/PetProvider.js");
+      })
+      .then(function () {
+        return loadScriptOnce(base + "components/pet/PetWidget.js");
+      })
+      .catch(function () {
+        // The pet is progressive decoration; the site must remain usable if it fails to load.
+      });
+  }
+
+  function triggerPet(eventName) {
+    if (typeof window.triggerPetEvent === "function") {
+      window.triggerPetEvent(eventName);
+    }
+  }
+
   setupFilter();
   setupLanguageSwitcher();
+  setupPetWidget();
   setupResearchGraph();
   setupReadingDesk();
   setupIssueQueue();
