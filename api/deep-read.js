@@ -40,92 +40,90 @@ const RESPONSE_SCHEMA = {
   ]
 };
 
-module.exports = async function handler(request, response) {
-  setCors(response);
+export default {
+  async fetch(request) {
+    const corsHeaders = getCorsHeaders();
 
-  if (!isAllowedOrigin(request)) {
-    response.status(403).json({
-      error: "Origin is not allowed for this API endpoint."
-    });
-    return;
-  }
+    if (!isAllowedOrigin(request)) {
+      return jsonResponse({ error: "Origin is not allowed for this API endpoint." }, 403, corsHeaders);
+    }
 
-  if (request.method === "OPTIONS") {
-    response.status(204).end();
-    return;
-  }
+    if (request.method === "OPTIONS") {
+      return new Response(null, { status: 204, headers: corsHeaders });
+    }
 
-  if (request.method === "GET") {
-    response.status(200).json({
-      ok: true,
-      service: "ljsdoctor-deep-read",
-      openaiConfigured: Boolean(process.env.OPENAI_API_KEY),
-      model: process.env.OPENAI_MODEL || "gpt-5.4"
-    });
-    return;
-  }
+    if (request.method === "GET") {
+      return jsonResponse(
+        {
+          ok: true,
+          service: "ljsdoctor-deep-read",
+          openaiConfigured: Boolean(process.env.OPENAI_API_KEY),
+          model: process.env.OPENAI_MODEL || "gpt-5.4"
+        },
+        200,
+        corsHeaders
+      );
+    }
 
-  if (request.method !== "POST") {
-    response.status(405).json({ error: "Method not allowed" });
-    return;
-  }
+    if (request.method !== "POST") {
+      return jsonResponse({ error: "Method not allowed" }, 405, corsHeaders);
+    }
 
-  if (!process.env.OPENAI_API_KEY) {
-    response.status(500).json({
-      error: "OPENAI_API_KEY is not configured on the server."
-    });
-    return;
-  }
+    if (!process.env.OPENAI_API_KEY) {
+      return jsonResponse(
+        { error: "OPENAI_API_KEY is not configured on the server." },
+        500,
+        corsHeaders
+      );
+    }
 
-  try {
-    const body = await readJsonBody(request);
-    const paper = normalizePaper(body);
-    const providerResponse = await callOpenAI(paper);
-    response.status(200).json(providerResponse);
-  } catch (error) {
-    response.status(error.statusCode || 500).json({
-      error: error.message || "Deep-reading request failed."
-    });
+    try {
+      const body = await readJsonBody(request);
+      const paper = normalizePaper(body);
+      const providerResponse = await callOpenAI(paper);
+      return jsonResponse(providerResponse, 200, corsHeaders);
+    } catch (error) {
+      return jsonResponse(
+        { error: error.message || "Deep-reading request failed." },
+        error.statusCode || 500,
+        corsHeaders
+      );
+    }
   }
 };
 
-function setCors(response) {
-  response.setHeader("Access-Control-Allow-Origin", process.env.ALLOWED_ORIGIN || "*");
-  response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+function getCorsHeaders() {
+  return {
+    "Access-Control-Allow-Origin": process.env.ALLOWED_ORIGIN || "*",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Content-Type": "application/json; charset=utf-8"
+  };
 }
 
 function isAllowedOrigin(request) {
-  const allowedOrigin = process.env.ALLOWED_ORIGIN;
-  if (!allowedOrigin) {
+  if (!process.env.ALLOWED_ORIGIN) {
     return true;
   }
-  const origin = request.headers.origin;
-  return !origin || origin === allowedOrigin;
+  const origin = request.headers.get("Origin");
+  return !origin || origin === process.env.ALLOWED_ORIGIN;
 }
 
-function readJsonBody(request) {
-  return new Promise((resolve, reject) => {
-    let raw = "";
-    request.on("data", chunk => {
-      raw += chunk;
-      if (raw.length > 24000) {
-        const error = new Error("Request is too large. Use a shorter abstract or selected excerpt.");
-        error.statusCode = 413;
-        reject(error);
-      }
-    });
-    request.on("end", () => {
-      try {
-        resolve(raw ? JSON.parse(raw) : {});
-      } catch (error) {
-        error.statusCode = 400;
-        error.message = "Request body must be valid JSON.";
-        reject(error);
-      }
-    });
-    request.on("error", reject);
-  });
+async function readJsonBody(request) {
+  const raw = await request.text();
+  if (raw.length > 24000) {
+    const error = new Error("Request is too large. Use a shorter abstract or selected excerpt.");
+    error.statusCode = 413;
+    throw error;
+  }
+
+  try {
+    return raw ? JSON.parse(raw) : {};
+  } catch (error) {
+    error.statusCode = 400;
+    error.message = "Request body must be valid JSON.";
+    throw error;
+  }
 }
 
 function normalizePaper(body) {
@@ -220,4 +218,11 @@ function extractResponseText(data) {
   }
 
   return "";
+}
+
+function jsonResponse(payload, status, headers) {
+  return new Response(JSON.stringify(payload), {
+    status,
+    headers
+  });
 }
