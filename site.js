@@ -145,7 +145,7 @@
     switcher.className = "language-switcher";
     switcher.setAttribute("data-language-switcher", "");
     switcher.innerHTML =
-      "<span>Language</span>" +
+      "<span>UI</span>" +
       ["zh", "en", "ja", "ru", "de"].map(function (code) {
         return "<button type='button' data-language-option='" + code + "'>" + LANGUAGE_PACKS[code].label + "</button>";
       }).join("");
@@ -959,10 +959,16 @@
     var aiEndpointReset = root.querySelector("[data-ai-endpoint-reset]");
     var queueList = root.querySelector("[data-reading-queue]");
     var exportQueueButton = root.querySelector("[data-export-reading-queue]");
+    var pdfUploadInput = root.querySelector("[data-pdf-upload]");
+    var pdfDropZone = root.querySelector("[data-pdf-drop-zone]");
+    var pdfUploadStatus = root.querySelector("[data-pdf-upload-status]");
+    var pdfFileName = root.querySelector("[data-pdf-file-name]");
 
     if (!form || !output) {
       return;
     }
+
+    setupPdfUploadBinding(pdfUploadInput, pdfDropZone, pdfUploadStatus, pdfFileName);
 
     form.addEventListener("submit", function (event) {
       event.preventDefault();
@@ -1078,6 +1084,86 @@
 
     renderQueue();
     window.addEventListener("deep-reading-queue-updated", renderQueue);
+  }
+
+  function setupPdfUploadBinding(input, dropZone, status, fileName) {
+    if (!input && !dropZone) {
+      return;
+    }
+
+    function setPdfStatus(message) {
+      if (status) {
+        status.textContent = message;
+      }
+    }
+
+    function setPdfFileName(message) {
+      if (fileName) {
+        fileName.textContent = message;
+      }
+    }
+
+    function markUploadStart() {
+      triggerPet("pdf_upload_start");
+      setPdfStatus("Receiving PDF...");
+    }
+
+    function handlePdfFile(file) {
+      if (!file) {
+        setPdfStatus("No PDF selected.");
+        return;
+      }
+
+      var isPdf = file.type === "application/pdf" || /\.pdf$/i.test(file.name);
+      if (!isPdf) {
+        setPdfFileName("No PDF selected");
+        setPdfStatus("Please choose a PDF file.");
+        triggerPet("task_error");
+        return;
+      }
+
+      setPdfFileName(file.name);
+      setPdfStatus("PDF received locally: " + file.name + ". Ready for deep-reading workflow.");
+      try {
+        localStorage.setItem("ljsdoctor:lastPdfUpload", JSON.stringify({
+          name: file.name,
+          size: file.size,
+          type: file.type || "application/pdf",
+          receivedAt: new Date().toISOString()
+        }));
+      } catch (error) {
+        // Local storage is optional; the selected PDF should still count as received.
+      }
+      triggerPet("pdf_upload_done");
+    }
+
+    if (input) {
+      input.addEventListener("click", markUploadStart);
+      input.addEventListener("change", function () {
+        handlePdfFile(input.files && input.files[0]);
+      });
+    }
+
+    if (dropZone) {
+      dropZone.addEventListener("dragenter", function (event) {
+        event.preventDefault();
+        dropZone.classList.add("is-dragging");
+        markUploadStart();
+      });
+      dropZone.addEventListener("dragover", function (event) {
+        event.preventDefault();
+        dropZone.classList.add("is-dragging");
+      });
+      dropZone.addEventListener("dragleave", function () {
+        dropZone.classList.remove("is-dragging");
+      });
+      dropZone.addEventListener("drop", function (event) {
+        event.preventDefault();
+        dropZone.classList.remove("is-dragging");
+        markUploadStart();
+        handlePdfFile(event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files[0]);
+      });
+    }
   }
 
   function requestAiDeepRead(fields, output, status, button) {
@@ -2235,7 +2321,6 @@
   }
 
   setupFilter();
-  setupLanguageSwitcher();
   setupPetWidget();
   setupResearchGraph();
   setupReadingDesk();

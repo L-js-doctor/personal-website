@@ -135,6 +135,20 @@
           </div>
         </section>
 
+        <section class="pdf-upload-panel" data-pdf-upload-panel aria-label="PDF upload for deep reading">
+          <div>
+            <p class="section-kicker">PDF Intake</p>
+            <h3>Upload a paper PDF</h3>
+            <p>Choose or drop a PDF to mark it for deep reading. This first pass records the file locally; full PDF parsing will be added later.</p>
+          </div>
+          <label class="pdf-drop-zone" data-pdf-drop-zone>
+            <span>Drop PDF here or choose file</span>
+            <strong data-pdf-file-name>No PDF selected</strong>
+            <input data-pdf-upload type="file" accept="application/pdf,.pdf">
+          </label>
+          <p class="empty-state compact" data-pdf-upload-status>PDF intake is ready.</p>
+        </section>
+
         <form class="tool-form" data-reading-form>
           <label>PMID or DOI<input name="id" placeholder="42193877 or 10.xxxx/xxxxx"></label>
           <label>Paper title<input name="title" placeholder="Paste the title"></label>
@@ -173,6 +187,7 @@
               <option value="ru">Russian</option>
               <option value="de">German</option>
             </select>
+            <span class="field-note">Controls generated reading notes and AI output, not the whole site interface.</span>
           </label>
           <button class="button primary" type="submit">Generate reading artifact</button>
           <button class="button secondary" type="button" data-manual-ai-prompt>Manual AI prompt</button>

@@ -540,6 +540,13 @@ h1 {
   font-weight: 800;
 }
 
+.field-note {
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
 .tool-form input,
 .tool-form textarea,
 .tool-bar input {
@@ -750,6 +757,72 @@ h1 {
 .reading-queue-list {
   display: grid;
   gap: 12px;
+}
+
+.pdf-upload-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(280px, 1.1fr);
+  gap: 18px;
+  align-items: center;
+  margin: 24px 0;
+  padding: 20px;
+  border: 1px solid rgba(23, 107, 102, 0.18);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: var(--small-shadow);
+}
+
+.pdf-upload-panel h3 {
+  margin: 4px 0 8px;
+}
+
+.pdf-upload-panel p {
+  margin: 0;
+}
+
+.pdf-drop-zone {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  min-height: 132px;
+  padding: 22px;
+  color: var(--ink);
+  text-align: center;
+  border: 1px dashed rgba(23, 107, 102, 0.46);
+  border-radius: 8px;
+  background: rgba(232, 244, 241, 0.62);
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.pdf-drop-zone:hover,
+.pdf-drop-zone.is-dragging {
+  border-color: var(--teal);
+  background: rgba(232, 244, 241, 0.92);
+  transform: translateY(-1px);
+}
+
+.pdf-drop-zone span {
+  font-weight: 800;
+}
+
+.pdf-drop-zone strong {
+  color: var(--muted);
+  font-size: 0.9rem;
+  word-break: break-word;
+}
+
+.pdf-drop-zone input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pdf-upload-panel .empty-state.compact {
+  grid-column: 1 / -1;
+  padding: 12px 14px;
 }
 
 .queue-paper-card {
@@ -1385,6 +1458,7 @@ h1 {
   .pubmed-builder,
   .literature-workflow,
   .metadata-grid,
+  .pdf-upload-panel,
   .deep-reading .tool-form {
     grid-template-columns: 1fr;
   }
