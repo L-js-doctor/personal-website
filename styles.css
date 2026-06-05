@@ -91,9 +91,9 @@ a {
   background: #eef3f7;
 }
 
-.language-switcher {
+.page-translator {
   position: fixed;
-  right: 18px;
+  left: 18px;
   bottom: 18px;
   z-index: 30;
   display: flex;
@@ -108,14 +108,14 @@ a {
   box-shadow: 0 10px 28px rgba(23, 32, 42, 0.1);
 }
 
-.language-switcher span {
+.page-translator span {
   padding: 0 6px;
   color: var(--muted);
   font-size: 0.78rem;
   font-weight: 800;
 }
 
-.language-switcher button {
+.page-translator button {
   min-height: 30px;
   padding: 5px 8px;
   color: var(--ink);
@@ -128,7 +128,7 @@ a {
   cursor: pointer;
 }
 
-.language-switcher button.active {
+.page-translator button.active {
   color: #fff;
   background: var(--teal);
   border-color: var(--teal);

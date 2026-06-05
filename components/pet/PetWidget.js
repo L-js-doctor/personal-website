@@ -41,9 +41,25 @@
   }
 
   function getMessage(state) {
-    return window.PetTypes && window.PetTypes.stateMessages[state]
-      ? window.PetTypes.stateMessages[state]
-      : "";
+    var language = localStorage.getItem("ljsdoctor:translationLanguage") || "zh-CN";
+    if (window.PetTypes && typeof window.PetTypes.getStateMessage === "function") {
+      return window.PetTypes.getStateMessage(state, language);
+    }
+    return window.PetTypes && window.PetTypes.stateMessages[state] ? window.PetTypes.stateMessages[state] : "";
+  }
+
+  function getToggleText(isCollapsed) {
+    var language = localStorage.getItem("ljsdoctor:translationLanguage") || "zh-CN";
+    var labels = {
+      "zh-CN": { open: "展开", close: "收起" },
+      en: { open: "Open", close: "Hide" },
+      ja: { open: "開く", close: "閉じる" },
+      ru: { open: "Открыть", close: "Скрыть" },
+      de: { open: "Öffnen", close: "Ausblenden" }
+    };
+    var normalized = language === "zh" ? "zh-CN" : language;
+    var selected = labels[normalized] || labels["zh-CN"];
+    return isCollapsed ? selected.open : selected.close;
   }
 
   function createDevPanel(setState) {
@@ -112,7 +128,7 @@
       status.textContent = state;
       message.textContent = getMessage(state);
       prop.textContent = STATE_PROPS[state] || "";
-      toggle.textContent = collapsed ? "展开" : "收起";
+      toggle.textContent = getToggleText(collapsed);
       toggle.setAttribute("aria-expanded", String(!collapsed));
     }
 
@@ -150,6 +166,8 @@
         render();
       }
     });
+
+    window.addEventListener("pet-language-updated", render);
 
     if (isDevMode()) {
       bubble.appendChild(createDevPanel(setState));

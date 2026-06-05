@@ -135,31 +135,59 @@
     });
   }
 
-  function setupLanguageSwitcher() {
-    if (document.querySelector("[data-language-switcher]")) {
+  var TRANSLATION_TARGETS = {
+    "zh-CN": "中文",
+    en: "English",
+    ja: "日本語",
+    ru: "Русский",
+    de: "Deutsch"
+  };
+
+  function setupPageTranslator() {
+    if (document.querySelector("[data-page-translator]")) {
       return;
     }
 
-    var saved = localStorage.getItem("ljsdoctor:language") || "zh";
-    var switcher = document.createElement("div");
-    switcher.className = "language-switcher";
-    switcher.setAttribute("data-language-switcher", "");
-    switcher.innerHTML =
-      "<span>UI</span>" +
-      ["zh", "en", "ja", "ru", "de"].map(function (code) {
-        return "<button type='button' data-language-option='" + code + "'>" + LANGUAGE_PACKS[code].label + "</button>";
+    var translator = document.createElement("div");
+    translator.className = "page-translator";
+    translator.setAttribute("data-page-translator", "");
+    translator.innerHTML =
+      "<span>Translate page</span>" +
+      Object.keys(TRANSLATION_TARGETS).map(function (code) {
+        return "<button type='button' data-translate-page='" + code + "'>" + TRANSLATION_TARGETS[code] + "</button>";
       }).join("");
-    document.body.appendChild(switcher);
+    document.body.appendChild(translator);
 
-    switcher.addEventListener("click", function (event) {
-      var button = event.target.closest("[data-language-option]");
+    translator.addEventListener("click", function (event) {
+      var button = event.target.closest("[data-translate-page]");
       if (!button) {
         return;
       }
-      applyLanguage(button.getAttribute("data-language-option"));
+      var target = button.getAttribute("data-translate-page");
+      localStorage.setItem("ljsdoctor:translationLanguage", target);
+      window.dispatchEvent(new CustomEvent("pet-language-updated", { detail: { language: target } }));
+      Array.prototype.slice.call(translator.querySelectorAll("[data-translate-page]")).forEach(function (item) {
+        item.classList.toggle("active", item.getAttribute("data-translate-page") === target);
+      });
+
+      if (!/^https?:\/\//.test(window.location.href)) {
+        window.alert("Page translation works on the published website URL, not local file preview.");
+        return;
+      }
+
+      var translateUrl = "https://translate.google.com/translate?sl=auto&tl=" +
+        encodeURIComponent(target) +
+        "&u=" +
+        encodeURIComponent(window.location.href);
+      window.open(translateUrl, "_blank", "noopener");
     });
 
-    applyLanguage(saved);
+    var saved = localStorage.getItem("ljsdoctor:translationLanguage");
+    if (saved) {
+      Array.prototype.slice.call(translator.querySelectorAll("[data-translate-page]")).forEach(function (item) {
+        item.classList.toggle("active", item.getAttribute("data-translate-page") === saved);
+      });
+    }
   }
 
   function applyLanguage(code) {
@@ -969,6 +997,7 @@
     }
 
     setupPdfUploadBinding(pdfUploadInput, pdfDropZone, pdfUploadStatus, pdfFileName);
+    setupReadingLanguageSync(form);
 
     form.addEventListener("submit", function (event) {
       event.preventDefault();
@@ -1164,6 +1193,21 @@
         handlePdfFile(event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files[0]);
       });
     }
+  }
+
+  function setupReadingLanguageSync(form) {
+    if (!form || !form.elements.language) {
+      return;
+    }
+
+    function syncLanguage() {
+      var language = form.elements.language.value === "zh" ? "zh-CN" : form.elements.language.value;
+      localStorage.setItem("ljsdoctor:translationLanguage", language);
+      window.dispatchEvent(new CustomEvent("pet-language-updated", { detail: { language: language } }));
+    }
+
+    form.elements.language.addEventListener("change", syncLanguage);
+    syncLanguage();
   }
 
   function requestAiDeepRead(fields, output, status, button) {
@@ -2321,6 +2365,7 @@
   }
 
   setupFilter();
+  setupPageTranslator();
   setupPetWidget();
   setupResearchGraph();
   setupReadingDesk();
