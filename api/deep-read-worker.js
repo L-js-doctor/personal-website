@@ -1,4 +1,5 @@
 const OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses";
+const DEFAULT_OPENAI_MODEL = "gpt-5-mini";
 
 const LANGUAGE_NAMES = {
   zh: "Chinese",
@@ -58,7 +59,7 @@ export default {
           ok: true,
           service: "ljsdoctor-deep-read-worker",
           openaiConfigured: Boolean(env.OPENAI_API_KEY),
-          model: env.OPENAI_MODEL || "gpt-5.4"
+          model: getOpenAIModel(env)
         },
         200,
         corsHeaders
@@ -168,7 +169,7 @@ async function callOpenAI(paper, env) {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      model: env.OPENAI_MODEL || "gpt-5.4",
+      model: getOpenAIModel(env),
       input: prompt,
       text: {
         format: {
@@ -197,9 +198,13 @@ async function callOpenAI(paper, env) {
 
   return {
     provider: "openai",
-    model: data.model || env.OPENAI_MODEL || "gpt-5.4",
+    model: data.model || getOpenAIModel(env),
     result: JSON.parse(text)
   };
+}
+
+function getOpenAIModel(env) {
+  return env.OPENAI_MODEL || DEFAULT_OPENAI_MODEL;
 }
 
 function extractResponseText(data) {
