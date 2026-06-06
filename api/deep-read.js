@@ -1,5 +1,5 @@
 const OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses";
-const DEFAULT_OPENAI_MODEL = "gpt-5.2";
+const DEFAULT_OPENAI_MODEL = "gpt-5.5";
 
 const LANGUAGE_NAMES = {
   zh: "Chinese",

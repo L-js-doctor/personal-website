@@ -54,7 +54,7 @@ Deployment route:
 
 1. Import this repository into Vercel.
 2. Add `OPENAI_API_KEY` in Vercel Project Settings -> Environment Variables.
-3. Optional: set `OPENAI_MODEL` to change the model without editing code. The example default is `gpt-5.2`.
+3. Optional: set `OPENAI_MODEL` to change the model without editing code. The example default is `gpt-5.5`.
 4. Optional but recommended: set `ALLOWED_ORIGIN=https://l-js-doctor.github.io` so browser calls are limited to the GitHub Pages site.
 5. Deploy the project.
 6. Test the endpoint:
