@@ -264,9 +264,15 @@ Require-Text "lib/pet/petEvents.js" "ai_output_done"
 Require-Text "lib/pet/petEvents.js" "task_error"
 Require-Text "components/pet/PetWidget.js" "data-pet-state"
 Require-Text "components/pet/PetWidget.js" "pet-language-updated"
+Require-Text "components/pet/PetWidget.js" "createPetCatModel"
+Require-Text "components/pet/PetWidget.js" "pet-cat-svg"
 Require-Text "components/pet/PetWidget.js" "petDev"
 Require-Text "components/pet/PetProvider.js" "setPetState"
 Require-Text "components/pet/PetWidget.css" "pet-widget"
+Require-Text "components/pet/PetWidget.css" "cat-tail"
+Require-Text "components/pet/PetWidget.css" "cat-paper"
+Require-Text "components/pet/PetWidget.css" "cat-pen"
+Require-Text "components/pet/PetWidget.css" "cat-card"
 
 if ($errors.Count -gt 0) {
   Write-Error ($errors -join [Environment]::NewLine)

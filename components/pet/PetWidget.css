@@ -3,7 +3,7 @@
   right: 18px;
   bottom: 18px;
   z-index: 80;
-  width: min(310px, calc(100vw - 28px));
+  width: min(336px, calc(100vw - 28px));
   font-family: inherit;
   color: #172033;
   pointer-events: auto;
@@ -19,21 +19,21 @@
 
 .pet-shell {
   display: grid;
-  grid-template-columns: 76px minmax(0, 1fr);
-  gap: 10px;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 12px;
   align-items: end;
   padding: 10px;
-  border: 1px solid rgba(92, 111, 145, 0.24);
+  border: 1px solid rgba(68, 107, 130, 0.22);
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.94);
-  box-shadow: 0 16px 42px rgba(31, 45, 70, 0.18);
+  box-shadow: 0 18px 46px rgba(31, 45, 70, 0.18);
   backdrop-filter: blur(10px);
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
 
 .pet-shell:hover {
   transform: translateY(-2px);
-  box-shadow: 0 20px 48px rgba(31, 45, 70, 0.22);
+  box-shadow: 0 22px 54px rgba(31, 45, 70, 0.24);
 }
 
 .pet-widget.is-collapsed .pet-shell {
@@ -48,34 +48,77 @@
   position: relative;
   display: grid;
   place-items: center;
-  width: 72px;
-  height: 72px;
+  width: 94px;
+  height: 94px;
   border-radius: 50%;
-  background: linear-gradient(145deg, #fff8ec, #e9f2ff);
+  background:
+    radial-gradient(circle at 36% 28%, rgba(255, 255, 255, 0.94), rgba(255, 244, 221, 0.2) 34%, transparent 58%),
+    linear-gradient(145deg, #fff8ec, #e8f5f3);
   border: 1px solid rgba(89, 114, 156, 0.22);
   overflow: hidden;
 }
 
 .pet-widget.is-collapsed .pet-avatar {
-  width: 42px;
-  height: 42px;
+  width: 46px;
+  height: 46px;
 }
 
-.pet-emoji {
-  font-size: 38px;
-  line-height: 1;
+.pet-cat-model {
+  width: 92px;
+  height: 92px;
   transform-origin: 50% 80%;
 }
 
-.pet-widget.is-collapsed .pet-emoji {
-  font-size: 25px;
+.pet-widget.is-collapsed .pet-cat-model {
+  width: 48px;
+  height: 48px;
 }
 
-.pet-prop {
-  position: absolute;
-  right: 8px;
-  bottom: 8px;
-  font-size: 18px;
+.pet-cat-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.cat-body,
+.cat-head,
+.cat-tail,
+.cat-paw,
+.cat-paper,
+.cat-card,
+.cat-pen,
+.cat-magnifier,
+.cat-question,
+.cat-sleep-bubbles,
+.cat-glasses {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.cat-tail {
+  transform-origin: 70% 70%;
+}
+
+.cat-head {
+  transform-origin: 50% 75%;
+}
+
+.cat-paw-left {
+  transform-origin: 64px 106px;
+}
+
+.cat-paw-right {
+  transform-origin: 98px 106px;
+}
+
+.cat-paper,
+.cat-card,
+.cat-pen,
+.cat-magnifier,
+.cat-question,
+.cat-sleep-bubbles {
+  opacity: 0;
 }
 
 .pet-bubble {
@@ -116,8 +159,7 @@
 
 .pet-widget.is-collapsed .pet-bubble,
 .pet-widget.is-collapsed .pet-controls,
-.pet-widget.is-collapsed .pet-dev-panel,
-.pet-widget.is-collapsed .pet-prop {
+.pet-widget.is-collapsed .pet-dev-panel {
   display: none;
 }
 
@@ -141,36 +183,96 @@
   padding: 3px 7px;
 }
 
-.pet-state-idle .pet-emoji {
+.pet-state-idle .pet-cat-model {
   animation: pet-breathe 2.8s ease-in-out infinite;
 }
 
-.pet-state-searching .pet-emoji {
-  animation: pet-look 1.3s ease-in-out infinite;
+.pet-state-idle .cat-eye {
+  animation: pet-blink 5s ease-in-out infinite;
 }
 
-.pet-state-uploading .pet-emoji,
-.pet-state-eatPaper .pet-emoji {
-  animation: pet-nibble 0.8s ease-in-out infinite;
+.pet-state-idle .cat-tail {
+  animation: pet-tail 2.6s ease-in-out infinite;
 }
 
-.pet-state-reading .pet-emoji {
-  animation: pet-think 1.4s ease-in-out infinite;
+.pet-state-searching .cat-head {
+  animation: pet-look 1.25s ease-in-out infinite;
 }
 
-.pet-state-writing .pet-emoji {
-  animation: pet-write 0.55s ease-in-out infinite;
+.pet-state-searching .cat-magnifier {
+  opacity: 1;
+  animation: pet-float 1.5s ease-in-out infinite;
 }
 
-.pet-state-done .pet-emoji {
-  animation: pet-pop 0.8s ease-in-out 1;
+.pet-state-uploading .cat-paper,
+.pet-state-eatPaper .cat-paper,
+.pet-state-reading .cat-paper {
+  opacity: 1;
 }
 
-.pet-state-error .pet-emoji {
+.pet-state-uploading .cat-paw-left,
+.pet-state-uploading .cat-paw-right {
+  animation: pet-hug 0.9s ease-in-out infinite;
+}
+
+.pet-state-eatPaper .cat-head {
+  animation: pet-nibble 0.72s ease-in-out infinite;
+}
+
+.pet-state-eatPaper .cat-paper {
+  animation: pet-paper-nibble 0.72s ease-in-out infinite;
+}
+
+.pet-state-reading .cat-glasses {
+  opacity: 1;
+}
+
+.pet-state-reading .cat-head {
+  animation: pet-read 1.4s ease-in-out infinite;
+}
+
+.pet-state-writing .cat-paper,
+.pet-state-writing .cat-pen {
+  opacity: 1;
+}
+
+.pet-state-writing .cat-paw-right,
+.pet-state-writing .cat-pen {
+  animation: pet-write 0.56s ease-in-out infinite;
+}
+
+.pet-state-done .cat-card {
+  opacity: 1;
+  animation: pet-card-pop 0.9s ease-out 1;
+}
+
+.pet-state-done .cat-tail {
+  animation: pet-tail-fast 0.8s ease-in-out 2;
+}
+
+.pet-state-error .cat-question {
+  opacity: 1;
+}
+
+.pet-state-error .pet-cat-model {
   animation: pet-shake 0.35s ease-in-out 2;
 }
 
-.pet-state-sleeping .pet-emoji {
+.pet-state-error .cat-paper {
+  opacity: 1;
+  animation: pet-stuck-paper 0.7s ease-in-out infinite;
+}
+
+.pet-state-sleeping .cat-sleep-bubbles {
+  opacity: 1;
+  animation: pet-sleep-bubble 2.2s ease-in-out infinite;
+}
+
+.pet-state-sleeping .cat-eye {
+  transform: scaleY(0.12);
+}
+
+.pet-state-sleeping .pet-cat-model {
   animation: pet-sleep 2.2s ease-in-out infinite;
 }
 
@@ -179,30 +281,65 @@
   50% { transform: translateY(-2px) scale(1.03); }
 }
 
+@keyframes pet-blink {
+  0%, 88%, 100% { transform: scaleY(1); }
+  92%, 96% { transform: scaleY(0.12); }
+}
+
+@keyframes pet-tail {
+  0%, 100% { transform: rotate(-4deg); }
+  50% { transform: rotate(8deg); }
+}
+
+@keyframes pet-tail-fast {
+  0%, 100% { transform: rotate(-10deg); }
+  50% { transform: rotate(15deg); }
+}
+
 @keyframes pet-look {
-  0%, 100% { transform: rotate(-5deg); }
-  50% { transform: rotate(7deg); }
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-2px) rotate(7deg); }
+}
+
+@keyframes pet-float {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-5px) rotate(5deg); }
+}
+
+@keyframes pet-hug {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(2px) rotate(-7deg); }
 }
 
 @keyframes pet-nibble {
   0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(2px) rotate(-6deg); }
+  50% { transform: translateY(4px) rotate(-5deg); }
 }
 
-@keyframes pet-think {
-  0%, 100% { transform: translateY(0); filter: saturate(1); }
-  50% { transform: translateY(-3px); filter: saturate(1.25); }
+@keyframes pet-paper-nibble {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(2px) rotate(3deg); }
+}
+
+@keyframes pet-read {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(2px) rotate(-2deg); }
 }
 
 @keyframes pet-write {
-  0%, 100% { transform: translateX(-2px) rotate(-2deg); }
-  50% { transform: translateX(3px) rotate(3deg); }
+  0%, 100% { transform: translateX(-2px) rotate(-4deg); }
+  50% { transform: translateX(3px) rotate(5deg); }
 }
 
-@keyframes pet-pop {
-  0% { transform: scale(0.94); }
-  55% { transform: scale(1.12); }
-  100% { transform: scale(1); }
+@keyframes pet-card-pop {
+  0% { transform: translateX(-10px) scale(0.88); opacity: 0; }
+  70% { transform: translateX(1px) scale(1.06); opacity: 1; }
+  100% { transform: translateX(0) scale(1); opacity: 1; }
+}
+
+@keyframes pet-stuck-paper {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  50% { transform: translateX(-3px) rotate(-4deg); }
 }
 
 @keyframes pet-shake {
@@ -212,8 +349,13 @@
 }
 
 @keyframes pet-sleep {
-  0%, 100% { transform: translateY(1px) rotate(-3deg); opacity: 0.9; }
-  50% { transform: translateY(4px) rotate(2deg); opacity: 0.72; }
+  0%, 100% { transform: translateY(1px) rotate(-2deg); opacity: 0.92; }
+  50% { transform: translateY(4px) rotate(2deg); opacity: 0.76; }
+}
+
+@keyframes pet-sleep-bubble {
+  0%, 100% { transform: translateY(0) scale(0.92); opacity: 0.62; }
+  50% { transform: translateY(-8px) scale(1.08); opacity: 1; }
 }
 
 @media (max-width: 720px) {
@@ -229,17 +371,35 @@
     padding: 8px 10px;
   }
 
+  .pet-widget:not(.is-expanded) .pet-avatar {
+    width: 46px;
+    height: 46px;
+  }
+
+  .pet-widget:not(.is-expanded) .pet-cat-model {
+    width: 48px;
+    height: 48px;
+  }
+
   .pet-widget:not(.is-expanded) .pet-bubble,
   .pet-widget:not(.is-expanded) .pet-controls,
-  .pet-widget:not(.is-expanded) .pet-dev-panel,
-  .pet-widget:not(.is-expanded) .pet-prop {
+  .pet-widget:not(.is-expanded) .pet-dev-panel {
     display: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .pet-shell,
-  .pet-emoji {
+  .pet-cat-model,
+  .cat-body,
+  .cat-head,
+  .cat-tail,
+  .cat-paw,
+  .cat-paper,
+  .cat-card,
+  .cat-pen,
+  .cat-magnifier,
+  .cat-sleep-bubbles {
     animation: none !important;
     transition: none !important;
   }
